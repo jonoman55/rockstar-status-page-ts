@@ -1,3 +1,4 @@
+// DOCS : https://github.com/jonoman55/rockstar-status-page
 import { lazy, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
@@ -9,10 +10,6 @@ import { useAppSelector } from './app/hooks';
 
 const Routes = lazy(() => import('./routes'));
 
-// TODO : Finish implementing all UI components and pages
-// NOTE : mui docs -> https://mui.com/material-ui/getting-started/overview/
-// NOTE : old source code ref -> https://github.com/jonoman55/rockstar-status-page
-// TODO : Push code to GitHub
 const App = () => {
     const theme = useAppSelector((state) => state.theme);
     const activeTheme = createTheme(theme.darkTheme ? darkTheme : lightTheme);
