@@ -14,7 +14,7 @@ import { RockstarStatus } from '../constants';
 
 import type { StatusType } from '../types';
 
-export const StyleStatus = (theme: Theme, status: StatusType) => {
+export const styleStatus = (theme: Theme, status: StatusType) => {
     switch (status) {
         case 'up':
             return theme.custom.palette.brightGreen;
@@ -27,7 +27,7 @@ export const StyleStatus = (theme: Theme, status: StatusType) => {
     };
 };
 
-export const FetchStatus = (status: StatusType) => {
+export const fetchStatus = (status: StatusType) => {
     switch (status) {
         case 'up':
             return 'UP';
@@ -40,7 +40,7 @@ export const FetchStatus = (status: StatusType) => {
     };
 };
 
-export const FetchImage = (id: number) => {
+export const fetchImage = (id: number) => {
     switch (id) {
         case 1:
             return RockstarWhiteLogo;
@@ -60,7 +60,7 @@ export const FetchImage = (id: number) => {
 };
 
 // TODO : Remove this after testing is done with getStatusesCount
-export const CheckStatuses = (statuses: any[]) => {
+export const checkStatuses = (statuses: any[]) => {
     if (Object.values(statuses).every((s) => s?.status.toLowerCase() === 'up'))
         return RockstarStatus.up;
     if (statuses.map((s) => s?.status.toLowerCase() === 'limited'))
@@ -74,7 +74,7 @@ export const CheckStatuses = (statuses: any[]) => {
  * @param statuses RockstarStatus
  * @returns The greatest status count
  */
-export const GetStatusesCount = (statuses: RockstarStatus[]) => {
+export const getStatusesCount = (statuses: RockstarStatus[]) => {
     return lodash.head(lodash(statuses)
         .countBy()
         .entries()
@@ -87,7 +87,7 @@ interface Indicator {
     value: string;
 };
 
-export const FetchStatusByCount = (statuses: any[]) => {
+export const fetchStatusByCount = (statuses: any[]) => {
     const count = lodash.countBy(statuses, 'status');
     let indicator: Indicator = { key: 0, value: '' };
     for (const [value, key] of Object.entries(count)) {

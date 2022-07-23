@@ -1,16 +1,18 @@
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
-import { Home, Services, Statuses, Api, NotFound } from '..';
+// import { HomeCard, ServicesCard, StatusesCard, ApiStatusCard, NotFoundCard } from '..';
 
-interface Props {
-    name: string;
-};
+// interface Props {
+//     name: string;
+// };
 
-export const PageRenderer = ({ name }: Props) => {
-    const navigate = useNavigate();
-    if (name === 'All') return <Home />;
-    if (name === 'Services') return <Services />;
-    if (name === 'Statuses') return <Statuses />;
-    if (name === 'Api') return <Api />;
-    return <NotFound onClick={() => navigate('/')} />;
-};
+// export const PageRenderer = ({ name }: Props) => {
+//     const navigate = useNavigate();
+//     if (name === 'All') return <HomeCard />;
+//     if (name === 'Services') return <ServicesCard />;
+//     if (name === 'Statuses') return <StatusesCard />;
+//     if (name === 'Api') return <ApiStatusCard />;
+//     return <NotFoundCard onClick={() => navigate('/')} />;
+// };
+
+export const PageRenderer = () => <></>;

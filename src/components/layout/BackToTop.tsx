@@ -26,7 +26,7 @@ function ScrollTop(props: ScrollTopProps) {
     const trigger = useScrollTrigger({
         target: window ? window() : undefined,
         disableHysteresis: true,
-        threshold: 150,
+        threshold: 100,
     });
   
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -36,6 +36,7 @@ function ScrollTop(props: ScrollTopProps) {
         if (anchor) {
             anchor.scrollIntoView({
                 block: 'center',
+                behavior: 'smooth'
             });
         }
     };

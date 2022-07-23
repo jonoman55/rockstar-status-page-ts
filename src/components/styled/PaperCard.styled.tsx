@@ -10,7 +10,7 @@ import { styled, Avatar, Box, IconButton } from '@mui/material';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
 
 import { StatusIcon } from '../shared';
-import { FetchImage } from '../../helpers';
+import { fetchImage } from '../../helpers';
 
 import type { StatusType } from '../../types';
 
@@ -30,10 +30,12 @@ export const Card = styled(MuiCard)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     marginBottom: theme.spacing(1),
     '& .MuiCardHeader-title': {
+        textAlign: 'right',
         color: theme.palette.primary.contrastText,
         paddingRight: theme.spacing(1),
     },
     '& .MuiCardHeader-subheader': {
+        textAlign: 'right',
         color: theme.palette.primary.contrastText,
         paddingRight: theme.spacing(1),
     },
@@ -73,7 +75,7 @@ export const CardMedia = ({ id }: { id: number }) => (
         sx={{ objectFit: 'contain' }}
         component='img'
         height='198px'
-        image={FetchImage(id)}
+        image={fetchImage(id)}
         alt='logo'
     />
 );

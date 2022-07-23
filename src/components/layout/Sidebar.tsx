@@ -27,7 +27,7 @@ const ListSubheader = styled(MuiListSubheader)<ListSubheaderProps>(({ theme }) =
 interface SidebarListProps {
     anchor: Anchor;
     toggleDrawer: (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => void
-}
+};
 
 // TODO : Move to design folder
 // TODO : Convert Switch to styled component
@@ -131,8 +131,10 @@ const Sidebar = () => {
         <Box component='div'>
             {([matches ? 'left' : 'bottom'] as const).map((anchor: Anchor) => (
                 <Fragment key={anchor}>
-                    <IconButton size='large' onClick={toggleDrawer(true)} sx={{ ml: 1 }}>
-                        <MenuIcon fontSize='medium' sx={{ color: 'primary.contrastText' }} />
+                    <IconButton size='large' onClick={toggleDrawer(true)} sx={{
+                        ml: 1, color: 'primary.contrastText', '&:hover': { color: 'secondary.contrastText' }
+                    }}>
+                        <MenuIcon fontSize='medium' />
                     </IconButton>
                     <SwipeableDrawer
                         anchor={anchor}

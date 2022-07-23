@@ -6,7 +6,7 @@ interface Props {
 };
 
 // TODO : Convert to styled components
-export const NotFound = ({ onClick }: Props) => (
+export const NotFoundCard = ({ onClick }: Props) => (
     <Paper elevation={0} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: 'primary.main', minHeight: '83.8vh' }}>
         <Card sx={{ display: 'flex', height: '100%', flexDirection: 'column', bgcolor: 'primary.dark', minWidth: '250px' }}>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'nowrap' }}>
