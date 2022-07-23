@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useTheme, Avatar, Typography, CardHeader, CardActions, IconButton, Stack, Divider } from '@mui/material';
+import { useTheme, Avatar, Divider, CardHeader, CardActions, Typography, IconButton, Stack } from '@mui/material';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
 
 import { RockstarSpinner } from '../design';
@@ -13,20 +13,23 @@ import type { StatusType } from '../../types';
 
 // TODO : Make the Avatar and Refresh Button into reusable components
 // TODO : Fix typography styling (make font bolder)
-export const ApiCard = () => {
+export const ApiCard = (): JSX.Element => {
     const theme = useTheme();
 
-    const { data: apiStatus, isLoading, isFetching, refetch } = useGetApiStatusQuery('getApiStatus', {
-        refetchOnMountOrArgChange: true,
+    const { data: apiStatus, isLoading, refetch } = useGetApiStatusQuery('getApiStatus', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
 
-    const color = useMemo(() => {
-        if (!isLoading) return styleStatus(theme, apiStatus.status.toLowerCase() as StatusType);
-    }, [isLoading, apiStatus, theme]);
+    const status = useMemo<StatusType | undefined>(() => {
+        if (!isLoading) return apiStatus.status.toLowerCase() as StatusType;
+    }, [isLoading, apiStatus]);
 
-    return isLoading || isFetching ? <RockstarSpinner /> : (
+    const color = useMemo<string | undefined>(() => {
+        if (status) return styleStatus(theme, status);
+    }, [status, theme]);
+
+    return isLoading ? <RockstarSpinner /> : (
         <Container>
             <Card elevation={2} sx={{ width: '100%', color: 'primary.contrastText' }}>
                 <CardHeader
