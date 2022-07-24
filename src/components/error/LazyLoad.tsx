@@ -25,7 +25,7 @@ export const ErrorFallback = ({ error, resetErrorBoundary }: ErrorProps) => (
 
 const Container = styled(Box)(({ theme }) => ({
     height: '100vh',
-    width: '100%',
+    width: '100vw',
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'nowrap',

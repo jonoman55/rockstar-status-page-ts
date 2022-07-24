@@ -8,7 +8,12 @@ export const Container = styled(Box)(({ theme }) => ({
     justifyContent: 'center',
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
-    padding: theme.spacing(10.92),
+    [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(10.92),
+    },
+    [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(8, 2, 8, 2),
+    },
 }));
 
 export const Title = styled(Typography)(({ theme }) => ({
