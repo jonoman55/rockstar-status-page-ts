@@ -12,15 +12,16 @@ import {
 } from '../images'
 import { RockstarStatus } from '../constants';
 
-import type { StatusType } from '../types';
+import type { Indicator, StatusType } from '../types';
 
 export const styleStatus = (theme: Theme, status: StatusType) => {
-    switch (status) {
-        case 'up':
+    console.log(RockstarStatus.UP);
+    switch (status.toLowerCase()) {
+        case RockstarStatus.UP:
             return theme.custom.palette.brightGreen;
-        case 'limited':
+        case RockstarStatus.LIMITED:
             return theme.custom.palette.brightYellow;
-        case 'down':
+        case RockstarStatus.DOWN:
             return theme.custom.palette.brightRed;
         default:
             return theme.palette.common.black;
@@ -28,12 +29,12 @@ export const styleStatus = (theme: Theme, status: StatusType) => {
 };
 
 export const fetchStatus = (status: StatusType) => {
-    switch (status) {
-        case 'up':
+    switch (status.toLowerCase()) {
+        case RockstarStatus.UP:
             return 'UP';
-        case 'limited':
+        case RockstarStatus.LIMITED:
             return 'LIMITED';
-        case 'down':
+        case RockstarStatus.DOWN:
             return 'DOWN';
         default:
             return status;
@@ -62,11 +63,11 @@ export const fetchImage = (id: number) => {
 // TODO : Remove this after testing is done with getStatusesCount
 export const checkStatuses = (statuses: any[]) => {
     if (Object.values(statuses).every((s) => s?.status.toLowerCase() === 'up'))
-        return RockstarStatus.up;
+        return RockstarStatus.UP;
     if (statuses.map((s) => s?.status.toLowerCase() === 'limited'))
-        return RockstarStatus.limited;
+        return RockstarStatus.LIMITED;
     if (statuses.map((s) => s?.status.toLowerCase() === 'down'))
-        return RockstarStatus.down;
+        return RockstarStatus.DOWN;
 };
 
 /**
@@ -80,12 +81,7 @@ export const getStatusesCount = (statuses: RockstarStatus[]) => {
         .entries()
         .maxBy(lodash.last)
     );
-};
-
-interface Indicator {
-    key: number;
-    value: string;
-};
+}; 
 
 export const fetchStatusByCount = (statuses: any[]) => {
     const count = lodash.countBy(statuses, 'status');

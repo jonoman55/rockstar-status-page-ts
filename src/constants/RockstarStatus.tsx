@@ -1,5 +1,5 @@
 export enum RockstarStatus {
-    'up',
-    'down',
-    'limited'
+    UP = 'up',
+    DOWN = 'down',
+    LIMITED = 'limited'
 };

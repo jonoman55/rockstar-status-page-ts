@@ -9,7 +9,7 @@ const Statuses = lazy(() => import("../pages/StatusesPage"));
 const Api = lazy(() => import("../pages/ApiPage"));
 const NotFound = lazy(() => import("../pages/NotFoundPage"));
 
-// TODO : Add :id routes for Statuses and Services
+// TODO : Add /service/:id page once implemented
 const Routes = () => (
     <Router>
         <Layout>
@@ -18,6 +18,7 @@ const Routes = () => (
                 <Route path="/all" element={<Home />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/statuses" element={<Statuses />} />
+                <Route path="/service/:id" element={<div>Service Page</div>} />
                 <Route path="/api" element={<Api />} />
                 <Route path="*" element={<NotFound />} />
             </Switch>
