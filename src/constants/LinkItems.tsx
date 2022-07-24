@@ -1,4 +1,4 @@
-import { Home, Api, Apps, Storage, RssFeed, Lan, GitHub } from "@mui/icons-material";
+import { Home, Api, Apps, Storage, RssFeed, Lan, GitHub, Twitter } from "@mui/icons-material";
 
 import type { LinkItem } from "../types";
 
@@ -22,6 +22,9 @@ export const LinkItems: LinkItem[] = [
         id: 5, text: 'GitHub Repo', description: 'Source Code', icon: <GitHub />, type: 'external', href: `${process.env.REACT_APP_GITHUB_URL}`
     },
     {
-        id: 6, text: 'Home', description: 'Go Home', icon: <Home />, type: 'other'
+        id: 6, text: 'Rockstar Support', description: 'Rockstar Support Twitter Account', icon: <Twitter />, type: 'external', href: `${process.env.REACT_APP_ROCKSTAR_TWITTER_URL}`
+    },
+    {
+        id: 7, text: 'Home', description: 'Go Home', icon: <Home />, type: 'other'
     },
 ];

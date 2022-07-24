@@ -1,4 +1,4 @@
-import { Box, Icon } from '@mui/material';
+import { useTheme, Box, Icon } from '@mui/material';
 import {
     Store, 
     NotificationsActive as Alert,
@@ -21,122 +21,123 @@ import {
 import {
     AiOutlineCloudServer as CloudServices
 } from 'react-icons/ai';
-import whiteLogo from '../../images/svgs/white-logo.svg'
 
-// TODO : Fix icon colors
-// TODO : create enum for platform type in constants
+import { PlatformType } from '../../constants/PlatformType';
+import { RockstarWhiteLogo } from '../../images';
+
 export const PlatformIcon = ({ platform }: { platform: string; }) => {
+    const theme = useTheme();
     switch (platform) {
-        case 'PC':
+        case PlatformType.PC:
             return (
                 <Icon
                     component={PC}
-                    sx={{ color: 'custom.pc', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.pc, width: 'auto' }}
                 />
             );
-        case 'Xbox One':
+        case PlatformType.XboxOne:
             return (
                 <Icon
                     component={Xbox}
-                    sx={{ color: 'custom.xboxOne', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.xboxOne, width: 'auto' }}
                 />
             );
-        case 'Xbox 360':
+        case PlatformType.Xbox360:
             return (
                 <Icon
                     component={Xbox360}
-                    sx={{ color: 'custom.xbox360', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.xbox360, width: 'auto' }}
                 />
             );
-        case 'Xbox Cloud Gaming':
+        case PlatformType.XboxCloudGaming:
             return (
                 <Icon
                     component={Xbox}
-                    sx={{ color: 'custom.xboxCloud', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.xboxCloud, width: 'auto' }}
                 />
             );
-        case 'Xbox Series X/S': 
+        case PlatformType.XboxSeriesXS: 
             return (
                 <Icon
                     component={Xbox}
-                    sx={{ color: 'custom.green', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.green, width: 'auto' }}
             />
             )
-        case 'PS3':
+        case PlatformType.PS3:
             return (
                 <Icon
                     component={Playstation}
-                    sx={{ color: 'custom.playstation', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.playstation, width: 'auto' }}
                 />
             );
-        case 'PS4':
+        case PlatformType.PS4:
             return (
                 <Icon
                     component={Playstation}
-                    sx={{ color: 'custom.playstation', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.playstation, width: 'auto' }}
                 />
             );
-        case 'PS5':
+        case PlatformType.PS5:
             return (
                 <Icon
                     component={Playstation}
-                    sx={{ color: 'custom.playstation', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.playstation, width: 'auto' }}
                 />
             )
-        case 'Stadia':
+        case PlatformType.Stadia:
             return (
                 <Icon
                     component={Stadia}
-                    sx={{ color: 'custom.stadia', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.stadia, width: 'auto' }}
                 />
             );
-        case 'Alert':
+        case PlatformType.Alert:
             return (
                 <Icon
                     component={Alert}
-                    sx={{ color: 'custom.alert', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.alert, width: 'auto' }}
                 />
             );
-        case 'Authentication':
+        case PlatformType.Authentication:
             return (
                 <Icon
                     component={Authentication}
-                    sx={{ color: 'custom.auth', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.auth, width: 'auto' }}
                 />
             );
-        case 'Store':
+        case PlatformType.Store:
             return (
                 <Icon
                     component={Store}
-                    sx={{ color: 'custom.store', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.store, width: 'auto' }}
                 />
             );
-        case 'Cloud Services':
+        case PlatformType.CloudServices:
             return (
                 <Icon
                     component={CloudServices}
-                    sx={{ color: 'custom.cloud', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.cloud, width: 'auto' }}
                 />
             );
-        case 'Downloads':
+        case PlatformType.Downloads:
             return (
                 <Icon
                     component={Downloads}
-                    sx={{ color: 'custom.downloads', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.downloads, width: 'auto' }}
                 />
             );
-        case 'All Features':
+        case PlatformType.AllFeatures:
             return (
                 <Icon
                     component={AllFeatures}
-                    sx={{ color: 'custom.all', width: 'auto' }}
+                    sx={{ color: theme.custom.palette.all, width: 'auto' }}
                 />
             );
         default:
             return (
                 <Box
                     component='img'
-                    src={whiteLogo}
+                    src={RockstarWhiteLogo}
                     alt='defualt'
                     sx={{ color: 'primary.contrastText', width: '24px', height: '24px' }}
                 />

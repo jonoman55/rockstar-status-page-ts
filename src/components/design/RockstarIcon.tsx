@@ -1,6 +1,6 @@
 import { Box, SxProps } from '@mui/material';
 
-import logo from '../../images/svgs/logo.svg';
+import { RockstarLogo } from '../../images';
 
 interface Props {
     sx: SxProps;
@@ -9,7 +9,7 @@ interface Props {
 export const RockstarIcon = ({ sx }: Props) => (
     <Box
         component='img'
-        src={logo}
+        src={RockstarLogo}
         alt='rockstar-logo'
         sx={sx}
     />

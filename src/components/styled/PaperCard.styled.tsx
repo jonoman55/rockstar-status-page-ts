@@ -6,7 +6,7 @@ import {
     CardContent as MuiCardContent,
     CardActions as MuiCardActions
 } from '@mui/material';
-import { styled, Avatar, Box, IconButton } from '@mui/material';
+import { styled, Avatar, IconButton } from '@mui/material';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
 
 import { CardActionBox, StatusIcon } from '../shared';
@@ -97,18 +97,6 @@ export const StatusAvatar = ({ status }: { status: StatusType }) => (
         <StatusIcon status={status} />
     </Avatar>
 );
-
-export const IndicatorsContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: theme.spacing(2),
-    marginLeft: theme.spacing(0.25),
-    marginTop: theme.spacing(-4),
-}));
 
 export const CardFooter = () => (
     <CardActions sx={{ p: 0, display: 'flex' }}>

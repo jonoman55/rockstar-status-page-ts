@@ -14,8 +14,7 @@ import { RockstarStatus } from '../constants';
 
 import type { Indicator, StatusType } from '../types';
 
-export const styleStatus = (theme: Theme, status: StatusType) => {
-    console.log(RockstarStatus.UP);
+export const styleStatus = (theme: Theme, status: StatusType | string) => {
     switch (status.toLowerCase()) {
         case RockstarStatus.UP:
             return theme.custom.palette.brightGreen;

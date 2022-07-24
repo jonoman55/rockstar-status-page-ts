@@ -26,12 +26,6 @@ export type Platform = {
     status: string;
 };
 
-// type TService = Service;
-// type TStatus = {
-//     services_platforms: Platform[];
-// };
-// export type Status = TService & TStatus;
-
 export interface Status extends Service {
     services_platforms: Platform[];
 };
