@@ -1,19 +1,15 @@
 import { useMemo } from 'react';
-import { useTheme, Avatar, Divider, CardHeader, CardActions, Typography, IconButton, Stack } from '@mui/material';
-import { Refresh as RefreshIcon } from '@mui/icons-material';
+import { useTheme, Divider, Typography, Stack } from '@mui/material';
 
 import { RockstarSpinner } from '../design';
-import { StatusIcon, CardActionBox } from '../shared';
-import { Card, CardMedia } from '../styled/PaperCard.styled';
+import { Card, CardMedia, CardHeader, CardFooter } from '../styled/PaperCard.styled';
 import { Container, CardContent, Title, Updated, DetailsLink } from '../styled/ApiCard.styled';
 import { useGetApiStatusQuery } from '../../services/rockstarApi';
 import { styleStatus } from '../../helpers';
 
 import type { StatusType } from '../../types';
 
-// TODO : Make the Avatar and Refresh Button into reusable components
-// TODO : Fix typography styling (make font bolder)
-export const ApiCard = (): JSX.Element => {
+export const ApiCard = () => {
     const theme = useTheme();
 
     const { data: apiStatus, isLoading, refetch } = useGetApiStatusQuery('getApiStatus', {
@@ -31,20 +27,12 @@ export const ApiCard = (): JSX.Element => {
 
     return isLoading ? <RockstarSpinner /> : (
         <Container>
-            <Card elevation={2} sx={{ width: '100%', color: 'primary.contrastText' }}>
+            <Card elevation={2}>
                 <CardHeader
-                    avatar={
-                        <Avatar aria-label='status-icon' sx={{ bgcolor: 'inherit' }}>
-                            <StatusIcon status={`${apiStatus.status.toLowerCase() as StatusType}`} />
-                        </Avatar>
-                    }
-                    action={
-                        <IconButton aria-label='refresh' onClick={refetch} sx={{ color: 'primary.contrastText' }}>
-                            <RefreshIcon fontSize='large' />
-                        </IconButton>
-                    }
                     title='Rockstar Services Status API'
                     subheader={`${new Date().toLocaleString()}`}
+                    status={status as StatusType}
+                    onClick={refetch}
                 />
                 <CardMedia id={0} />
                 <CardContent>
@@ -61,9 +49,7 @@ export const ApiCard = (): JSX.Element => {
                         <Updated>{`Updated: ${apiStatus.updated}`}</Updated>
                     </DetailsLink>
                 </CardContent>
-                <CardActions sx={{ p: 0, display: 'flex' }}>
-                    <CardActionBox />
-                </CardActions>
+                <CardFooter />
             </Card>
         </Container>
     );

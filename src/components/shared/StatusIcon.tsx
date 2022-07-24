@@ -2,11 +2,7 @@ import { Error, OfflinePin, OfflineBolt } from '@mui/icons-material';
 
 import type { StatusType } from '../../types';
 
-interface Props {
-    status: StatusType;
-}
-
-export const StatusIcon = ({ status }: Props) => {
+export const StatusIcon = ({ status }: { status: StatusType; }) => {
     switch (status) {
         case 'up':
             return <OfflinePin fontSize='large' sx={{ color: (theme) => theme.custom.palette.brightGreen }} />;

@@ -9,7 +9,7 @@ import {
 import { styled, Avatar, Box, IconButton } from '@mui/material';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
 
-import { StatusIcon } from '../shared';
+import { CardActionBox, StatusIcon } from '../shared';
 import { fetchImage } from '../../helpers';
 
 import type { StatusType } from '../../types';
@@ -23,6 +23,8 @@ export const Paper = styled(MuiPaper)(({ theme }) => ({
 }));
 
 export const Card = styled(MuiCard)(({ theme }) => ({
+    height: '100%',
+    width: '100%',
     alignContent: 'flex-start',
     justifyContent: 'center',
     alignItems: 'center',
@@ -62,7 +64,7 @@ interface CardHeaderProps {
 
 export const CardHeader = ({ title, subheader, status, onClick }: CardHeaderProps) => (
     <MuiCardHeader
-        avatar={<AvatarStatusIcon status={status} />}
+        avatar={<StatusAvatar status={status} />}
         action={<RefreshButton onClick={onClick} />}
         title={title}
         subheader={subheader}
@@ -90,7 +92,7 @@ export const RefreshButton = ({ onClick }: RefreshButtonProps) => (
     </IconButton>
 );
 
-export const AvatarStatusIcon = ({ status }: { status: StatusType }) => (
+export const StatusAvatar = ({ status }: { status: StatusType }) => (
     <Avatar aria-label='status-icon' sx={{ bgcolor: 'inherit' }}>
         <StatusIcon status={status} />
     </Avatar>
@@ -107,3 +109,9 @@ export const IndicatorsContainer = styled(Box)(({ theme }) => ({
     marginLeft: theme.spacing(0.25),
     marginTop: theme.spacing(-4),
 }));
+
+export const CardFooter = () => (
+    <CardActions sx={{ p: 0, display: 'flex' }}>
+        <CardActionBox />
+    </CardActions>
+);
