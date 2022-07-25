@@ -1,1 +1,1 @@
-export * from './Statuses';
+export * from './';

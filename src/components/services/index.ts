@@ -1,2 +1,2 @@
-export * from './Services';
-export * from './Service';
+export * from './ServicesCard';
+export * from './ServiceDetailsCard';

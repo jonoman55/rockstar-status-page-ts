@@ -1,10 +1,14 @@
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { Paper } from '@mui/material';
 
+import { ServiceDetailsCard } from '../components';
+
+// TODO : Add page wrapper with ToggleButtonToolbar
 const StatusPage = () => {
     const { id } = useParams();
+    const serviceId = useMemo(() => parseInt(id as string), [id]);
     return (
-        <Paper>StatusPage {id}</Paper>
+        <ServiceDetailsCard id={serviceId} />
     );
 }
 

@@ -4,7 +4,7 @@ export * from './error';
 export * from './layout';
 // Page Components
 export * from './home/HomeCard';
-export * from './services/Services';
-export * from './services/Service';
-export * from './statuses/Statuses';
+export * from './services/ServicesCard';
+export * from './services/ServiceDetailsCard';
+export * from './statuses/StatusesCard';
 export * from './api/ApiCard';

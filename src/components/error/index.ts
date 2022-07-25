@@ -1,2 +1,2 @@
 export * from './LazyLoad';
-export * from './NotFound';
+export * from './NotFoundCard';
