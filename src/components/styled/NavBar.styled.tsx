@@ -1,20 +1,24 @@
+import { Link } from 'react-router-dom';
 import { styled, Box, AppBar as MuiAppBar, ToggleButtonGroup as MuiToggleButtonGroup, ToggleButton as MuiToggleButton, ToggleButtonProps } from '@mui/material';
 
 export const AppBar = styled(MuiAppBar)(({
     backgroundColor: 'transparent',
 }));
 
-export const HomeButton = styled(MuiToggleButton)(({ theme }) => ({
+export const HomeButton = styled(({ ...props }: ToggleButtonProps) =>
+    <MuiToggleButton {...props} />
+)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     padding: theme.spacing(1),
     borderLeftStyle: 'none',
     '&.Mui-selected': {
-        color: theme.custom.palette.main,
+        backgroundColor: 'inherit',
+        color: theme.palette.primary.contrastText,
     },
     '&:hover': {
         color: theme.custom.palette.main,
     },
-}));
+})) as unknown as typeof Link | typeof MuiToggleButton;;
 
 export const ToggleButton = styled(({ ...props }: ToggleButtonProps) =>
     <MuiToggleButton {...props} />, {
@@ -40,7 +44,7 @@ export const ToggleButton = styled(({ ...props }: ToggleButtonProps) =>
             color: theme.custom.palette.main,
         },
     }),
-}));
+})) as unknown as typeof Link | typeof MuiToggleButton;
 
 export const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
     display: 'inline-flex',

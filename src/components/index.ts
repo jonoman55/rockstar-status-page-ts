@@ -2,6 +2,7 @@
 export * from './shared';
 export * from './error';
 export * from './layout';
+export * from './design';
 // Page Components
 export * from './home/HomeCard';
 export * from './services/ServicesCard';
