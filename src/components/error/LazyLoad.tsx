@@ -15,7 +15,7 @@ interface ErrorProps {
     resetErrorBoundary: () => void;
 };
 
-export const ErrorFallback = ({ error, resetErrorBoundary }: ErrorProps) => (
+export const ErrorFallback = ({ error, resetErrorBoundary }: ErrorProps): JSX.Element => (
     <ErrorContainer component='div' role='alert'>
         <Typography component='p' variant='body1' fontSize='large' gutterBottom>Something went wrong:</Typography>
         <Typography component='pre' color='error' sx={{ p: 2, whiteSpace: 'pre-line' }}>{error.message}</Typography>
@@ -45,7 +45,7 @@ const Loader = styled(CircularProgress)(({ theme }) => ({
     color: theme.custom.palette.main,
 }));
 
-export const LoadingContainer = () => (
+export const LoadingContainer = (): JSX.Element => (
     <Container component='main'>
         <Loader />
         <Text variant='h5'>

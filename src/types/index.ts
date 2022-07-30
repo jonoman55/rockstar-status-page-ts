@@ -2,7 +2,32 @@ import { ReactNode } from "react";
 
 export type ChildProps = ReactNode | JSX.Element | JSX.Element[];
 
-export type StatusType = 'up' | 'down' | 'limited'; 
+export type DivRef = React.LegacyRef<HTMLDivElement> | undefined;
+
+export type StatusType = 'up' | 'down' | 'limited' | undefined;
+
+export type ZoomStyles = {
+    position: string;
+    bottom: number;
+    right: number;
+}
+
+export type All = {
+    services: Service[];
+    statuses: Status[];
+    updated: string;
+};
+
+export type Api = {
+    message: string
+    status: string
+    success: boolean;
+    updated: string
+};
+
+export type Updated = {
+    updated: string;
+};
 
 export type Service = {
     id: number;

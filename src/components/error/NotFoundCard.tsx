@@ -5,7 +5,7 @@ interface Props {
     onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
 };
 
-export const NotFoundCard = ({ onClick }: Props) => (
+export const NotFoundCard: React.FC<Props> = ({ onClick }) => (
     <Paper>
         <Card>
             <CardContent>

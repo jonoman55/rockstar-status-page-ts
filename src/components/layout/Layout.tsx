@@ -9,7 +9,7 @@ interface Props {
     children: ChildProps;
 };
 
-export const Layout = (props: Props) => (
+export const Layout: React.FC<Props> = (props) => (
     <Body>
         <Header />
         <Container component='main'>

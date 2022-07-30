@@ -30,3 +30,10 @@ export const LinkBox = styled(({ ...props }: BoxProps) =>
     alignItems: 'center',
     justifyContent: 'space-between',
 })) as unknown as typeof Link;
+
+export const titleStyles = {
+    mx: 2,
+    '&:hover': {
+        color: 'secondary.contrastText'
+    },
+};

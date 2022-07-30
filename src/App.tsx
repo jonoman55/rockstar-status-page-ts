@@ -10,7 +10,7 @@ import { useAppSelector } from './app/hooks';
 
 const Routes = lazy(() => import('./routes'));
 
-const App = () => {
+const App: React.FC = () => {
     const theme = useAppSelector((state) => state.theme);
     const activeTheme = createTheme(theme.darkTheme ? darkTheme : lightTheme);
     return (

@@ -3,12 +3,12 @@ import { Box } from '@mui/material';
 import Sidebar from './Sidebar';
 import { XLFlexText, ToolTip } from '../controls';
 import { ThemeSwitch, RockstarIcon } from '../design';
-import { AppBar, Toolbar, LinkBox } from '../styled/Header.styled';
+import { AppBar, Toolbar, LinkBox, titleStyles } from '../styled/Header.styled';
 import { appActions } from '../../reducers/appSlice';
 import { toggleTheme } from '../../reducers/themeSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
-const Header = () => {
+const Header: React.FC = () => {
     const dispatch = useAppDispatch();
     const { darkTheme } = useAppSelector((state) => state.theme);
     return (
@@ -20,7 +20,7 @@ const Header = () => {
                 <ToolTip title='Home' placement='bottom' component={
                     <LinkBox to='/all' onClick={() => dispatch(appActions.setTabValue(0))}>
                         <RockstarIcon sx={{ height: 50, width: 50, my: 0.5, ml: 1 }} />
-                        <XLFlexText fontWeight={600} textAlign='center' sx={{ mx: 2, '&:hover': { color: 'secondary.contrastText' } }}>
+                        <XLFlexText fontWeight={600} textAlign='center' sx={titleStyles}>
                             Rockstar Status Page
                         </XLFlexText>
                     </LinkBox>}

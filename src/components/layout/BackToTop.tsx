@@ -2,9 +2,9 @@ import React from 'react';
 import { styled, useScrollTrigger, Zoom, Box, Fab } from '@mui/material';
 import { KeyboardArrowUp } from '@mui/icons-material';
 
-import type { ChildProps } from '../../types';
+import type { ChildProps, ZoomStyles } from '../../types';
 
-const zoomBoxStyles = {
+const zoomBoxStyles: ZoomStyles = {
     position: 'fixed',
     bottom: 100,
     right: 15,
@@ -20,10 +20,10 @@ interface ScrollTopProps {
     window?: () => Window;
 };
 
-function ScrollTop(props: ScrollTopProps) {
+function ScrollTop(props: ScrollTopProps): JSX.Element {
     const { children, window } = props;
 
-    const trigger = useScrollTrigger({
+    const trigger: boolean = useScrollTrigger({
         target: window ? window() : undefined,
         disableHysteresis: true,
         threshold: 100,
@@ -54,7 +54,7 @@ interface Props {
     children: ChildProps;
 };
 
-const BackToTop = (props: Props) => (
+const BackToTop: React.FC<Props> = (props) => (
     <ScrollTop {...props}>
         <UpIcon color='primary' size='small' aria-label='scroll back to top'>
             <KeyboardArrowUp />

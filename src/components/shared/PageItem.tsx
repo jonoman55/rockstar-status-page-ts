@@ -1,13 +1,14 @@
+import React, { Fragment } from 'react';
+
 import { TabNav } from '../design';
 
 import { ChildProps } from '../../types';
-import { Fragment } from 'react';
 
 interface Props {
     children: ChildProps;
 };
 
-export const PageItem = (props: Props) => (
+export const PageItem: React.FC<Props> = (props) => (
     <Fragment>
         <TabNav />
         {props.children}

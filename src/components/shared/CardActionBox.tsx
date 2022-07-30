@@ -17,7 +17,7 @@ const Content = styled(Box)(({
     width: '16px',
 }));
 
-export const CardActionBox = () => (
+export const CardActionBox: React.FC = () => (
     <Container>
         <Content />
     </Container>

@@ -15,4 +15,5 @@
 //     return <NotFoundCard onClick={() => navigate('/')} />;
 // };
 
+// TODO : Remove from project
 export const PageRenderer = () => <></>;

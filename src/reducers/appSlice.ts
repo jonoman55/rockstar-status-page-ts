@@ -1,5 +1,4 @@
-// DOCS : https://redux-toolkit.js.org/usage/usage-with-typescript#createslice
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AppState {
     tabValue: number;
@@ -8,17 +7,17 @@ interface AppState {
 
 const initialState: AppState = {
     tabValue: 0,
-    drawerOpen: false
+    drawerOpen: false,
 };
 
 const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
-        setTabValue: (state, action) => {
+        setTabValue: (state: AppState, action: PayloadAction<number>) => {
             state.tabValue = action.payload;
         },
-        setDrawerAnchor: (state, action) => {
+        setDrawerAnchor: (state: AppState, action: PayloadAction<boolean>) => {
             state.drawerOpen = action.payload;
         },
     },

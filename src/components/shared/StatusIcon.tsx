@@ -2,7 +2,7 @@ import { Error, OfflinePin, OfflineBolt } from '@mui/icons-material';
 
 import type { StatusType } from '../../types';
 
-export const StatusIcon = ({ status }: { status: StatusType; }) => {
+export const StatusIcon: React.FC<{ status: StatusType; }> = ({ status }) => {
     switch (status) {
         case 'up':
             return <OfflinePin fontSize='large' sx={{ color: (theme) => theme.custom.palette.brightGreen }} />;

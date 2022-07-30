@@ -24,7 +24,7 @@ interface Props {
     children: ChildProps;
 }
 
-export const Body = (props: Props) => {
+export const Body: React.FC<Props> = (props) => {
     const theme = useTheme();
     const body = document.querySelector('body') as HTMLBodyElement;
     body.style.backgroundColor = theme.palette.background.paper;

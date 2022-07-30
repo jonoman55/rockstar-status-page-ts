@@ -1,6 +1,6 @@
 import { Image, ImageBox } from "../styled/NotFoundCard.styled";
 
-export const NotFoundImage = () => (
+export const NotFoundImage: React.FC = () => (
     <ImageBox>
         <Image />
     </ImageBox>

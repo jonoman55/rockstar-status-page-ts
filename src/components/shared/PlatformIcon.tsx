@@ -25,7 +25,7 @@ import {
 import { PlatformType } from '../../constants/PlatformType';
 import { RockstarWhiteLogo } from '../../images';
 
-export const PlatformIcon = ({ platform }: { platform: string; }) => {
+export const PlatformIcon: React.FC<{ platform: string; }> = ({ platform }) => {
     const theme = useTheme();
     switch (platform) {
         case PlatformType.PC:

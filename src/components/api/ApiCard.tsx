@@ -9,7 +9,7 @@ import { styleStatus } from '../../helpers';
 
 import type { StatusType } from '../../types';
 
-export const ApiCard = () => {
+export const ApiCard: React.FC = () => {
     const theme = useTheme();
 
     const { data: apiStatus, isLoading, refetch } = useGetApiStatusQuery('getApiStatus', {
@@ -17,12 +17,20 @@ export const ApiCard = () => {
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
 
-    const status = useMemo<StatusType | undefined>(() => {
-        if (!isLoading) return apiStatus.status.toLowerCase() as StatusType;
+    const status = useMemo<StatusType>(() => {
+        let result: StatusType;
+        if (!isLoading && apiStatus) {
+            result = apiStatus?.status?.toLowerCase() as StatusType;
+        }
+        return result;
     }, [isLoading, apiStatus]);
 
-    const color = useMemo<string | undefined>(() => {
-        if (status) return styleStatus(theme, status);
+    const color = useMemo<string>(() => {
+        let result: string = '#000';
+        if (status) {
+            result = styleStatus(theme, status);
+        }
+        return result;
     }, [status, theme]);
 
     return isLoading ? <RockstarSpinner /> : (
@@ -37,16 +45,16 @@ export const ApiCard = () => {
                 <CardMedia id={0} />
                 <CardContent>
                     <DetailsLink href={`${process.env.REACT_APP_BACKEND_API_URL}`} target='_blank'>
-                        <Title variant='h6'>{apiStatus.message}</Title>
+                        <Title variant='h6'>{apiStatus?.message}</Title>
                         <Divider sx={{ pb: 1 }} />
                         <Stack direction='row' sx={{ pt: 2 }}>
                             <Typography sx={{ pr: 1 }}>Status:</Typography>
                             <Typography variant='body1' sx={{ color: color, fontWeight: 'bold' }}>
-                                {apiStatus.status}
+                                {apiStatus?.status}
                             </Typography>
                         </Stack>
                         <Divider sx={{ pt: 2 }} />
-                        <Updated>{`Updated: ${apiStatus.updated}`}</Updated>
+                        <Updated>{`Updated: ${apiStatus?.updated}`}</Updated>
                     </DetailsLink>
                 </CardContent>
                 <CardFooter />

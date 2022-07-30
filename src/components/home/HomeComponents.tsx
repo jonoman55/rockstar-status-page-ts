@@ -30,7 +30,7 @@ import type { Status, Platform, StatusType } from '../../types';
 const IndicatorItem = ({ status }: { status: StatusType }) => (
     <IndicatorPaper>
         <StatusIcon status={status} />
-        <IndicatorStatus>{status.toUpperCase()}</IndicatorStatus>
+        <IndicatorStatus>{status?.toUpperCase()}</IndicatorStatus>
     </IndicatorPaper>
 );
 

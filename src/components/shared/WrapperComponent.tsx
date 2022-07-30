@@ -1,7 +1,7 @@
-import React from "react";
+import React, { forwardRef, useMemo } from "react";
 import { Link as RouterLink, LinkProps } from "react-router-dom";
 
-import type { ChildProps } from "../../types";
+import type { ChildProps, DivRef } from "../../types";
 
 interface WrappedLinkProps {
     icon: ChildProps;
@@ -10,10 +10,10 @@ interface WrappedLinkProps {
     children: ChildProps;
 };
 
-export function WrappedLink(props: WrappedLinkProps) {
-    const CustomLink = React.useMemo(
+export function WrappedLink(props: WrappedLinkProps): JSX.Element {
+    const CustomLink = useMemo(
         () =>
-            React.forwardRef<HTMLAnchorElement, Omit<LinkProps, 'to'>>(function Link(
+            forwardRef<HTMLAnchorElement, Omit<LinkProps, 'to'>>(function Link(
                 linkProps,
                 ref,
             ) {
@@ -29,10 +29,6 @@ interface ComponentProps {
     children: ChildProps;
 };
 
-type Ref = React.LegacyRef<HTMLDivElement> | undefined;
-
-export const WrapperComponent = React.forwardRef(
-    function Component({ other, children }: ComponentProps, ref: Ref) {
-        return <div {...other} ref={ref}>{children}</div>;
-    }
-);
+export const WrapperComponent = forwardRef(function Component({ other, children }: ComponentProps, ref: DivRef) {
+    return <div {...other} ref={ref}>{children}</div>;
+});

@@ -1,1 +1,2 @@
-export * from './';
+export * from './StatusesCard';
+export * from './StatusesComponents';
