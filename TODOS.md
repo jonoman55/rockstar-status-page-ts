@@ -10,6 +10,6 @@
 - [ ] Add a page Overall Status page with DataGrid component with all statuses
 - [ ] Add banner for when there is a known outage
 - [ ] Fix loading state
-	- clicking from tab to tab is not smooth
+	- Clicking from tab to tab is not smooth
 - [ ] Updating routing to include /service/:id routes (click back doesn't work)
 - [ ] Deploy to Netlify
