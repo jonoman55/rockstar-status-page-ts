@@ -36,7 +36,6 @@ export const XSFlexText = styled(Typography)(({ theme }) => ({
     },
 }));
 
-// TODO : Fix font sizes
 export const XLFlexText = styled(Typography)(({ theme }) => ({
     [theme.breakpoints.up('xs')]: {
         fontSize: 10,

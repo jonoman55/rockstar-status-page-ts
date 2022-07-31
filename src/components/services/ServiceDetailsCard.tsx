@@ -7,7 +7,7 @@ import { Footer, HtmlMessage, CardImage, StatusesList } from './ServiceDetailsCo
 import { CardHeader } from '../styled/PaperCard.styled';
 import { Card, CardContent, Paper } from '../styled/ServiceDetailsCard.styled';
 import { useGetStatusQuery } from '../../services/rockstarApi';
-import { RockstarStatus } from '../../constants';
+import { fetchStatus } from '../../helpers';
 
 import type { Service, StatusType } from '../../types';
 
@@ -36,23 +36,10 @@ export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetc
     const serviceStatus = useMemo<StatusType>(() => {
         let result: StatusType;
         if (service) {
-            result = service?.status?.toLowerCase() as StatusType;
+            result = fetchStatus(service?.status?.toLowerCase() as StatusType);
         }
         return result;
     }, [service]);
-
-    const overallStatus = useMemo<RockstarStatus>(() => {
-        if (statusStatus === 'up' && serviceStatus === 'up') {
-            return RockstarStatus.UP;
-        }
-        if (statusStatus === 'down' && serviceStatus === 'down') {
-            return RockstarStatus.DOWN;
-        }
-        if (statusStatus === 'limited' && serviceStatus === 'limited') {
-            return RockstarStatus.LIMITED;
-        }
-        return RockstarStatus.UP;
-    }, [serviceStatus, statusStatus]);
 
     const handleClick = useCallback(() => {
         refetch();
@@ -65,7 +52,7 @@ export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetc
                 <CardHeader
                     title={`${data?.name}`}
                     subheader={`${new Date().toLocaleString()}`}
-                    status={overallStatus as StatusType}
+                    status={serviceStatus as StatusType}
                     onClick={handleClick}
                 />
                 <CardImage id={serviceId} />

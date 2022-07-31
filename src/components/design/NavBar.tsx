@@ -23,11 +23,15 @@ export const NavBar: React.FC<{ services: Service[]; }> = ({ services }) => {
         dispatch(appActions.setNavbarAlignment(newAlignment));
     };
 
+    const handleClick = () => {
+        dispatch(appActions.setTabValue(0));
+    };
+
     return (
         <AppBar position='static'>
             <ButtonContainer>
                 <ToggleButtonGroup value={navbarAlignment} exclusive fullWidth onChange={handleChange}>
-                    <HomeButton LinkComponent={NavLink} to='/' value='Home'>
+                    <HomeButton LinkComponent={NavLink} to='/all' value='Home' onClick={handleClick}>
                         <HomeIcon />
                     </HomeButton>
                     {services?.map((service: Service, index: number) => (

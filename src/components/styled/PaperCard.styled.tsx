@@ -20,6 +20,7 @@ export const Paper = styled(MuiPaper)(({ theme }) => ({
     padding: theme.spacing(2),
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
+    borderRadius: 0,
 }));
 
 export const Card = styled(MuiCard)(({ theme }) => ({

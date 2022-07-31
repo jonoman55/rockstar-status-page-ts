@@ -3,7 +3,6 @@ import { styled, useTheme, useMediaQuery, Box, BoxProps } from '@mui/material';
 
 import { ChildProps } from '../../types';
 
-// TODO : Fix minHeight after main content is populated
 export const FlexContainer = styled(({ ...props }: BoxProps) => (
     <Box {...props} component='main' />
 ))(({ theme }) => ({

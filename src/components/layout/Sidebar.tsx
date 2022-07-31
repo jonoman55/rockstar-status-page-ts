@@ -1,40 +1,28 @@
 import { Fragment } from 'react';
-import {
-    styled, Box, IconButton, SwipeableDrawer, Switch, Divider,
-    List, ListItem, ListItemButton, ListItemIcon, ListItemText,
-    ListSubheader as MuiListSubheader, ListSubheaderProps
-} from '@mui/material';
+import { Box, SwipeableDrawer, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { DarkMode, LightMode, Menu as MenuIcon } from '@mui/icons-material';
 
 import { ToolTip } from '../controls';
-import { LinkItems } from '../../constants';
+import { ListSubheader, IconButton, Switch } from '../styled/Sidebar.styled';
 import { appActions } from '../../reducers/appSlice';
 import { toggleTheme } from '../../reducers/themeSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useBreakpoint } from '../../hooks';
+import { LinkItems } from '../../constants';
 
 import type { LinkItem, Anchor } from '../../types';
-
-const ListSubheader = styled(MuiListSubheader)<ListSubheaderProps>(({ theme }) => ({
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.mode === 'dark'
-        ? theme.palette.background.paper
-        : theme.palette.primary.dark,
-}));
 
 interface SidebarListProps {
     anchor: Anchor;
     toggleDrawer: (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => void
 };
 
-// TODO : Move to design folder
-// TODO : Convert Switch to styled component
 const SidebarList = ({ anchor, toggleDrawer }: SidebarListProps) => {
     const dispatch = useAppDispatch();
     const matches = useBreakpoint('sm', 'up');
+
     const { darkTheme } = useAppSelector((state) => state.theme);
+    
     return (
         <Box
             sx={{ width: anchor === 'bottom' ? 'auto' : 250 }}
@@ -80,26 +68,13 @@ const SidebarList = ({ anchor, toggleDrawer }: SidebarListProps) => {
                         primary={darkTheme ? 'Dark Mode' : 'Light Mode'}
                         sx={{ color: 'primary.contrastText' }}
                     />
-                    <ToolTip title={`Toggle ${!darkTheme ? 'Dark Mode' : 'Light Mode'}`} placement={matches ? 'right' : 'top'} component={
+                    <ToolTip title={`Toggle ${darkTheme ? 'Light Mode' : 'Dark Mode'}`} placement={matches ? 'right' : 'top'} component={
                         <Switch
                             edge="end"
                             onChange={() => dispatch(toggleTheme())}
                             checked={darkTheme}
                             inputProps={{
                                 'aria-labelledby': 'switch-list-label-theme',
-                            }}
-                            sx={{
-                                '& .MuiSwitch-thumb': {
-                                    color: (theme) => theme.palette.mode === 'dark'
-                                        ? theme.custom.palette.main
-                                        : theme.palette.common.black,
-                                },
-                                '& .Mui-checked+.MuiSwitch-track': {
-                                    opacity: 1,
-                                    bgcolor: (theme) => theme.palette.mode === 'dark'
-                                        ? '#8796A5'
-                                        : '#aab4be',
-                                },
                             }}
                         />} />
                 </ListItem>
@@ -131,9 +106,7 @@ const Sidebar = () => {
         <Box component='div'>
             {([matches ? 'left' : 'bottom'] as const).map((anchor: Anchor) => (
                 <Fragment key={anchor}>
-                    <IconButton size='large' onClick={toggleDrawer(true)} sx={{
-                        ml: 1, color: 'primary.contrastText', '&:hover': { color: 'secondary.contrastText' }
-                    }}>
+                    <IconButton size='large' onClick={toggleDrawer(true)}>
                         <MenuIcon fontSize='medium' />
                     </IconButton>
                     <SwipeableDrawer

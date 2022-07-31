@@ -14,6 +14,12 @@ import { RockstarStatus } from '../constants';
 
 import type { Indicator, StatusType } from '../types';
 
+/**
+ * Style Status
+ * @param theme MUI Theme
+ * @param status Status Type
+ * @returns Corresponding Color of Status Type
+ */
 export const styleStatus = (theme: Theme, status: StatusType | string) => {
     switch (status?.toLowerCase()) {
         case RockstarStatus.UP:
@@ -27,19 +33,11 @@ export const styleStatus = (theme: Theme, status: StatusType | string) => {
     };
 };
 
-export const fetchStatus = (status: StatusType) => {
-    switch (status?.toLowerCase()) {
-        case RockstarStatus.UP:
-            return 'UP';
-        case RockstarStatus.LIMITED:
-            return 'LIMITED';
-        case RockstarStatus.DOWN:
-            return 'DOWN';
-        default:
-            return status;
-    };
-};
-
+/**
+ * Fetch Rockstar Image
+ * @param id Service ID
+ * @returns Corresponding Logo
+ */
 export const fetchImage = (id: number) => {
     switch (id) {
         case 1:
@@ -59,7 +57,40 @@ export const fetchImage = (id: number) => {
     };
 };
 
-// TODO : Remove this after testing is done with getStatusesCount
+/**
+ * Fetch Rockstar Status
+ * @param status Status Type
+ * @returns up, limited, down or undefined
+ */
+ export const fetchStatus = (status: StatusType): StatusType => {
+    switch (status?.toLowerCase()) {
+        case 'up':
+            return RockstarStatus.UP;
+        case 'down':
+            return RockstarStatus.LIMITED;
+        case 'limited':
+            return RockstarStatus.DOWN;
+        default:
+            return undefined;
+    };
+};
+
+/**
+ * Get The Hightest Rockstar Status Count
+ * @param statuses RockstarStatus
+ * @returns The greatest status count
+ */
+ export const getStatusesCount = (statuses: RockstarStatus[]) => {
+    return lodash.head(lodash(statuses)
+        .countBy()
+        .entries()
+        .maxBy(lodash.last)
+    );
+}; 
+
+/**
+ * @deprecated Use getStatusesCount
+ */
 export const checkStatuses = (statuses: any[]) => {
     if (Object.values(statuses).every((s) => s?.status.toLowerCase() === 'up'))
         return RockstarStatus.UP;
@@ -70,18 +101,8 @@ export const checkStatuses = (statuses: any[]) => {
 };
 
 /**
- * Get The Hightest Rockstar Status Count
- * @param statuses RockstarStatus
- * @returns The greatest status count
+ * @deprecated Use getStatusesCount
  */
-export const getStatusesCount = (statuses: RockstarStatus[]) => {
-    return lodash.head(lodash(statuses)
-        .countBy()
-        .entries()
-        .maxBy(lodash.last)
-    );
-}; 
-
 export const fetchStatusByCount = (statuses: any[]) => {
     const count = lodash.countBy(statuses, 'status');
     let indicator: Indicator = { key: 0, value: '' };
