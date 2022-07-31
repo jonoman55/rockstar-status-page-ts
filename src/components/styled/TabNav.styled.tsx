@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { styled, Tabs as MuiTabs, Tab as MuiTab, TabProps as MuiTabProps, Paper as MuiPaper, Box } from '@mui/material';
+import { styled, Tabs as MuiTabs, Tab as MuiTab, Paper as MuiPaper, Box } from '@mui/material';
 
 export const Paper = styled(MuiPaper)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
@@ -9,39 +8,6 @@ export const Paper = styled(MuiPaper)(({ theme }) => ({
     borderBottomLeftRadius: theme.shape.borderRadius,
     borderBottomRightRadius: theme.shape.borderRadius,
 }));
-
-// export const Tabs = styled(MuiTabs)(({ theme }) => ({
-//     '& .MuiTabs-indicator': {
-//         backgroundColor: theme.palette.mode === 'light'
-//             ? theme.palette.common.white
-//             : theme.custom.palette.main,
-//     },
-// }));
-
-// export const Tab = styled(({ ...props }: MuiTabProps) =>
-//     <MuiTab {...props} />
-// )(({ theme }) => ({
-//     padding: theme.spacing(0),
-//     color: theme.palette.primary.contrastText,
-//     fontWeight: 500,
-//     fontFamily: [
-//         'Roboto',
-//         'sans-serif',
-//     ].join(','),
-//     '&.Mui-selected': {
-//         color: theme.palette.mode === 'dark'
-//             ? theme.custom.palette.main
-//             : theme.palette.common.white,
-//         '&:hover': {
-//             color: theme.palette.action.disabledBackground
-//         },
-//     },
-//     '&:hover': {
-//         color: theme.palette.mode === 'dark'
-//             ? theme.custom.palette.main
-//             : theme.palette.common.white,
-//     },
-// }));
 
 interface TabsProps {
     children?: React.ReactNode;
