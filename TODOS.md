@@ -1,0 +1,15 @@
+# TODO's
+- [ ] Covert statuses (StatusTypes) to Chips
+- [ ] Update header with a better R* logo and remove text
+- [ ] Add a notification alerts for when service or platform statuses change
+- [ ] Add Nonfiction icon to header with badge indicator (number of services/platforms that aren't up).
+	- The icon should be clickable and open a dialog to display outages
+- [ ] Style ServiceDetails Page better and include last updated date from API
+- [ ] Update Status Indicators Grid styling
+- [ ] Update styling for the Services and Statuses Tabs
+- [ ] Add a page Overall Status page with DataGrid component with all statuses
+- [ ] Add banner for when there is a known outage
+- [ ] Fix loading state
+	- clicking from tab to tab is not smooth
+- [ ] Updating routing to include /service/:id routes (click back doesn't work)
+- [ ] Deploy to Netlify
