@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom';
-import { styled, Box, AppBar as MuiAppBar, ToggleButtonGroup as MuiToggleButtonGroup, ToggleButton as MuiToggleButton, ToggleButtonProps } from '@mui/material';
+import { NavLink, NavLinkProps } from 'react-router-dom';
+import { styled, Box, AppBar as MuiAppBar, AppBarProps, ToggleButtonGroup as MuiToggleButtonGroup, ToggleButton as MuiToggleButton, ToggleButtonProps } from '@mui/material';
 
-export const AppBar = styled(MuiAppBar)(({
+export const AppBar = styled(({ ...props }: AppBarProps) =>
+    <MuiAppBar component='div' {...props} />
+)(({
     backgroundColor: 'transparent',
 }));
 
@@ -18,33 +20,28 @@ export const HomeButton = styled(({ ...props }: ToggleButtonProps) =>
     '&:hover': {
         color: theme.custom.palette.main,
     },
-})) as unknown as typeof Link | typeof MuiToggleButton;;
+})) as unknown as typeof NavLink | typeof MuiToggleButton;;
 
-export const ToggleButton = styled(({ ...props }: ToggleButtonProps) =>
+export const ToggleButton = styled(({ ...props }: ToggleButtonProps & NavLinkProps) =>
     <MuiToggleButton {...props} />, {
     shouldForwardProp: (prop: PropertyKey) => prop !== 'selected'
 })(({ theme, selected }) => ({
     textAlign: 'center',
     padding: theme.spacing(1),
-    color: theme.palette.primary.contrastText,
     ...(!selected && {
-        '&:hover': {
-            color: theme.custom.palette.main,
-        },
-        '&.Mui-selected': {
-            color: theme.custom.palette.main,
-        },
+        color: theme.palette.primary.contrastText,
     }),
     ...(selected && {
-        color: theme.custom.palette.main,
         '&:hover': {
-            color: theme.palette.action.selected,
+            color: theme.palette.action.disabled,
         },
-        '&.Mui-selected': {
-            color: theme.custom.palette.main,
-        },
+        '&.active': {
+            color: theme.palette.mode === 'light'
+                ? theme.palette.common.white
+                : theme.custom.palette.main,
+        }
     }),
-})) as unknown as typeof Link | typeof MuiToggleButton;
+})) as unknown as typeof NavLink | typeof MuiToggleButton;
 
 export const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
     display: 'inline-flex',

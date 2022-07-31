@@ -5,7 +5,7 @@ import { useGetServicesQuery } from "../services/rockstarApi";
 import type { Service } from "../types";
 
 export const useServices = () => {
-    const { data: servicesResults, isLoading } = useGetServicesQuery('getNavbarServices');
+    const { data: servicesResults, isLoading, refetch } = useGetServicesQuery('getNavbarServices');
     const services = useMemo(() => {
         const results: Service[] = [];
         if (!isLoading && servicesResults) {
@@ -15,5 +15,5 @@ export const useServices = () => {
         }
         return results;
     }, [isLoading, servicesResults]);
-    return { isLoading, services };
+    return { isLoading, services, refetch };
 };

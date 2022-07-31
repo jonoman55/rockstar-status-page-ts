@@ -1,3 +1,4 @@
+import { useEffect, useMemo } from 'react';
 import { Box } from '@mui/material';
 
 import Sidebar from './Sidebar';
@@ -7,10 +8,24 @@ import { AppBar, Toolbar, LinkBox, titleStyles } from '../styled/Header.styled';
 import { appActions } from '../../reducers/appSlice';
 import { toggleTheme } from '../../reducers/themeSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { usePathname } from '../../hooks';
 
 const Header: React.FC = () => {
+    const pathname = usePathname();
     const dispatch = useAppDispatch();
+
     const { darkTheme } = useAppSelector((state) => state.theme);
+    const { servicePageId } = useAppSelector((state) => state.app);
+
+    const pageId = useMemo(() => parseInt(pathname.slice(-1)), [pathname]);
+
+    useEffect(() => {
+        if (servicePageId !== pageId) {
+            dispatch(appActions.setServicePageId(pageId));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pathname]);
+
     return (
         <AppBar position='static' elevation={2}>
             <Toolbar id='back-to-top-anchor' disableGutters>

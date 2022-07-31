@@ -4,9 +4,9 @@ import {
     CardHeader as MuiCardHeader,
     CardMedia as MuiCardMedia,
     CardContent as MuiCardContent,
-    CardActions as MuiCardActions
+    CardActions as MuiCardActions,
 } from '@mui/material';
-import { styled, Avatar, IconButton } from '@mui/material';
+import { styled, Avatar, IconButton, SxProps } from '@mui/material';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
 
 import { CardActionBox, StatusIcon } from '../shared';
@@ -62,7 +62,7 @@ interface CardHeaderProps {
     onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
 };
 
-export const CardHeader = ({ title, subheader, status, onClick }: CardHeaderProps) => (
+export const CardHeader: React.FC<CardHeaderProps> = ({ title, subheader, status, onClick }) => (
     <MuiCardHeader
         avatar={<StatusAvatar status={status} />}
         action={<RefreshButton onClick={onClick} />}
@@ -72,7 +72,7 @@ export const CardHeader = ({ title, subheader, status, onClick }: CardHeaderProp
     />
 );
 
-export const CardMedia = ({ id }: { id: number }) => (
+export const CardMedia: React.FC<{ id: number }> = ({ id }) => (
     <MuiCardMedia
         sx={{ objectFit: 'contain' }}
         component='img'
@@ -86,20 +86,20 @@ interface RefreshButtonProps {
     onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
 };
 
-export const RefreshButton = ({ onClick }: RefreshButtonProps) => (
+export const RefreshButton: React.FC<RefreshButtonProps> = ({ onClick }) => (
     <IconButton aria-label='refresh' onClick={onClick} sx={{ color: 'primary.contrastText' }}>
         <RefreshIcon fontSize='large' />
     </IconButton>
 );
 
-export const StatusAvatar = ({ status }: { status: StatusType }) => (
+export const StatusAvatar: React.FC<{ status: StatusType; }> = ({ status }) => (
     <Avatar aria-label='status-icon' sx={{ bgcolor: 'inherit' }}>
         <StatusIcon status={status} />
     </Avatar>
 );
 
-export const CardFooter = () => (
-    <CardActions sx={{ p: 0, display: 'flex' }}>
+export const CardFooter: React.FC<{ sx?: SxProps; }> = ({ sx }) => (
+    <CardActions sx={{ p: 0, display: 'flex', ...sx }}>
         <CardActionBox />
     </CardActions>
 );
