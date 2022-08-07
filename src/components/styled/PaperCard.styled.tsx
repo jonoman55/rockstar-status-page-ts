@@ -10,7 +10,7 @@ import { styled, Avatar, IconButton, SxProps } from '@mui/material';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
 
 import { CardActionBox, StatusIcon } from '../shared';
-import { fetchImage } from '../../helpers';
+import { fetchImage, fetchCardImage } from '../../helpers';
 
 import type { StatusType } from '../../types';
 
@@ -77,6 +77,16 @@ export const CardHeader: React.FC<CardHeaderProps> = ({ title, subheader, status
 );
 
 export const CardMedia: React.FC<{ id: number }> = ({ id }) => (
+    <MuiCardMedia
+        sx={{ objectFit: 'contain' }}
+        component='img'
+        height='198px'
+        image={fetchCardImage(id)}
+        alt='logo'
+    />
+);
+
+export const CardMediaBrandLogo: React.FC<{ id: number }> = ({ id }) => (
     <MuiCardMedia
         sx={{ objectFit: 'contain' }}
         component='img'

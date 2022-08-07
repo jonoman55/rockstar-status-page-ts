@@ -58,7 +58,7 @@ export const HomeCard: React.FC = () => {
                     status={overallStatus as StatusType}
                     onClick={refetch}
                 />
-                <CardMedia id={0} />
+                <CardMedia id={1} />
                 <CardContent>
                     <Title />
                     <Updated updated={`${updatedResult?.updated}`} />

@@ -34,7 +34,7 @@ export const ApiCard: React.FC = () => {
                     status={status as StatusType}
                     onClick={refetch}
                 />
-                <CardMedia id={0} />
+                <CardMedia id={4} />
                 <CardContent>
                     <DetailsLink href={`${process.env.REACT_APP_BACKEND_API_URL}`} target='_blank'>
                         <Title variant='h6'>{apiStatus?.message}</Title>

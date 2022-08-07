@@ -1,9 +1,11 @@
 import { useCallback, useMemo } from 'react';
 import { Divider, useTheme } from '@mui/material';
 
+import { FlexText } from '../controls';
 import { RockstarSpinner } from '../design';
 import { PlatformsListItem } from '../statuses';
 import { Footer, HtmlMessage, CardImage, StatusesList } from './ServiceDetailsComponents';
+import { UpdatedBox } from '../styled/StatusesCard.styled';
 import { CardHeader } from '../styled/PaperCard.styled';
 import { Card, CardContent, Paper } from '../styled/ServiceDetailsCard.styled';
 import { useGetStatusQuery } from '../../services/rockstarApi';
@@ -60,6 +62,13 @@ export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetc
                     <HtmlMessage message={data?.message} />
                 )}
                 <CardContent>
+                    <Divider sx={{ pb: 2 }} />
+                    <UpdatedBox>
+                        <FlexText sx={{ pr: 1 }}>Updated:</FlexText>
+                        <FlexText sx={{ pr: 1 }}>{new Date(service?.updated).toLocaleDateString()}</FlexText>
+                        <FlexText sx={{ pr: 1 }}>{' - '}</FlexText>
+                        <FlexText>{new Date(service?.updated).toLocaleTimeString()}</FlexText>
+                    </UpdatedBox>
                     <Divider sx={{ pb: 2 }} />
                     <StatusesList
                         status={statusStatus}

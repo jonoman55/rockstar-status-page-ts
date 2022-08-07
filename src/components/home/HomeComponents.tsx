@@ -5,7 +5,7 @@ import { sortBy } from 'lodash';
 
 import { PlatformIcon, StatusChip, StatusIcon } from '../shared';
 import { FlexText } from '../controls';
-import { CardMedia } from '../styled/PaperCard.styled';
+import { CardMediaBrandLogo } from '../styled/PaperCard.styled';
 import {
     CardImageBox,
     CardName,
@@ -70,7 +70,7 @@ export const Updated = ({ updated }: { updated: string }) => (
 
 export const Image = ({ id }: { id: number; }) => (
     <CardImageBox>
-        <CardMedia id={id} />
+        <CardMediaBrandLogo id={id} />
     </CardImageBox>
 );
 

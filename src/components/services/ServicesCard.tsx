@@ -51,7 +51,7 @@ export const ServicesCard: React.FC = () => {
                     status={overallStatus as StatusType}
                     onClick={refetch}
                 />
-                <CardMedia id={0} />
+                <CardMedia id={6} />
                 <CardContent>
                     {services && (
                         <ServicesGridItems

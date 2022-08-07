@@ -8,6 +8,7 @@ const Services = lazy(() => import("../pages/ServicesPage"));
 const Statuses = lazy(() => import("../pages/StatusesPage"));
 const Api = lazy(() => import("../pages/ApiPage"));
 const Service = lazy(() => import("../pages/ServicePage"));
+const Outages = lazy(() => import("../pages/ApiPage"));
 const NotFound = lazy(() => import("../pages/NotFoundPage"));
 
 const Routes = () => (
@@ -20,6 +21,7 @@ const Routes = () => (
                 <Route path="/statuses" element={<Statuses />} />
                 <Route path="/api" element={<Api />} />
                 <Route path="/service/:id" element={<Service />} />
+                <Route path="/outages" element={<Outages />} />
                 <Route path="*" element={<NotFound />} />
             </Switch>
         </Layout>

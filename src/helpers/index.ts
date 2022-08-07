@@ -8,7 +8,23 @@ import {
     SocialClub,
     RockstarSupport,
     RockstarWhiteLogo,
-    RockstarLogo
+    RockstarLogo,
+    EagleLogo,
+    StatusApiLogo,
+    ServicesLogo,
+    StatusesLogo,
+    RockstarGames,
+    RockstarIndia,
+    RockstarLeeds,
+    RockstarLondon,
+    RockstarLincoln,
+    RockstarNewEngland,
+    RockstarNorth,
+    RockstarSanDiego,
+    RockstarToronto,
+    RockstarVancouver,
+    RockstarVienna,
+    WhiteLogo
 } from '../images'
 import { RockstarStatus } from '../constants';
 
@@ -58,11 +74,53 @@ export const fetchImage = (id: number) => {
 };
 
 /**
+ * Fetch Card Image Logo
+ * @param id Image ID
+ * @returns Card Image
+ */
+export const fetchCardImage = (id: number) => {
+    switch (id) {
+        case 1:
+            return EagleLogo;
+        case 2:
+            return ServicesLogo;
+        case 3:
+            return StatusesLogo;
+        case 4:
+            return StatusApiLogo;
+        case 5:
+            return WhiteLogo;
+        case 6:
+            return RockstarIndia;
+        case 7:
+            return RockstarLincoln;
+        case 8:
+            return RockstarLondon;
+        case 9:
+            return RockstarLeeds;
+        case 10:
+            return RockstarNewEngland;
+        case 11:
+            return RockstarNorth;
+        case 12:
+            return RockstarSanDiego;
+        case 13:
+            return RockstarToronto;
+        case 14:
+            return RockstarVancouver;
+        case 15:
+            return RockstarVienna;
+        default:
+            return RockstarGames;
+    }
+};
+
+/**
  * Fetch Rockstar Status
  * @param status Status Type
  * @returns up, limited, down or undefined
  */
- export const fetchStatus = (status: StatusType): StatusType => {
+export const fetchStatus = (status: StatusType): StatusType => {
     switch (status?.toLowerCase()) {
         case 'up':
             return RockstarStatus.UP;
@@ -80,13 +138,13 @@ export const fetchImage = (id: number) => {
  * @param statuses RockstarStatus
  * @returns The greatest status count
  */
- export const getStatusesCount = (statuses: RockstarStatus[]) => {
+export const getStatusesCount = (statuses: RockstarStatus[]) => {
     return lodash.head(lodash(statuses)
         .countBy()
         .entries()
         .maxBy(lodash.last)
     );
-}; 
+};
 
 /**
  * @deprecated Use getStatusesCount

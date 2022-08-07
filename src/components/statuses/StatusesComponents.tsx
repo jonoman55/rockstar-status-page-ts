@@ -52,7 +52,7 @@ export const PlatformsListItem: React.FC<{ platforms: Platform[], theme: Theme; 
         {platforms && (
             <Fragment>
                 <Divider sx={{ pb: 0 }} />
-                <List component='div' sx={{ px: 0 }}>
+                <List component='div' sx={{ p: 0 }}>
                     {platforms?.map((p: Platform, idx: number) => (
                         <Fragment key={idx}>
                             <ListItem sx={{ pt: 2 }} disableGutters>
