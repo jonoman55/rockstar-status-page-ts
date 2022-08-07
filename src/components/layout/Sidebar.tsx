@@ -1,4 +1,5 @@
-import { Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, SwipeableDrawer, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { DarkMode, LightMode, Menu as MenuIcon } from '@mui/icons-material';
 
@@ -18,10 +19,21 @@ interface SidebarListProps {
 };
 
 const SidebarList = ({ anchor, toggleDrawer }: SidebarListProps) => {
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const matches = useBreakpoint('sm', 'up');
 
     const { darkTheme } = useAppSelector((state) => state.theme);
+
+    const handleClick = useCallback((id: number, href: string) => {
+        if (id !== 4) {
+            dispatch(appActions.setTabValue(id));
+            navigate(href);
+        } else {
+            navigate(href);
+            toggleDrawer(false);
+        }
+    }, [dispatch, navigate, toggleDrawer]);
     
     return (
         <Box
@@ -31,10 +43,10 @@ const SidebarList = ({ anchor, toggleDrawer }: SidebarListProps) => {
             onKeyDown={toggleDrawer(false)}
         >
             <List component='nav' subheader={<ListSubheader>Status Pages</ListSubheader>}>
-                {LinkItems.filter((i) => i.type !== 'external' && i.type !== 'other').map(({ text, icon, id }: LinkItem, index: number) => (
+                {LinkItems.filter((i) => i.type !== 'external' && i.type !== 'other').map(({ text, icon, id, href }: LinkItem, index: number) => (
                     <ListItem key={index} disablePadding>
                         <ToolTip title={text} placement={matches ? 'right' : 'top-end'} sx={{ width: '100%' }} component={
-                            <ListItemButton onClick={() => dispatch(appActions.setTabValue(id))}>
+                            <ListItemButton onClick={() => handleClick(id, href)}>
                                 <ListItemIcon sx={{ color: 'primary.contrastText' }}>
                                     {icon}
                                 </ListItemIcon>

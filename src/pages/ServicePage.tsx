@@ -6,7 +6,7 @@ import { useServices } from '../hooks';
 
 import type { Service } from '../types';
 
-const StatusPage = () => {
+const ServicePage = () => {
     const { id } = useParams();
     const serviceId = useMemo(() => parseInt(id as string), [id]);
     const { isLoading, services, refetch } = useServices();
@@ -33,4 +33,4 @@ const StatusPage = () => {
     );
 };
 
-export default StatusPage;
+export default ServicePage;

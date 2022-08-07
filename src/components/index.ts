@@ -9,3 +9,4 @@ export * from './services/ServicesCard';
 export * from './services/ServiceDetailsCard';
 export * from './statuses/StatusesCard';
 export * from './api/ApiCard';
+export * from './outages/OutagesCard';

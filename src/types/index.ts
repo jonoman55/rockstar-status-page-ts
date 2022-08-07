@@ -65,7 +65,7 @@ export type LinkItem = {
     description: string;
     icon: ChildProps;
     type: LinkType;
-    href?: string;
+    href: string;
 };
 
 export type Indicator = {
