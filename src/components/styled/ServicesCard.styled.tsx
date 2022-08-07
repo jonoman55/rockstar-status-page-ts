@@ -10,7 +10,7 @@ export const CardContent = styled(MuiCardContent)(({ theme }) => ({
 }));
 
 export const ServiceCard = styled(MuiCard)(({ theme }) => ({
-    minHeight: '325px',
+    minHeight: '350px',
     padding: theme.spacing(2),
     color: theme.palette.primary.contrastText,
     backgroundColor: theme.palette.mode === 'dark'

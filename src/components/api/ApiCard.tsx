@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 import { useTheme, Divider, Typography, Stack } from '@mui/material';
 
 import { RockstarSpinner } from '../design';
+import { StatusChip } from '../shared';
 import { Card, CardMedia, CardHeader, CardFooter } from '../styled/PaperCard.styled';
 import { Container, CardContent, Title, Updated, DetailsLink } from '../styled/ApiCard.styled';
 import { useGetApiStatusQuery } from '../../services/rockstarApi';
-import { styleStatus } from '../../helpers';
 
 import type { StatusType } from '../../types';
 
@@ -25,14 +25,6 @@ export const ApiCard: React.FC = () => {
         return result;
     }, [isLoading, apiStatus]);
 
-    const color = useMemo<string>(() => {
-        let result: string = '#000';
-        if (status) {
-            result = styleStatus(theme, status);
-        }
-        return result;
-    }, [status, theme]);
-
     return isLoading ? <RockstarSpinner /> : (
         <Container>
             <Card elevation={2}>
@@ -47,14 +39,12 @@ export const ApiCard: React.FC = () => {
                     <DetailsLink href={`${process.env.REACT_APP_BACKEND_API_URL}`} target='_blank'>
                         <Title variant='h6'>{apiStatus?.message}</Title>
                         <Divider sx={{ pb: 1 }} />
-                        <Stack direction='row' sx={{ pt: 2 }}>
-                            <Typography sx={{ pr: 1 }}>Status:</Typography>
-                            <Typography variant='body1' sx={{ color: color, fontWeight: 'bold' }}>
-                                {apiStatus?.status}
-                            </Typography>
+                        <Stack direction='row' spacing={4} sx={{ pt: 2, alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Typography variant='h6' sx={{ pr: 1 }}>Status</Typography>
+                            <StatusChip  status={`${apiStatus?.status}`} theme={theme} />
                         </Stack>
                         <Divider sx={{ pt: 2 }} />
-                        <Updated>{`Updated: ${apiStatus?.updated}`}</Updated>
+                        <Updated variant='h6'>{`Updated: ${apiStatus?.updated}`}</Updated>
                     </DetailsLink>
                 </CardContent>
                 <CardFooter />

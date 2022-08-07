@@ -1,6 +1,8 @@
 import { Fragment } from 'react';
 import { styled, useTheme, useMediaQuery, Box, BoxProps } from '@mui/material';
 
+import { RockstarBackground } from '../../images';
+
 import { ChildProps } from '../../types';
 
 export const FlexContainer = styled(({ ...props }: BoxProps) => (
@@ -26,6 +28,10 @@ interface Props {
 export const Body: React.FC<Props> = (props) => {
     const theme = useTheme();
     const body = document.querySelector('body') as HTMLBodyElement;
-    body.style.backgroundColor = theme.palette.background.paper;
+    body.style.backgroundColor = theme.palette.primary.dark;
+    body.style.backgroundImage = `url(${RockstarBackground})`;
+    body.style.backgroundSize = 'auto';
+    body.style.backgroundRepeat = 'repeat';
+    body.style.backgroundSize = '256px';
     return <Fragment>{props.children}</Fragment>;
 };

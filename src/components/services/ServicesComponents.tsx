@@ -1,11 +1,11 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Divider, Grid, Stack, Typography } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 
 import { FlexText } from '../controls';
-import { ServiceCard, UpdatedBox, Title, Status } from '../styled/ServicesCard.styled';
-import { styleStatus } from '../../helpers';
+import { StatusChip } from '../shared';
+import { ServiceCard, UpdatedBox, Title } from '../styled/ServicesCard.styled';
 
 import type { Service } from '../../types';
 
@@ -32,11 +32,9 @@ export const ServiceGridItem: React.FC<{ service: Service, theme: Theme }> = ({ 
     <ServiceCard>
         <Title variant='h6'>{service?.name}</Title>
         <Divider sx={{ py: 1 }} />
-        <Stack direction='row' sx={{ pt: 1 }}>
-            <Typography component='p' sx={{ pt: 1, pr: 1 }}>Status:</Typography>
-            <Status sx={{ color: `${styleStatus(theme, service?.status?.toLowerCase())}` }}>
-                {service?.status}
-            </Status>
+        <Stack direction='row' spacing={4} sx={{ pt: 1.5, alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography variant='h6' sx={{ pt: 1, pr: 1 }}>Status</Typography>
+            <StatusChip status={`${service?.status.toUpperCase()}`} theme={theme} />
         </Stack>
         {service?.message && (
             <ServiceMessage message={service?.message} />

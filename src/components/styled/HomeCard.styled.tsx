@@ -3,7 +3,7 @@ import { styled, darken, lighten } from '@mui/material/styles'
 import { Wifi as WifiIcon } from '@mui/icons-material';
 
 export const StatusCard = styled(Card)(({ theme }) => ({
-    minHeight: '625px',
+    minHeight: '675px',
     padding: theme.spacing(2),
     color: theme.palette.primary.contrastText,
     backgroundColor: theme.palette.mode === 'dark'
@@ -133,5 +133,4 @@ export const IndicatorTitle = styled(Typography)(({ theme }) => ({
 export const IndicatorStatus = styled(Typography)(({ theme }) => ({
     paddingTop: theme.spacing(1),
     textTransform: 'uppercase',
-    fontWeight: 'bold'
 }));

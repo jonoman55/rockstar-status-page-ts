@@ -47,5 +47,5 @@ export const UpdatedBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start',
-    padding: theme.spacing(1, 0),
+    paddingTop: theme.spacing(2.5),
 }));

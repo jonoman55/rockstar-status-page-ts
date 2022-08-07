@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useTheme, Box, Stack, Typography, Divider, Grid } from '@mui/material';
 import { sortBy } from 'lodash';
 
-import { PlatformIcon, StatusIcon } from '../shared';
+import { PlatformIcon, StatusChip, StatusIcon } from '../shared';
 import { FlexText } from '../controls';
 import { CardMedia } from '../styled/PaperCard.styled';
 import {
@@ -23,7 +23,6 @@ import {
     StatusCard
 } from '../styled/HomeCard.styled';
 import { RockstarStatus } from '../../constants';
-import { styleStatus } from '../../helpers';
 
 import type { Status, Platform, StatusType } from '../../types';
 
@@ -87,9 +86,10 @@ export const PlatformsList = memo(({ platforms }: { platforms: Platform[]; }) =>
                             <PlatformIcon platform={platform?.name} />
                             <Typography sx={{ pl: 2 }}>{platform?.name}</Typography>
                         </Box>
-                        <Typography sx={{ color: `${styleStatus(theme, platform?.status)}`, fontWeight: 'bold' }}>
-                            {platform?.status}
-                        </Typography>
+                        <StatusChip
+                            status={`${platform?.status}`}
+                            theme={theme}
+                        />
                     </PlatformWrapper>
                 </PlatformItem>
             ))}

@@ -1,8 +1,8 @@
 import { Box, CardActions, Stack, Theme, Typography } from '@mui/material';
 
-import { CardActionBox } from '../shared';
+import { CardActionBox, StatusChip } from '../shared';
 import { Image, ImageBox, StatusTextBox } from '../styled/ServiceDetailsCard.styled';
-import { fetchImage, styleStatus } from '../../helpers';
+import { fetchImage } from '../../helpers';
 
 import type { StatusType } from '../../types';
 
@@ -33,10 +33,11 @@ export const Footer: React.FC = () => (
 
 export const StatusText: React.FC<{ name: string; status: StatusType, theme: Theme; }> = ({ name, status, theme }) => (
     <StatusTextBox>
-        <Typography variant='h6' fontWeight='bold'>{name}:</Typography>
-        <Typography sx={{ color: `${styleStatus(theme, status)}`, pl: 2, fontWeight: 'bold', fontSize: 'large' }}>
-            {status?.toString()?.toUpperCase()}
-        </Typography>
+        <Typography variant='h6'>{name}</Typography>
+        <StatusChip
+            status={`${status?.toUpperCase()}`}
+            theme={theme}
+        />
     </StatusTextBox>
 );
 

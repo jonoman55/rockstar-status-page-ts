@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useTheme } from '@mui/material';
+import { Divider, useTheme } from '@mui/material';
 
 import { RockstarSpinner } from '../design';
 import { PlatformsListItem } from '../statuses';
@@ -60,6 +60,7 @@ export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetc
                     <HtmlMessage message={data?.message} />
                 )}
                 <CardContent>
+                    <Divider sx={{ pb: 2 }} />
                     <StatusesList
                         status={statusStatus}
                         service={serviceStatus}

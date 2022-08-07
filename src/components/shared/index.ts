@@ -4,3 +4,4 @@ export * from './WrapperComponent';
 export * from './CardActionBox';
 export * from './ExpandMore';
 export * from './PlatformIcon';
+export * from './StatusChip';

@@ -4,21 +4,24 @@ import { styled } from '@mui/material/styles';
 export const Paper = styled(MuiPaper)(({ theme }) => ({
     width: '100%',
     height: '100%',
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: 'transparent', //theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     padding: theme.spacing(4),
     borderRadius: 0,
-    boxShadow: 'none'
+    boxShadow: 'none',
+    [theme.breakpoints.up('xs')]: {
+        padding: theme.spacing(0),
+    },
 }));
 
 export const Card = styled(MuiCard)(({ theme }) => ({
     padding: theme.spacing(2),
+    margin: theme.spacing(4),
     alignContent: 'flex-start',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
-    marginBottom: theme.spacing(1),
     '& .MuiCardHeader-title': {
         color: theme.palette.primary.contrastText,
         paddingRight: theme.spacing(2),
@@ -59,10 +62,13 @@ export const CardContent = styled(MuiCardContent)(({ theme }) => ({
     flexWrap: 'wrap',
 }));
 
-export const StatusTextBox = styled(Box)(({
+export const StatusTextBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
-    justifyContent: 'center',
-    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    height: 'auto',
+    paddingTop: theme.spacing(1.5)
 }));

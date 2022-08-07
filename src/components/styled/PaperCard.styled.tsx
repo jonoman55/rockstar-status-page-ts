@@ -17,10 +17,13 @@ import type { StatusType } from '../../types';
 export const Paper = styled(MuiPaper)(({ theme }) => ({
     height: '100%',
     width: '100%',
-    padding: theme.spacing(2),
-    backgroundColor: theme.palette.primary.main,
+    padding: theme.spacing(6),
+    backgroundColor: 'transparent', //theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     borderRadius: 0,
+    [theme.breakpoints.up('xs')]: {
+        padding: theme.spacing(2),
+    },
 }));
 
 export const Card = styled(MuiCard)(({ theme }) => ({
@@ -31,7 +34,7 @@ export const Card = styled(MuiCard)(({ theme }) => ({
     alignItems: 'center',
     backgroundColor: theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
-    marginBottom: theme.spacing(1),
+    padding: theme.spacing(2),
     '& .MuiCardHeader-title': {
         textAlign: 'right',
         color: theme.palette.primary.contrastText,

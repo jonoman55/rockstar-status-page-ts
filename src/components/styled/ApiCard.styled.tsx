@@ -6,7 +6,7 @@ export const Container = styled(Box)(({ theme }) => ({
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: 'transparent', //theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     [theme.breakpoints.up('sm')]: {
         padding: theme.spacing(10.92),

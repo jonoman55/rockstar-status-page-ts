@@ -3,10 +3,9 @@ import { NavLink } from 'react-router-dom';
 import { Box, Typography, Divider, Stack, List, ListItemIcon, ListItem, ListItemText, Grid } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 
-import { PlatformIcon } from '../shared';
+import { PlatformIcon, StatusChip } from '../shared';
 import { FlexText } from '../controls';
-import { StatusCard, UpdatedBox, Title, StatusText } from '../styled/StatusesCard.styled';
-import { styleStatus } from '../../helpers';
+import { StatusCard, UpdatedBox, Title } from '../styled/StatusesCard.styled';
 
 import type { Platform, Status } from '../../types';
 
@@ -26,11 +25,9 @@ export const StatusItem: React.FC<{ status: Status, theme: Theme }> = ({ status,
     <StatusCard>
         <Title variant='h6'>{status?.name}</Title>
         <Divider sx={{ py: 1 }} />
-        <Stack direction='row' sx={{ pt: 1 }}>
-            <Typography component='p' sx={{ pt: 1, pr: 1 }}>Status:</Typography>
-            <StatusText sx={{ color: `${styleStatus(theme, status?.status?.toLowerCase())}` }}>
-                {status?.status}
-            </StatusText>
+        <Stack direction='row' spacing={4} sx={{ pt: 1.5, alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography variant='h6' sx={{ pt: 1, pr: 1 }}>Status</Typography>
+            <StatusChip status={`${status?.status.toUpperCase()}`} theme={theme} />
         </Stack>
         <Divider sx={{ py: 1 }} />
         <UpdatedBox>
@@ -63,9 +60,10 @@ export const PlatformsListItem: React.FC<{ platforms: Platform[], theme: Theme; 
                                     <PlatformIcon platform={p?.name} />
                                 </ListItemIcon>
                                 <ListItemText>{p.name}</ListItemText>
-                                <Typography sx={{ color: `${styleStatus(theme, p?.status?.toLowerCase())}`, pr: 1, fontWeight: 'bold' }}>
-                                    {p.status}
-                                </Typography>
+                                <StatusChip
+                                    status={`${p.status.toUpperCase()}`}
+                                    theme={theme}
+                                />
                             </ListItem>
                             <Divider sx={{ pt: 1 }} />
                         </Fragment>
