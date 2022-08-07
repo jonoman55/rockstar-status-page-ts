@@ -57,7 +57,7 @@ export interface Status extends Service {
 
 export type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
-export type LinkType = 'internal' | 'external' | 'other';
+export type LinkType = 'internal' | 'external' | 'other' | 'settings';
 
 export type LinkItem = {
     id: number;
