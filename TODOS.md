@@ -3,13 +3,14 @@
 - [x] Update header with a better R* logo and remove text
 - [x] Update Status Indicators Grid styling
 - [x] Update styling for the Services and Statuses Tabs
-- [x] Fix routing issues with sidebar
+- [x] Updating routing to include /service/:id routes  - Clicking back doesn't work
+- [x] Fix routing issues with Sidebar - Clicking All, Services, Statuses, Api doesn't work 
 - [x] Fix loading state - Clicking from tab to tab is not smooth
-- [x] Updating routing to include /service/:id routes (clicking back doesn't work)
+- [x] Fix routing issue to Outage page
 - [x] Add last updated date from API to ServiceDetails Page
-- [ ] Add badge to menu icon in header with the number of services/platforms that aren't up or a FAB.
+- [ ] Add badge to menu icon in header or FAB with the number of services/platforms that aren't.
 - [ ] Add banner for when there is a known outage
 - [ ] Add a notification alerts for when service or platform statuses change
-- [ ] Finish implementing Outage page with DataGrid component with all statuses
-- [ ] Fix routing issue to Outage page
+- [ ] Finish implementing Outage page with DataGrid component containing all statuses
+- [ ] Fix Sidebar bug where it doesn't close after clicking Outages (on first render)
 - [ ] Deploy to Netlify

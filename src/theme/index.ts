@@ -1,33 +1,36 @@
 // Rockstar Yellow #ffa500
 // Rockstar Gray #f2f2f2
 // https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=f2f2f2&secondary.color=424242
-import { ThemeOptions } from "@mui/material/styles";
+import { PaletteColor, ThemeOptions } from "@mui/material/styles";
+import { TypographyOptions } from "@mui/material/styles/createTypography";
+
+import type { CustomPalette } from "../types";
 
 declare module '@mui/material/styles' {
   interface Theme {
     custom: {
       palette: {
-        main: string,
-        gray: string,
-        error: string,
-        green: string,
-        red: string,
-        yellow: string,
-        alert: string,
-        stadia: string,
-        playstation: string,
-        xboxOne: string,
-        xbox360: string,
-        xboxCloud: string,
-        brightGreen: string,
-        brightRed: string,
-        brightYellow: string,
-        cloud: string,
-        auth: string,
-        store: string,
-        all: string,
-        downloads: string,
-        pc: string,
+        main: string;
+        gray: string;
+        error: string;
+        green: string;
+        red: string;
+        yellow: string;
+        alert: string;
+        stadia: string;
+        playstation: string;
+        xboxOne: string;
+        xbox360: string;
+        xboxCloud: string;
+        brightGreen: string;
+        brightRed: string;
+        brightYellow: string;
+        cloud: string;
+        auth: string;
+        store: string;
+        all: string;
+        downloads: string;
+        pc: string;
       }
     };
   }
@@ -35,31 +38,31 @@ declare module '@mui/material/styles' {
   interface ThemeOptions {
     custom?: {
       palette?: {
-        main?: string,
-        gray?: string,
-        error?: string,
-        green?: string,
-        red?: string,
-        yellow?: string,
-        alert?: string,
-        stadia?: string,
-        playstation?: string,
-        xboxOne?: string,
-        xbox360?: string,
-        xboxCloud?: string,
-        brightGreen?: string,
-        brightRed?: string,
-        brightYellow?: string,
-        cloud?: string,
-        auth?: string,
-        store?: string,
-        all?: string,
-        downloads?: string,
-        pc?: string,
+        main?: string;
+        gray?: string;
+        error?: string;
+        green?: string;
+        red?: string;
+        yellow?: string;
+        alert?: string;
+        stadia?: string;
+        playstation?: string;
+        xboxOne?: string;
+        xbox360?: string;
+        xboxCloud?: string;
+        brightGreen?: string;
+        brightRed?: string;
+        brightYellow?: string;
+        cloud?: string;
+        auth?: string;
+        store?: string;
+        all?: string;
+        downloads?: string;
+        pc?: string;
       }
     };
   }
-}
+};
 
 const scrollBodyLight = {
   scrollbarColor: '#959595 #2b2b2b',
@@ -111,21 +114,21 @@ const scrollBodyDark = {
   },
 };
 
-const light = {
+const light: PaletteColor = {
   main: '#f2f2f2',
   light: '#ffffff',
   dark: '#bfbfbf',
   contrastText: '#000000',
 };
 
-const dark = {
+const dark: PaletteColor = {
   main: '#424242',
   light: '#6d6d6d',
   dark: '#1b1b1b',
   contrastText: '#ffffff',
 };
 
-const custom = {
+const custom: CustomPalette = {
   palette: {
     main: '#ffa500',
     gray: '#f2f2f2',
@@ -151,7 +154,7 @@ const custom = {
   }
 };
 
-const typography = {
+const typography: TypographyOptions = {
   fontFamily: [
     'Neue Haas Grotesk Light',
     'sans-serif',

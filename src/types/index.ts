@@ -72,3 +72,29 @@ export type Indicator = {
     key: number;
     value: string;
 };
+
+export type CustomPalette = {
+    palette: {
+        main: string;
+        gray: string;
+        error: string;
+        green: string;
+        red: string;
+        yellow: string;
+        alert: string;
+        stadia: string;
+        playstation: string;
+        xboxOne: string;
+        xbox360: string;
+        xboxCloud: string;
+        brightGreen: string;
+        brightRed: string;
+        brightYellow: string;
+        cloud: string;
+        auth: string;
+        store: string;
+        all: string;
+        downloads: string;
+        pc: string;
+    }
+};
