@@ -1,15 +1,23 @@
 import { createRef, useCallback } from 'react';
 import { Slide, IconButton } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
-import { SnackbarProvider as NotistackProvider, SnackbarKey } from 'notistack';
+import { SnackbarProvider as NotistackProvider, SnackbarKey, SnackbarOrigin } from 'notistack';
 
-import type { ChildProps } from '../types';
+import { ChildProps } from '../interfaces';
 
-interface DismissProps {
+/**
+ * Dismiss Icon Props
+ */
+interface DismissIconProps {
     onClick: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-const DismissIcon = ({ onClick }: DismissProps): JSX.Element => (
+/**
+ * Snackbar Dismiss Icon Button
+ * @param {DismissIconProps} props onClick handler
+ * @returns {JSX.Element} JSX Element
+ */
+const DismissIcon = ({ onClick }: DismissIconProps): JSX.Element => (
     <IconButton size='small' onClick={onClick}>
         <CloseIcon
             fontSize='small'
@@ -18,29 +26,43 @@ const DismissIcon = ({ onClick }: DismissProps): JSX.Element => (
     </IconButton>
 );
 
-interface Props { 
-    children: ChildProps;
+/**
+ * Default Snackbar Anchor Origin
+ */
+export const defaultAnchorOrigin: SnackbarOrigin = {
+    vertical: 'bottom',
+    horizontal: 'right'
 };
 
-export const SnackbarProvider = ({ children }: Props) => {
-    const notistackRef = createRef<any>();
+/**
+ * Notistack Context Provider
+ * @param {ChildProps} props ReactNode 
+ * @returns {JSX.Element} JSX Element
+ */
+export const SnackbarProvider = ({ children }: ChildProps): JSX.Element => {
+    /**
+     * Notistack Provider Ref
+     */
+    const notistackRef: React.RefObject<NotistackProvider> = createRef<NotistackProvider>();
 
-    const onClickDismiss = useCallback((key: SnackbarKey) => () => {
-        notistackRef.current.closeSnackbar(key);
-    }, [notistackRef]);
+    /**
+     * Dismiss Notistack Snackbar Notification Callback
+     */
+    const onClickDismiss = useCallback<(key: SnackbarKey) => () => void>(
+        (key: SnackbarKey) => () =>
+            notistackRef?.current?.closeSnackbar(key),
+        [notistackRef]
+    );
 
     return (
         <NotistackProvider
             ref={notistackRef}
             maxSnack={3}
-            preventDuplicate
+            preventDuplicate={true}
             autoHideDuration={3000}
             TransitionComponent={Slide}
-            hideIconVariant={true}
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-            }}
+            hideIconVariant={false}
+            anchorOrigin={defaultAnchorOrigin}
             action={(key: SnackbarKey) => (
                 <DismissIcon onClick={onClickDismiss(key)} />
             )}

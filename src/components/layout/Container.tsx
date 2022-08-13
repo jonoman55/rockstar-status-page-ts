@@ -3,7 +3,7 @@ import { styled, useTheme, useMediaQuery, Box, BoxProps } from '@mui/material';
 
 import { RockstarBackground } from '../../images';
 
-import { ChildProps } from '../../types';
+import { ChildProps } from '../../interfaces';
 
 export const FlexContainer = styled(({ ...props }: BoxProps) => (
     <Box {...props} component='main' />
@@ -16,16 +16,12 @@ export const FlexContainer = styled(({ ...props }: BoxProps) => (
     backgroundColor: theme.palette.primary.main,
 }));
 
-export const Container = styled(Box)(({
+export const Container = styled(Box)<BoxProps>(({
     width: '100%',
     height: '100%',
 }));
 
-interface Props {
-    children: ChildProps;
-}
-
-export const Body: React.FC<Props> = (props) => {
+export const Body: React.FC<ChildProps> = (props) => {
     const theme = useTheme();
     const body = document.querySelector('body') as HTMLBodyElement;
     body.style.backgroundColor = theme.palette.primary.dark;

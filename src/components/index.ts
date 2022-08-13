@@ -4,9 +4,8 @@ export * from './error';
 export * from './layout';
 export * from './design';
 // Page Components
-export * from './home/HomeCard';
-export * from './services/ServicesCard';
-export * from './services/ServiceDetailsCard';
-export * from './statuses/StatusesCard';
-export * from './api/ApiCard';
-export * from './outages/OutagesCard';
+export * from './home';
+export * from './services';
+export * from './statuses';
+export * from './api';
+export * from './outages';

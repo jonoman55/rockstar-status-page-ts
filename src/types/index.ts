@@ -1,23 +1,41 @@
 import { ReactNode } from "react";
 
-export type ChildProps = ReactNode | JSX.Element | JSX.Element[];
+/**
+ * React Node and JSX Elements
+ */
+export type Children = ReactNode | JSX.Element | JSX.Element[];
 
+/**
+ * HTML Div Ref
+ */
 export type DivRef = React.LegacyRef<HTMLDivElement> | undefined;
 
+/**
+ * Rockstar Status
+ */
 export type StatusType = 'up' | 'down' | 'limited' | undefined;
 
+/**
+ * Scroll Zoom Styles
+ */
 export type ZoomStyles = {
     position: string;
     bottom: number;
     right: number;
-}
+};
 
+/**
+ * All Services and Statuses Payload
+ */
 export type All = {
     services: Service[];
     statuses: Status[];
     updated: string;
 };
 
+/**
+ * API Status Payload
+ */
 export type Api = {
     message: string
     status: string
@@ -25,10 +43,16 @@ export type Api = {
     updated: string
 };
 
+/**
+ * Last Updated Payload
+ */
 export type Updated = {
     updated: string;
 };
 
+/**
+ * Service
+ */
 export type Service = {
     id: number;
     name: string;
@@ -45,34 +69,78 @@ export type Service = {
     status_tag?: string;
 };
 
+/**
+ * Platform
+ */
 export type Platform = {
     id: number;
     name: string;
     status: string;
 };
 
-export interface Status extends Service {
-    services_platforms: Platform[];
+/**
+ * Services Platforms
+ */
+export type ServicePlatforms = {
+    services_platforms: Platform[]
 };
 
+/**
+ * Status
+ */
+export type Status = Service & ServicePlatforms;
+
+/**
+ * Drawer Anchor
+ */
 export type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
+/**
+ * Link Type
+ */
 export type LinkType = 'internal' | 'external' | 'other' | 'settings';
 
+/**
+ * Link Item
+ */
 export type LinkItem = {
+    /**
+     * Tab ID
+     */
     id: number;
+    /**
+     * Tooltip Text
+     */
     text: string;
+    /**
+     * Description
+     */
     description: string;
-    icon: ChildProps;
+    /**
+     * Icon
+     */
+    icon: ReactNode;
+    /**
+     * Link Type
+     */
     type: LinkType;
+    /**
+     * Link Path
+     */
     href: string;
 };
 
+/**
+ * Rockstar Indicator
+ */
 export type Indicator = {
     key: number;
     value: string;
 };
 
+/**
+ * MUI Custom Palette
+ */
 export type CustomPalette = {
     palette: {
         main: string;

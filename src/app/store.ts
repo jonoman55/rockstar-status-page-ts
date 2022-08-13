@@ -30,7 +30,9 @@ const persistConfig = {
         'app',
         'theme'
     ],
-    blacklist: ['rockstarApi'],
+    blacklist: [
+        'rockstarApi'
+    ],
 };
 
 const rootReducer = combineReducers({

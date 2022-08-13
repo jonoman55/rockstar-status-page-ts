@@ -1,13 +1,13 @@
 import React, { forwardRef, useMemo } from "react";
 import { Link as RouterLink, LinkProps } from "react-router-dom";
 
-import type { ChildProps, DivRef } from "../../types";
+import type { Children, DivRef } from "../../types";
 
 interface WrappedLinkProps {
-    icon: ChildProps;
+    icon: React.ReactNode;
     primary: string;
     to: string;
-    children: ChildProps;
+    children: Children;
 };
 
 export function WrappedLink(props: WrappedLinkProps): JSX.Element {
@@ -26,7 +26,7 @@ export function WrappedLink(props: WrappedLinkProps): JSX.Element {
 
 interface ComponentProps {
     other: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
-    children: ChildProps;
+    children: Children;
 };
 
 export const WrapperComponent = forwardRef(function Component({ other, children }: ComponentProps, ref: DivRef) {

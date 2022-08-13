@@ -1,4 +1,3 @@
-// DOCS : https://github.com/jonoman55/rockstar-status-page
 import { lazy, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
@@ -8,9 +7,11 @@ import { ErrorFallback, LoadingContainer } from './components';
 import { darkTheme, lightTheme } from './theme';
 import { useAppSelector } from './app/hooks';
 
-const Routes = lazy(() => import('./routes'));
+const Routes: React.LazyExoticComponent<() => JSX.Element> = lazy(
+    () => import('./routes')
+);
 
-const App: React.FC = () => {
+const App: React.FC = (): JSX.Element => {
     const theme = useAppSelector((state) => state.theme);
     const activeTheme = createTheme(theme.darkTheme ? darkTheme : lightTheme);
     return (

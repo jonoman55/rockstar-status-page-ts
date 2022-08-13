@@ -2,34 +2,52 @@ import React from 'react';
 import { styled, useScrollTrigger, Zoom, Box, Fab } from '@mui/material';
 import { KeyboardArrowUp } from '@mui/icons-material';
 
-import type { ChildProps, ZoomStyles } from '../../types';
+import { ChildProps } from '../../interfaces';
+import type { Children, ZoomStyles } from '../../types';
 
+/**
+ * Default Zoom Styles
+ */
 const zoomBoxStyles: ZoomStyles = {
     position: 'fixed',
     bottom: 100,
     right: 15,
 };
 
+/**
+ * Scroll To Top Icon
+ */
 const UpIcon = styled(Fab)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     backgroundColor: theme.custom.palette.main,
 }));
 
-interface ScrollTopProps {
-    children: ChildProps;
+/**
+ * Scroll Top Props
+ */
+interface Props {
+    children: Children;
     window?: () => Window;
 };
 
-function ScrollTop(props: ScrollTopProps): JSX.Element {
+/**
+ * Scroll Top Wrapper Component
+ * @param {Props} props 
+ * @returns {JSX.Element} JSX Element
+ */
+const ScrollTop = (props: Props): JSX.Element => {
     const { children, window } = props;
 
+    /**
+     * Scroll Trigger Options
+     */
     const trigger: boolean = useScrollTrigger({
         target: window ? window() : undefined,
         disableHysteresis: true,
         threshold: 100,
     });
   
-    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>): void => {
         const anchor = (
             (event.target as HTMLDivElement).ownerDocument || document
         ).querySelector('#back-to-top-anchor');
@@ -50,11 +68,12 @@ function ScrollTop(props: ScrollTopProps): JSX.Element {
     );
 };
 
-interface Props {
-    children: ChildProps;
-};
-
-const BackToTop: React.FC<Props> = (props) => (
+/**
+ * Scroll Back To Top Button
+ * @param {ChildProps} props React Node
+ * @returns {JSX.Element} JSX Element
+ */
+const BackToTop = (props: ChildProps): JSX.Element => (
     <ScrollTop {...props}>
         <UpIcon color='primary' size='small' aria-label='scroll back to top'>
             <KeyboardArrowUp />

@@ -3,19 +3,20 @@ import BackToTop from './BackToTop';
 import Footer from './Footer';
 import { Container, Body } from './Container';
 
-import type { ChildProps } from '../../types';
+import { ChildProps } from '../../interfaces';
 
-interface Props {
-    children: ChildProps;
-};
-
-export const Layout: React.FC<Props> = (props) => (
+/**
+ * Layout Wrapper Component
+ * @param {ChildProps} props React Node
+ * @returns {JSX.Element} Layout as JSX Element
+ */
+export const Layout = ({ children }: ChildProps): JSX.Element => (
     <Body>
         <Header />
         <Container component='main'>
-            {props.children}
+            {children}
             <BackToTop
-                children={props.children}
+                children={children}
             />
         </Container>
         <Footer />

@@ -1,27 +1,39 @@
 import { useCallback } from "react";
-import { useSnackbar, SnackbarMessage, SnackbarOrigin, SharedProps } from "notistack";
+import { useSnackbar, SnackbarMessage, OptionsObject, ProviderContext } from "notistack";
 
-interface NotifyMessage extends SharedProps {
+import { defaultAnchorOrigin } from "../contexts/AlertContext";
+
+/**
+ * Use Notify Props - Extends Enqueue
+ */
+interface NotifyProps extends OptionsObject {
+    /**
+     * Snackbar Message
+     */
     message: SnackbarMessage;
 };
 
-const defaultAnchorOrigin: SnackbarOrigin = {
-    horizontal: 'right',
-    vertical: 'bottom'
-};
-
+/**
+ * Enqueue Snackbar Notification Message
+ */
 export const useNotify = () => {
-    const { enqueueSnackbar } = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar() as ProviderContext;
 
+    /**
+     * Enqueue Snackbar Notification Message Callback
+     * @param {NotifyProps} props Use Notify Props
+     */
     const notify = useCallback(({
         message,
         variant,
+        persist = false,
         anchorOrigin = defaultAnchorOrigin,
         autoHideDuration = 3000,
         disableWindowBlurListener = false
-    }: NotifyMessage) => {
+    }: NotifyProps): void => {
         enqueueSnackbar(message, {
             variant,
+            persist,
             anchorOrigin,
             autoHideDuration,
             disableWindowBlurListener

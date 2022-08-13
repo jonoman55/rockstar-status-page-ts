@@ -1,12 +1,19 @@
 import { useMemo } from "react";
 
 import { useGetServicesQuery } from "../services/rockstarApi";
-
+import { ServiceQueryProps } from "../interfaces";
 import type { Service } from "../types";
 
-export const useServices = () => {
+/**
+ * Use Services Query
+ * @returns {ServiceQueryProps} Services Array
+ */
+export const useServicesQuery = (): ServiceQueryProps => {
     const { data: servicesResults, isLoading, refetch } = useGetServicesQuery('getNavbarServices');
-    const services = useMemo(() => {
+    /**
+     * Memoize Fetched Services
+     */
+    const services: Service[] = useMemo<Service[]>(() => {
         const results: Service[] = [];
         if (!isLoading && servicesResults) {
             servicesResults.forEach((service: Service) => {
@@ -15,5 +22,9 @@ export const useServices = () => {
         }
         return results;
     }, [isLoading, servicesResults]);
-    return { isLoading, services, refetch };
+    return {
+        isLoading,
+        services,
+        refetch
+    } as const;
 };
