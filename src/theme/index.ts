@@ -114,6 +114,9 @@ const scrollBodyDark = {
   },
 };
 
+/**
+ * Light Theme Color Palette
+ */
 const light: PaletteColor = {
   main: '#f2f2f2',
   light: '#ffffff',
@@ -121,6 +124,9 @@ const light: PaletteColor = {
   contrastText: '#000000',
 };
 
+/**
+ * Dark Theme Color Palette
+ */
 const dark: PaletteColor = {
   main: '#424242',
   light: '#6d6d6d',
@@ -128,6 +134,9 @@ const dark: PaletteColor = {
   contrastText: '#ffffff',
 };
 
+/**
+ * Custom Color Palette
+ */
 const custom: CustomPalette = {
   palette: {
     main: '#ffa500',
@@ -154,6 +163,9 @@ const custom: CustomPalette = {
   }
 };
 
+/**
+ * Typography Font Family Options
+ */
 const typography: TypographyOptions = {
   fontFamily: [
     'Neue Haas Grotesk Light',
@@ -161,6 +173,9 @@ const typography: TypographyOptions = {
   ].join(','),
 };
 
+/**
+ * MUI Light Theme
+ */
 export const lightTheme: ThemeOptions = {
   palette: {
     mode: 'light',
@@ -178,6 +193,9 @@ export const lightTheme: ThemeOptions = {
   },
 };
 
+/**
+ * MUI Dark Theme
+ */
 export const darkTheme: ThemeOptions = {
   palette: {
     mode: 'dark',

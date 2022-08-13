@@ -32,11 +32,11 @@ import type { Indicator, StatusType } from '../types';
 
 /**
  * Style Status
- * @param theme MUI Theme
- * @param status Status Type
- * @returns Corresponding Color of Status Type
+ * @param {Theme} theme MUI Theme
+ * @param {StatusType | string} status Status Type
+ * @returns {string} Corresponding Color of Status Type
  */
-export const styleStatus = (theme: Theme, status: StatusType | string) => {
+export const styleStatus = (theme: Theme, status: StatusType | string): string => {
     switch (status?.toLowerCase()) {
         case RockstarStatus.UP:
             return theme.custom.palette.brightGreen;
@@ -51,10 +51,10 @@ export const styleStatus = (theme: Theme, status: StatusType | string) => {
 
 /**
  * Fetch Rockstar Image
- * @param id Service ID
- * @returns Corresponding Logo
+ * @param {number} id Service ID
+ * @returns {string} Corresponding Logo
  */
-export const fetchImage = (id: number) => {
+export const fetchImage = (id: number): string => {
     switch (id) {
         case 1:
             return RockstarWhiteLogo;
@@ -75,10 +75,10 @@ export const fetchImage = (id: number) => {
 
 /**
  * Fetch Card Image Logo
- * @param id Image ID
- * @returns Card Image
+ * @param {number} id Image ID
+ * @returns {string} Card Image
  */
-export const fetchCardImage = (id: number) => {
+export const fetchCardImage = (id: number): string => {
     switch (id) {
         case 1:
             return EagleLogo;
@@ -117,8 +117,8 @@ export const fetchCardImage = (id: number) => {
 
 /**
  * Fetch Rockstar Status
- * @param status Status Type
- * @returns up, limited, down or undefined
+ * @param {StatusType} status Status Type
+ * @returns {StatusType} up, limited, down or undefined
  */
 export const fetchStatus = (status: StatusType): StatusType => {
     switch (status?.toLowerCase()) {
@@ -135,10 +135,10 @@ export const fetchStatus = (status: StatusType): StatusType => {
 
 /**
  * Get The Hightest Rockstar Status Count
- * @param statuses RockstarStatus
- * @returns The greatest status count
+ * @param {RockstarStatus[]} statuses RockstarStatus
+ * @returns { string | number | undefined} The greatest status count
  */
-export const getStatusesCount = (statuses: RockstarStatus[]) => {
+export const getStatusesCount = (statuses: RockstarStatus[]): string | number | undefined => {
     return lodash.head(lodash(statuses)
         .countBy()
         .entries()
@@ -149,7 +149,7 @@ export const getStatusesCount = (statuses: RockstarStatus[]) => {
 /**
  * @deprecated Use getStatusesCount
  */
-export const checkStatuses = (statuses: any[]) => {
+export const checkStatuses = (statuses: any[]): RockstarStatus | undefined => {
     if (Object.values(statuses).every((s) => s?.status.toLowerCase() === 'up'))
         return RockstarStatus.UP;
     if (statuses.map((s) => s?.status.toLowerCase() === 'limited'))
@@ -161,7 +161,7 @@ export const checkStatuses = (statuses: any[]) => {
 /**
  * @deprecated Use getStatusesCount
  */
-export const fetchStatusByCount = (statuses: any[]) => {
+export const fetchStatusByCount = (statuses: any[]): string => {
     const count = lodash.countBy(statuses, 'status');
     let indicator: Indicator = { key: 0, value: '' };
     for (const [value, key] of Object.entries(count)) {

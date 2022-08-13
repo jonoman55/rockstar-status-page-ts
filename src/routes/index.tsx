@@ -3,15 +3,17 @@ import { HashRouter as Router, Routes as Switch, Route, Navigate } from "react-r
 
 import { Layout } from "../components";
 
-const Home = lazy(() => import("../pages/HomePage"));
-const Services = lazy(() => import("../pages/ServicesPage"));
-const Statuses = lazy(() => import("../pages/StatusesPage"));
-const Api = lazy(() => import("../pages/ApiPage"));
-const Outages = lazy(() => import("../pages/OutagesPage"));
-const Service = lazy(() => import("../pages/ServicePage"));
-const NotFound = lazy(() => import("../pages/NotFoundPage"));
+import type { Lazy } from "../types";
 
-const Routes = () => (
+const Home: Lazy = lazy(() => import("../pages/HomePage"));
+const Services: Lazy = lazy(() => import("../pages/ServicesPage"));
+const Statuses: Lazy = lazy(() => import("../pages/StatusesPage"));
+const Api: Lazy = lazy(() => import("../pages/ApiPage"));
+const Outages: Lazy = lazy(() => import("../pages/OutagesPage"));
+const Service: Lazy = lazy(() => import("../pages/ServicePage"));
+const NotFound: Lazy = lazy(() => import("../pages/NotFoundPage"));
+
+const Routes = (): JSX.Element => (
     <Router>
         <Layout>
             <Switch>

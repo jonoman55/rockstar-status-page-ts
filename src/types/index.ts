@@ -6,6 +6,11 @@ import { ReactNode } from "react";
 export type Children = ReactNode | JSX.Element | JSX.Element[];
 
 /**
+ * React Lazy Component
+ */
+export type Lazy = React.LazyExoticComponent<() => JSX.Element>;
+
+/**
  * HTML Div Ref
  */
 export type DivRef = React.LegacyRef<HTMLDivElement> | undefined;
