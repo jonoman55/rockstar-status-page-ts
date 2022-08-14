@@ -462,9 +462,9 @@ export const StyledImageBox = styled(Box)(({ theme }) => ({
     flexWrap: 'nowrap',
     justifyContent: 'center', 
     alignItems: 'center', 
-    bgcolor: 'common.white',
-    border: `1px solid ${theme.palette.common.black}`, 
-    borderRadius: theme.shape.borderRadius, 
+    // backgroundColor: theme.palette.common.white,
+    // border: `1px solid ${theme.palette.common.black}`, 
+    // borderRadius: theme.shape.borderRadius, 
 }));
 
 /**

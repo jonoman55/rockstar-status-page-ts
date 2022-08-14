@@ -13,4 +13,5 @@
 - [ ] Add banner for when there is a known outage
 - [ ] Add a notification alerts for when service or platform statuses change
 - [ ] Finish implementing Outage page with DataGrid component containing all statuses
+- [ ] Fix StatusAvatar by weighting the Status (UP, DOWN, LIMITED) rather than based on count
 - [ ] Deploy to Netlify

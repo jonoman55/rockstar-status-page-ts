@@ -18,7 +18,7 @@ export const Paper = styled(MuiPaper)(({ theme }) => ({
     height: '100%',
     width: '100%',
     padding: theme.spacing(6),
-    backgroundColor: 'transparent', //theme.palette.primary.main,
+    backgroundColor: 'transparent', // theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     borderRadius: 0,
     [theme.breakpoints.up('xs')]: {
@@ -66,7 +66,7 @@ interface CardHeaderProps {
     onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
 };
 
-export const CardHeader: React.FC<CardHeaderProps> = ({ title, subheader, status, onClick }) => (
+export const CardHeader: React.FC<CardHeaderProps> = ({ title, subheader, status, onClick }): JSX.Element => (
     <MuiCardHeader
         avatar={<StatusAvatar status={status} />}
         action={<RefreshButton onClick={onClick} />}
@@ -76,7 +76,7 @@ export const CardHeader: React.FC<CardHeaderProps> = ({ title, subheader, status
     />
 );
 
-export const CardMedia: React.FC<{ id: number }> = ({ id }) => (
+export const CardMedia: React.FC<{ id: number }> = ({ id }): JSX.Element => (
     <MuiCardMedia
         sx={{ objectFit: 'contain' }}
         component='img'
@@ -86,7 +86,7 @@ export const CardMedia: React.FC<{ id: number }> = ({ id }) => (
     />
 );
 
-export const CardMediaBrandLogo: React.FC<{ id: number }> = ({ id }) => (
+export const CardMediaBrandLogo: React.FC<{ id: number }> = ({ id }): JSX.Element => (
     <MuiCardMedia
         sx={{ objectFit: 'contain' }}
         component='img'
@@ -100,19 +100,19 @@ interface RefreshButtonProps {
     onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
 };
 
-export const RefreshButton: React.FC<RefreshButtonProps> = ({ onClick }) => (
+export const RefreshButton: React.FC<RefreshButtonProps> = ({ onClick }): JSX.Element => (
     <IconButton aria-label='refresh' onClick={onClick} sx={{ color: 'primary.contrastText' }}>
         <RefreshIcon fontSize='large' />
     </IconButton>
 );
 
-export const StatusAvatar: React.FC<{ status: StatusType; }> = ({ status }) => (
+export const StatusAvatar: React.FC<{ status: StatusType; }> = ({ status }): JSX.Element => (
     <Avatar aria-label='status-icon' sx={{ bgcolor: 'inherit' }}>
         <StatusIcon status={status} />
     </Avatar>
 );
 
-export const CardFooter: React.FC<{ sx?: SxProps; }> = ({ sx }) => (
+export const CardFooter: React.FC<{ sx?: SxProps; }> = ({ sx }): JSX.Element => (
     <CardActions sx={{ p: 0, display: 'flex', ...sx }}>
         <CardActionBox />
     </CardActions>
