@@ -41,7 +41,7 @@ export const styleStatus = (theme: Theme, status: StatusType | string): string =
         case RockstarStatus.UP:
             return theme.custom.palette.brightGreen;
         case RockstarStatus.LIMITED:
-            return theme.custom.palette.brightYellow;
+            return theme.custom.palette.orange; // brightYellow
         case RockstarStatus.DOWN:
             return theme.custom.palette.brightRed;
         default:

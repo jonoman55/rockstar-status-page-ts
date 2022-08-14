@@ -1,4 +1,5 @@
 import { JSXElementConstructor, LazyExoticComponent, LegacyRef, ReactElement, ReactNode } from "react";
+import { GridColDef } from "@mui/x-data-grid";
 
 /**
  * React Node and JSX Elements
@@ -144,6 +145,19 @@ export type Indicator = {
 };
 
 /**
+ * Outage DataGrid Row
+ */
+export type OutageRow = Status | Service;
+
+/**
+ * Outages DataGrid Columns & Rows
+ */
+export type OutagesDataGrid = {
+    columns: GridColDef<any, any, any>[];
+    rows: OutageRow[];
+};
+
+/**
  * MUI Custom Palette
  */
 export type CustomPalette = {
@@ -154,6 +168,7 @@ export type CustomPalette = {
         green: string;
         red: string;
         yellow: string;
+        orange: string;
         alert: string;
         stadia: string;
         playstation: string;

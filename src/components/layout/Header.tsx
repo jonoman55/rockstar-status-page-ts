@@ -17,10 +17,12 @@ const Header: React.FC = () => {
     const navigate = useNavigate();
 
     const { darkTheme } = useAppSelector((state) => state.theme);
-    const { servicePageId, targetHref } = useAppSelector((state) => state.app);
+    
+    const { servicePageId, targetHref, drawerOpen } = useAppSelector((state) => state.app);
 
     const pageId = useMemo(() => parseInt(pathname.slice(-1)), [pathname]);
 
+    // Set Service Page ID
     useEffect(() => {
         if (servicePageId !== pageId) {
             dispatch(appActions.setServicePageId(pageId));
@@ -28,12 +30,21 @@ const Header: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
 
+    // Handle Sidebar Navigation
     useEffect(() => {
         if (targetHref !== pathname && !pathname.includes('/service/')) {
             navigate(targetHref);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname, targetHref]);
+
+    // Close Drawer if in open state on load
+    useEffect(() => { 
+        if (drawerOpen) {
+            dispatch(appActions.setDrawerOpen(false));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleClick = () => {
         dispatch(appActions.setTabValue(0));

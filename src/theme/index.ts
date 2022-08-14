@@ -16,6 +16,7 @@ declare module '@mui/material/styles' {
         green: string;
         red: string;
         yellow: string;
+        orange: string;
         alert: string;
         stadia: string;
         playstation: string;
@@ -44,6 +45,7 @@ declare module '@mui/material/styles' {
         green?: string;
         red?: string;
         yellow?: string;
+        orange?: string;
         alert?: string;
         stadia?: string;
         playstation?: string;
@@ -145,6 +147,7 @@ const custom: CustomPalette = {
     green: '#0cfa1c',
     red: '#ff0000',
     yellow: '#fff700',
+    orange: '#efbb00',
     alert: '#ffeb3b',
     stadia: '#f44336',
     playstation: '#2196f3',
