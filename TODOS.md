@@ -7,10 +7,10 @@
 - [x] Fix routing issues with Sidebar - Clicking All, Services, Statuses, Api doesn't work 
 - [x] Fix loading state - Clicking from tab to tab is not smooth
 - [x] Fix routing issue to Outage page
+- [x] Fix Sidebar bug where it doesn't close after clicking Outages (on first render)
 - [x] Add last updated date from API to ServiceDetails Page
 - [ ] Add badge to menu icon in header or FAB with the number of services/platforms that aren't.
 - [ ] Add banner for when there is a known outage
 - [ ] Add a notification alerts for when service or platform statuses change
 - [ ] Finish implementing Outage page with DataGrid component containing all statuses
-- [ ] Fix Sidebar bug where it doesn't close after clicking Outages (on first render)
 - [ ] Deploy to Netlify
