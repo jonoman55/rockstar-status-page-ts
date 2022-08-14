@@ -1,6 +1,5 @@
-import { Fragment, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Box, SwipeableDrawer, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, PopperPlacementType } from '@mui/material';
+import { useCallback, useMemo, Fragment } from 'react';
+import { Box, ClickAwayListener, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, PopperPlacementType } from '@mui/material';
 import { DarkMode, LightMode, Menu as MenuIcon } from '@mui/icons-material';
 
 import { ToolTip } from '../controls';
@@ -12,6 +11,7 @@ import { useBreakpoint } from '../../hooks';
 import { LinkItems } from '../../constants';
 
 import type { LinkItem, Anchor } from '../../types';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Sidebar List Props
@@ -28,24 +28,26 @@ interface ListProps {
 };
 
 const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element => {
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const matches: boolean = useBreakpoint('sm', 'up');
+
+    const darkTheme: boolean = useAppSelector((state) => state.theme.darkTheme);
+    const { targetHref, isServiceRoute } = useAppSelector((state) => state.app);
 
     const placement: PopperPlacementType = useMemo(() => matches ? 'right' : 'top-end', [matches]);
 
-    const darkTheme: boolean = useAppSelector((state) => state.theme.darkTheme);
-
-    const handleClick = useCallback(
-        (id: number, href: string) => {
-            if (id !== 4) {
-                dispatch(appActions.setTabValue(id));
+    const handleClick = (id: number, href: string) => () => {
+        if (id <= 3) {
+            dispatch(appActions.setTabValue(id));
+        }
+        dispatch(appActions.setTargetHref(href));
+        if (isServiceRoute) {
+            if (targetHref) {
+                navigate(targetHref);
             }
-            navigate(href);
-            toggleDrawer(false);
-        },
-        [dispatch, navigate, toggleDrawer]
-    );
+        }
+    };
 
     return (
         <Box
@@ -59,7 +61,7 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
                     ({ text, icon, id, href }: LinkItem, index: number) => (
                         <ListItem key={index} disablePadding>
                             <ToolTip title={text} placement={placement} sx={{ width: '100%' }} component={
-                                <ListItemButton onClick={() => handleClick(id, href)}>
+                                <ListItemButton onClick={handleClick(id, href)}>
                                     <ListItemIcon sx={{ color: 'primary.contrastText' }}>
                                         {icon}
                                     </ListItemIcon>
@@ -126,7 +128,7 @@ const Sidebar: React.FC = (): JSX.Element => {
                 ) {
                     return;
                 }
-                dispatch(appActions.setDrawerAnchor(open));
+                dispatch(appActions.setDrawerOpen(open));
             },
         [dispatch]
     );
@@ -138,20 +140,23 @@ const Sidebar: React.FC = (): JSX.Element => {
                     <IconButton size='large' onClick={toggleDrawer(true)}>
                         <MenuIcon fontSize='medium' />
                     </IconButton>
-                    <SwipeableDrawer
-                        anchor={anchor}
-                        open={drawerOpen}
-                        onClose={toggleDrawer(false)}
-                        onOpen={toggleDrawer(true)}
-                        ModalProps={{
-                            onBackdropClick: toggleDrawer(false)
-                        }}
-                    >
-                        <SidebarList
+                    <ClickAwayListener onClickAway={() => toggleDrawer(false)}>
+                        <Drawer
+                            variant="temporary"
                             anchor={anchor}
-                            toggleDrawer={toggleDrawer}
-                        />
-                    </SwipeableDrawer>
+                            open={drawerOpen}
+                            onClose={toggleDrawer(false)}
+                        // onOpen={toggleDrawer(true)}
+                        // onClick={toggleDrawer(false)}
+                        // onClose={(_, reason) => reason === 'backdropClick' && toggleDrawer(false)}
+                        // ModalProps={{ onBackdropClick: toggleDrawer(false) }}
+                        >
+                            <SidebarList
+                                anchor={anchor}
+                                toggleDrawer={toggleDrawer}
+                            />
+                        </Drawer>
+                    </ClickAwayListener>
                 </Fragment>
             ))}
         </Box>

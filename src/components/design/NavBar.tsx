@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Home as HomeIcon } from '@mui/icons-material';
 
@@ -16,15 +16,18 @@ export const NavBar: React.FC<{ services: Service[]; }> = ({ services }) => {
     const setSelected = useCallback(({ id }: Service) => {
         if (id === servicePageId) {
             dispatch(appActions.setServicePageId(id));
+            dispatch(appActions.setIsServiceRoute(true));
         }
     }, [dispatch, servicePageId]);
 
     const handleChange = (_event: React.MouseEvent<HTMLElement, MouseEvent>, newAlignment: string) => {
         dispatch(appActions.setNavbarAlignment(newAlignment));
+        dispatch(appActions.setIsServiceRoute(true));
     };
 
     const handleClick = () => {
         dispatch(appActions.setTabValue(0));
+        dispatch(appActions.setTargetHref('/all'));
     };
 
     return (

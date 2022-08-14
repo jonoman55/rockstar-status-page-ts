@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 
 import Sidebar from './Sidebar';
@@ -13,9 +14,10 @@ import { usePathname } from '../../hooks';
 const Header: React.FC = () => {
     const pathname = usePathname();
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const { darkTheme } = useAppSelector((state) => state.theme);
-    const { servicePageId } = useAppSelector((state) => state.app);
+    const { servicePageId, targetHref } = useAppSelector((state) => state.app);
 
     const pageId = useMemo(() => parseInt(pathname.slice(-1)), [pathname]);
 
@@ -26,6 +28,18 @@ const Header: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
 
+    useEffect(() => {
+        if (targetHref !== pathname && !pathname.includes('/service/')) {
+            navigate(targetHref);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pathname, targetHref]);
+
+    const handleClick = () => {
+        dispatch(appActions.setTabValue(0));
+        dispatch(appActions.setTargetHref('/all'));
+    };
+
     return (
         <AppBar position='static' elevation={2}>
             <Toolbar id='back-to-top-anchor' disableGutters>
@@ -33,7 +47,7 @@ const Header: React.FC = () => {
                     <Sidebar />
                 </Box>
                 <ToolTip title='Home' placement='bottom' component={
-                    <LinkBox to='/all' onClick={() => dispatch(appActions.setTabValue(0))}>
+                    <LinkBox to='/all' onClick={handleClick}>
                         <RockstarIcon sx={{ height: 50, width: 50 }} />
                     </LinkBox>}
                 />

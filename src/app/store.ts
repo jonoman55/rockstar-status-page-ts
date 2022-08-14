@@ -27,10 +27,10 @@ const persistConfig = {
     stateReconciles: hardSet as (inboundState: CombinedState) => CombinedState,
     version: 1,
     whitelist: [
-        'app',
         'theme'
     ],
     blacklist: [
+        'app',
         'rockstarApi'
     ],
 };

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { JSXElementConstructor, LazyExoticComponent, LegacyRef, ReactElement, ReactNode } from "react";
 
 /**
  * React Node and JSX Elements
@@ -8,12 +8,12 @@ export type Children = ReactNode | JSX.Element | JSX.Element[];
 /**
  * React Lazy Component
  */
-export type Lazy = React.LazyExoticComponent<() => JSX.Element>;
+export type Lazy = LazyExoticComponent<() => JSX.Element>;
 
 /**
  * HTML Div Ref
  */
-export type DivRef = React.LegacyRef<HTMLDivElement> | undefined;
+export type DivRef = LegacyRef<HTMLDivElement> | undefined;
 
 /**
  * Rockstar Status
@@ -124,7 +124,7 @@ export type LinkItem = {
     /**
      * Icon
      */
-    icon: ReactNode;
+    icon: ReactNode | ReactElement<any, string | JSXElementConstructor<any>> | undefined;
     /**
      * Link Type
      */

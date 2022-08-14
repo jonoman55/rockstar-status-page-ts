@@ -5,12 +5,14 @@ import { AppBar } from '@mui/material';
 import { a11yProps, Tabs, Tab, Paper } from '../styled/TabNav.styled';
 import { appActions } from '../../reducers/appSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { usePathname } from '../../hooks';
 
 export const TabNav: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const pathname = usePathname();
 
-    const { tabValue } = useAppSelector((state) => state.app);
+    const { tabValue, targetHref } = useAppSelector((state) => state.app);
 
     useEffect(() => {
         if (tabValue === 0) {
@@ -25,7 +27,10 @@ export const TabNav: React.FC = () => {
         if (tabValue === 3) {
             navigate('/api');
         }
-    }, [tabValue, navigate]);
+        if (targetHref === '/outages') {
+            navigate(targetHref);
+        }
+    }, [tabValue, pathname, targetHref, navigate]);
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         dispatch(appActions.setTabValue(newValue));
