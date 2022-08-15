@@ -147,7 +147,7 @@ export type Indicator = {
 /**
  * Outage DataGrid Row
  */
-export type OutageRow = Status | Service;
+export type OutageRow = Status;
 
 /**
  * Outages DataGrid Columns & Rows

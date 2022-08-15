@@ -5,6 +5,7 @@ import {
     CardMedia as MuiCardMedia,
     CardContent as MuiCardContent,
     CardActions as MuiCardActions,
+    CardContentProps,
 } from '@mui/material';
 import { styled, Avatar, IconButton, SxProps } from '@mui/material';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
@@ -57,6 +58,19 @@ export const CardContent = styled(MuiCardContent)(({ theme }) => ({
 
 export const CardActions = styled(MuiCardActions)(({
     display: 'flex',
+}));
+
+export const CardContentPaper = styled(({ ...props }: CardContentProps) =>
+    <MuiCardContent component={MuiPaper} elevation={1} {...props} />
+)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    padding: theme.spacing(0),
+    margin: theme.spacing(4, 0),
+    '&:last-child': {
+        paddingBottom: theme.spacing(0),
+    },
 }));
 
 interface CardHeaderProps {

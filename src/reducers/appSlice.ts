@@ -7,6 +7,7 @@ interface AppState {
     servicePageId: number;
     targetHref: string;
     isServiceRoute: boolean;
+    showToolbar: boolean;
 };
 
 const initialState: AppState = {
@@ -15,7 +16,8 @@ const initialState: AppState = {
     navbarAlignment: 'Home',
     servicePageId: 0,
     targetHref: '/all',
-    isServiceRoute: false
+    isServiceRoute: false,
+    showToolbar: true,
 };
 
 const appSlice = createSlice({
@@ -40,6 +42,9 @@ const appSlice = createSlice({
         },
         setIsServiceRoute: (state: AppState, action: PayloadAction<boolean>) => {
             state.isServiceRoute = action.payload;
+        },
+        setShowToolbar: (state: AppState, action: PayloadAction<boolean>) => {
+            state.showToolbar = action.payload;
         },
     },
 });

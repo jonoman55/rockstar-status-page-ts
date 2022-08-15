@@ -1,11 +1,21 @@
 import { Link } from 'react-router-dom';
 import { styled, AppBar as MuiAppBar, Toolbar as MuiToolbar, Box, AppBarProps, BoxProps, ToolbarProps } from '@mui/material';
 
-export const AppBar = styled(({ ...prop }: AppBarProps) =>
-    <MuiAppBar component='header' {...prop} />
-)(({ theme }) => ({
+interface AppBarExtProps {
+    pathname: string;
+};
+
+export const AppBar = styled(({ ...prop }: AppBarProps & AppBarExtProps) =>
+    <MuiAppBar component='header' {...prop} />, {
+    shouldForwardProp: (prop: PropertyKey) => prop !== 'pathname'
+})(({ theme, pathname }) => ({
     backgroundColor: theme.custom.palette.main,
-    borderBottom: `solid 2px ${theme.palette.primary.contrastText}`,
+    ...(pathname !== '/outages' && {
+        borderBottom: `2px solid ${theme.palette.primary.contrastText}`,
+    }),
+    ...(pathname === '/outages' && {
+        borderBottom: `2px solid ${theme.palette.common.white}`,
+    }),
 }));
 
 export const Toolbar = styled(({ ...props }: ToolbarProps) =>
@@ -19,7 +29,7 @@ export const Toolbar = styled(({ ...props }: ToolbarProps) =>
 }));
 
 export const LinkBox = styled(({ ...props }: BoxProps) =>
-    <Box component={Link} {...props } />
+    <Box component={Link} {...props} />
 )(({
     width: 'auto',
     height: 'auto',

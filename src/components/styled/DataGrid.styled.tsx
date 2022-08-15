@@ -1,5 +1,6 @@
-import React, { memo, useState } from 'react';
-import { Box, Chip, Pagination, Typography } from '@mui/material';
+import { Fragment, memo, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Box, Chip, Divider, IconButton, Pagination, Popper, Typography } from '@mui/material';
 import {
     CardHeader as MuiCardHeader,
     CardHeaderProps,
@@ -7,6 +8,7 @@ import {
     CardContentProps,
     LinearProgress as MuiLinearProgress,
     linearProgressClasses,
+    Link as MuiLink,
     Paper as MuiPaper,
 } from '@mui/material';
 import {
@@ -24,15 +26,20 @@ import {
 import {
     ExpandLess as ExpandLessIcon,
     ExpandMore as ExpandMoreIcon,
-    FiberManualRecord as FiberManualRecordIcon
+    FiberManualRecord as FiberManualRecordIcon,
+    Visibility as VisibilityIcon,
+    VisibilityOff as VisibilityOffIcon
 } from '@mui/icons-material';
-import { styled, alpha, darken, lighten, useTheme } from '@mui/material/styles';
+import { styled, alpha, darken, lighten, useTheme, Theme } from '@mui/material/styles';
 
 import { StatusChip, StatusChipProps } from '../shared';
 import { CardMediaBrandLogo, RefreshButton, StatusAvatar } from './PaperCard.styled';
+import { appActions } from '../../reducers/appSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RockstarSupport } from '../../images';
 
-import type { Children, StatusType } from '../../types';
+import type { Children, OutageRow, Status, StatusType } from '../../types';
+import { ToolTip } from '../controls';
 
 /* <---------- Start Of Not In Use Components ----------> */
 /**
@@ -298,7 +305,8 @@ export const DataGridFooterStatus = (props: {
 
 /**
  * DataGrid Pagination
- * @param {number} props page count (default = 10)
+ * @param {number} props pageCount
+ * @default pageCount 10
  * @returns {JSX.Element} DataGridPagination Component
  */
 export const DataGridPagination = (props: {
@@ -337,19 +345,55 @@ export const GridCellStatusTypeChip = memo(({ status }: StatusChipProps) => {
 export const getFullName = (params: GridValueGetterParams): string => {
     return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
 };
+
+/**
+ * Expandable Cell
+ * @param {GridRenderCellParams} params Grid Render Cell Params
+ * @returns {JSX.Element} Expandable Cell Component
+ */
+export const ExpandableCell = ({ value }: GridRenderCellParams): JSX.Element => {
+    const [expanded, setExpanded] = useState(false);
+    return (
+        <Box>
+            {expanded ? value : value.slice(0, 200)}&nbsp;
+            {value.length > 200 && (
+                // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                <MuiLink
+                    type="button"
+                    component="button"
+                    sx={{ color: (theme) => theme.palette.info.main, fontSize: 'inherit' }}
+                    onClick={() => setExpanded(!expanded)}
+                >
+                    {expanded ? 'view less' : 'view more'}
+                </MuiLink>
+            )}
+        </Box>
+    );
+};
+
+/**
+ * Render Expandable Cell
+ * @param {GridRenderCellParams} params Grid Render Cell Params
+ * @returns {JSX.Element} Rendered Expandable Cell Component
+ */
+export function renderExpandableCell(params: GridRenderCellParams): JSX.Element {
+    return (
+        <ExpandableCell {...params} />
+    );
+};
 /* <---------- End Of Not In Use Components ----------> */
 
 /* <---------- Start Of In Use Components ----------> */
 /**
  * Styled DataGrid
  */
- export const DataGrid = styled(MuiDataGrid)(({ theme }) => ({
+export const DataGrid = styled(MuiDataGrid)(({ theme }) => ({
     borderRadius: 0,
     borderBottomLeftRadius: 4,
     borderBottomRightRadius: 4,
     color: theme.palette.mode === 'light'
-        ? 'rgba(0,0,0,.85)'
-        : 'rgba(255,255,255,0.85)',
+        ? 'rgba(0, 0, 0, .85)'
+        : 'rgba(255, 255, 255, 0.85)',
     fontFamily: [
         '-apple-system',
         'Neue Haas Grotesk Light',
@@ -357,6 +401,14 @@ export const getFullName = (params: GridValueGetterParams): string => {
     ].join(','),
     WebkitFontSmoothing: 'auto',
     letterSpacing: 'normal',
+    '&. MuiDataGrid-virtualScrollerContent': {
+        borderRight: `1px solid ${theme.palette.mode === 'light'
+            ? 'rgba(224, 224, 224, 1)'
+            : 'rgba(81, 81, 81, 1)'}`,
+        borderLeft: `1px solid ${theme.palette.mode === 'light'
+            ? 'rgba(224, 224, 224, 1)'
+            : 'rgba(81, 81, 81, 1)'}`,
+    },
     '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
         padding: theme.spacing(1, 0),
     },
@@ -430,16 +482,47 @@ export const getFullName = (params: GridValueGetterParams): string => {
 }));
 
 /**
+ * DataGrid Wrapper
+ * @description Wraps DataGrid Component
+ * @param {Children} props React Node and JSX Elements
+ * @returns {JSX.Element} Data Grid Wrapper Component
+ */
+export const DataGridWrapper = (props: {
+    children: Children
+}): JSX.Element => (
+    <Box sx={{ height: '100%', width: '100%' }}>
+        <Box sx={{ display: 'flex', height: '100%' }}>
+            <Box sx={{ flexGrow: 1 }}>
+                {props.children}
+            </Box>
+        </Box>
+    </Box>
+);
+
+/**
  * Styled DataGrid Header Box
  */
-export const DataGridHeaderBox = styled(Box)(({ theme }) => ({
+export const DataGridHeaderBox = styled(MuiPaper)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '100%',
+    height: '100%',
     padding: theme.spacing(2),
     color: theme.palette.common.white,
     textAlign: 'center',
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: theme.palette.mode === 'light'
+        ? 'rgba(0, 0, 0, 0.04)'
+        : 'rgba(255, 255, 255, 0.08)',
+    boxShadow: 'none',
+    backgroundImage: 'none',
+    borderRadius: 0,
     borderTopLeftRadius: theme.shape.borderRadius,
     borderTopRightRadius: theme.shape.borderRadius,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
     borderRight: theme.palette.mode === 'light'
         ? '1px solid rgba(224, 224, 224, 1)'
         : '1px solid rgba(81, 81, 81, 1)',
@@ -449,22 +532,22 @@ export const DataGridHeaderBox = styled(Box)(({ theme }) => ({
     borderTop: theme.palette.mode === 'light'
         ? '1px solid rgba(224, 224, 224, 1)'
         : '1px solid rgba(81, 81, 81, 1)',
+    borderBottom: `2px solid ${theme.custom.palette.main}`,
 }));
 
 /**
  * Styled DataGrid Header Image Box
  */
 export const StyledImageBox = styled(Box)(({ theme }) => ({
-    margin: theme.spacing(2), 
-    padding: theme.spacing(1), 
     display: 'flex',
-    flexDirection: 'row', 
+    flexDirection: 'row',
     flexWrap: 'nowrap',
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    // backgroundColor: theme.palette.common.white,
-    // border: `1px solid ${theme.palette.common.black}`, 
-    // borderRadius: theme.shape.borderRadius, 
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: theme.spacing(2),
+    padding: theme.spacing(2),
+    backgroundColor: 'transparent',
+    borderRadius: theme.shape.borderRadius
 }));
 
 /**
@@ -472,7 +555,7 @@ export const StyledImageBox = styled(Box)(({ theme }) => ({
  * @returns {JSX.Element} DataGrid Header Component
  */
 export const DataGridHeader = (): JSX.Element => (
-    <DataGridHeaderBox>
+    <DataGridHeaderBox elevation={1}>
         <StyledImageBox>
             <Box
                 component='img'
@@ -553,14 +636,44 @@ export const NoRowsOverlay = (): JSX.Element => (
  * DataGrid Toolbar
  * @returns {JSX.Element} DataGridToolbar Component
  */
-export const DataGridToolbar = (): JSX.Element => (
-    <GridToolbarContainer>
-        <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-        <GridToolbarExport />
-    </GridToolbarContainer>
-);
+export const DataGridToolbar = (): JSX.Element => {
+    const dispatch = useAppDispatch();
+    const { showToolbar } = useAppSelector((state) => state.app);
+    const handleClick = () => dispatch(appActions.setShowToolbar(!showToolbar));
+    return (
+        <GridToolbarContainer>
+            <ToolTip title={`${showToolbar ? 'Show Toolbar' : 'Hide Toolbar'}`} placement='right' component={
+                <IconButton onClick={handleClick} sx={{ color: 'primary.contrastText' }}>
+                    {!showToolbar ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </IconButton>}
+            />
+            <Divider flexItem orientation='vertical' />
+            {!showToolbar ? (
+                <Fragment>
+                    <Box sx={{ pl: 1 }} />
+                    <GridToolbarColumnsButton />
+                    <GridToolbarFilterButton />
+                    <GridToolbarDensitySelector />
+                    <GridToolbarExport />
+                </Fragment>
+            ) : null}
+        </GridToolbarContainer>
+    );
+};
+
+/**
+ * Styled Linear Progress Bar
+ */
+export const LinearProgress = styled(MuiLinearProgress)(({ theme }) => ({
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+        backgroundColor: theme.palette.grey[
+            theme.palette.mode === 'light' ? 200 : 800
+        ],
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+        backgroundColor: theme.custom.palette.main,
+    },
+}));
 
 /**
  * DataGird Sorted Descending Icon
@@ -645,7 +758,7 @@ export const GridCellStatusChip = memo(({ status }: { status: string; }) => (
 ));
 
 /**
- * Render GridCell Status Chip
+ * Render Grid Cell Status Chip
  * @param {GridRenderCellParams} params Grid Render Cell Params
  * @returns {JSX.Element} Rendered Status Chip Component
  */
@@ -654,20 +767,204 @@ export function renderCellStatusChip(params: GridRenderCellParams<typeof Chip>):
 };
 
 /**
- * Styled Linear Progress Bar
+ * Memoized Grid Cell ID
  */
-export const LinearProgress = styled(MuiLinearProgress)(({ theme }) => ({
-    [`&.${linearProgressClasses.colorPrimary}`]: {
-        backgroundColor: theme.palette.grey[
-            theme.palette.mode === 'light'
-                ? 200
-                : 800
-        ],
-    },
-    [`& .${linearProgressClasses.bar}`]: {
-        backgroundColor: theme.custom.palette.main,
-    },
-}));
+export const GridCellId = memo(({ id }: { id: number; }) => (
+    <Typography variant='body2'>{id}</Typography>
+));
+
+/**
+ * Render Grid Cell ID
+ * @param {GridRenderCellParams} params Grid Render Cell Params
+ * @returns {JSX.Element} Rendered ID Component
+ */
+export function renderCellId(params: GridRenderCellParams<typeof Typography>): JSX.Element {
+    return (
+        <GridCellId id={params.row.id} />
+    );
+};
+
+/**
+ * Create Link Styles
+ * @param {Theme} theme MUI Theme
+ * @returns Link Styles
+ */
+export const linkStyles = (theme: Theme) => {
+    return {
+        textDecoration: 'none',
+        color: 'inherit',
+        '&:hover': {
+            color: theme.palette.mode === 'dark'
+                ? lighten(
+                    theme.custom.palette.main,
+                    theme.palette.action.disabledOpacity
+                )
+                : lighten(
+                    theme.custom.palette.main,
+                    theme.palette.action.focusOpacity
+                )
+        }
+    }
+};
+
+/**
+ * Grid Cell Props Interface
+ */
+export interface GridCellProps {
+    service: OutageRow | Status;
+};
+
+/**
+ * Memoized Grid Cell Link
+ */
+export const GridCellLink = memo((props: GridCellProps) => {
+    const { service: { name, id } } = props;
+    const theme = useTheme();
+    return (
+        <Typography variant='body2' component={Link} to={`/service/${id}`} sx={linkStyles(theme)}>
+            {name}
+        </Typography>
+    );
+});
+
+/**
+ * Render Grid Cell Link
+ * @param {GridRenderCellParams} params Grid Render Cell Params
+ * @returns {JSX.Element} Rendered Link Component
+ */
+export function renderCellLink(params: GridRenderCellParams<typeof Typography>): JSX.Element {
+    return (
+        <GridCellLink service={params.row} />
+    )
+};
+
+/**
+ * Grid Cell Expand Props Interface
+ */
+interface GridCellExpandProps {
+    value: string;
+    width: number;
+};
+
+/**
+ * Is Element Overflown
+ * @param {Element} element Element
+ * @returns {boolean} true or false
+ */
+export function isOverflown(element: Element): boolean {
+    return (
+        element.scrollHeight > element.clientHeight ||
+        element.scrollWidth > element.clientWidth
+    );
+};
+
+/**
+ * Grid Cell Expand With Popper
+ */
+export const GridCellExpand = memo(function GridCellExpand(
+    props: GridCellExpandProps,
+) {
+    const { width, value } = props;
+    const wrapper = useRef<HTMLDivElement | null>(null);
+    const cellDiv = useRef(null);
+    const cellValue = useRef(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [showFullCell, setShowFullCell] = useState(false);
+    const [showPopper, setShowPopper] = useState(false);
+
+    const handleMouseEnter = () => {
+        const isCurrentlyOverflown = isOverflown(cellValue.current!);
+        setShowPopper(isCurrentlyOverflown);
+        setAnchorEl(cellDiv.current);
+        setShowFullCell(true);
+    };
+
+    const handleMouseLeave = () => {
+        setShowFullCell(false);
+    };
+
+    useEffect(() => {
+        if (!showFullCell) {
+            return undefined;
+        }
+
+        function handleKeyDown(nativeEvent: KeyboardEvent) {
+            // IE11, Edge (prior to using Bink?) use 'Esc'
+            if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
+                setShowFullCell(false);
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [setShowFullCell, showFullCell]);
+
+    return (
+        <Box
+            ref={wrapper}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            sx={{
+                alignItems: 'center',
+                lineHeight: '24px',
+                width: '100%',
+                height: '100%',
+                position: 'relative',
+                display: 'flex',
+            }}
+        >
+            <Box
+                ref={cellDiv}
+                sx={{
+                    height: '100%',
+                    width,
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                }}
+            />
+            <Box
+                ref={cellValue}
+                sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+            >
+                {value}
+            </Box>
+            {showPopper && (
+                <Popper
+                    open={showFullCell && anchorEl !== null}
+                    anchorEl={anchorEl}
+                    style={{ width, marginLeft: -17, display: 'inline-flex' }}
+                    popperOptions={{
+                        placement: 'auto'
+                    }}
+                >
+                    <MuiPaper
+                        elevation={1}
+                        style={{ minHeight: wrapper.current!.offsetHeight - 3 }}
+                    >
+                        <Typography variant="body2" style={{ padding: 8 }}>
+                            {value}
+                        </Typography>
+                    </MuiPaper>
+                </Popper>
+            )}
+        </Box>
+    );
+});
+
+/**
+ * Render Cell Expand With Popper
+ * @param {GridRenderCellParams<string>} params Grid Render Cell Params
+ * @returns {JSX.Element} Rendered Cell Expand With Popper Component
+ */
+export function renderCellExpand(params: GridRenderCellParams<string>): JSX.Element {
+    return (
+        <GridCellExpand value={params.row.message || ''} width={params.colDef.computedWidth} />
+    );
+};
 
 /**
  * Get DataGrid Row Background Color
@@ -690,20 +987,12 @@ export const getHoverBackgroundColor = (color: string, mode: string) => {
 };
 
 /**
- * DataGrid Wrapper
- * @description Wraps DataGrid Component
- * @param {Children} props React Node and JSX Elements
- * @returns {JSX.Element} Data Grid Wrapper Component
+ * Get Updated Date
+ * @description Concatenates First and Last Name
+ * @param {GridValueGetterParams} params Grid Value Getter Params
+ * @returns {string} Local Date String
  */
-export const DataGridWrapper = (props: {
-    children: Children
-}): JSX.Element => (
-    <Box sx={{ height: '100%', width: '100%' }}>
-        <Box sx={{ display: 'flex', height: '100%' }}>
-            <Box sx={{ flexGrow: 1 }}>
-                {props.children}
-            </Box>
-        </Box>
-    </Box>
-);
+export const getUpdatedDate = (params: GridValueGetterParams): string => {
+    return `${new Date(params.row.updated).toLocaleString()}`;
+};
 /* <---------- End Of In Use Components ----------> */

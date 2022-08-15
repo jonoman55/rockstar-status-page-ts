@@ -52,7 +52,7 @@ const Header: React.FC = () => {
     };
 
     return (
-        <AppBar position='static' elevation={2}>
+        <AppBar position='static' elevation={2} pathname={pathname}>
             <Toolbar id='back-to-top-anchor' disableGutters>
                 <Box sx={{ width: 78, height: 50 }}>
                     <Sidebar />

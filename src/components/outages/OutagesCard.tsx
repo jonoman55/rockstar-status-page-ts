@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useMemo, useState } from 'react';
 import { Typography } from '@mui/material';
-import { GridColDef, GridCellParams, GridColumnVisibilityModel, GridRowModel, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColDef, GridCellParams, GridColumnVisibilityModel, GridRowModel, GridRenderCellParams, GridRowClassNameParams, GridValidRowModel } from '@mui/x-data-grid';
 
 import {
     DataGrid,
@@ -10,14 +10,18 @@ import {
     DataGridWrapper,
     getBackgroundColor,
     getHoverBackgroundColor,
+    getUpdatedDate,
     LinearProgress,
     NoRowsOverlay,
+    renderCellExpand,
+    renderCellId,
+    renderCellLink,
     renderCellStatusChip,
     renderColumnHeader,
     SortedAscendingIcon,
     SortedDescendingIcon
 } from '../styled/DataGrid.styled';
-import { Card, CardContent, CardHeader, Paper } from '../styled/PaperCard.styled';
+import { Card, CardContent, CardContentPaper, CardHeader, Paper } from '../styled/PaperCard.styled';
 import { useGetServicesQuery, useGetStatusesQuery } from '../../services/rockstarApi';
 import { useAppDispatch } from '../../app/hooks';
 import { getStatusesCount } from '../../helpers';
@@ -25,41 +29,33 @@ import { RockstarStatus } from '../../constants';
 
 import type { OutageRow, OutagesDataGrid, Status, StatusType } from '../../types';
 
+/**
+ * DataGrid Column Definitions
+ */
 const columns: GridColDef[] = [
     {
         field: 'id',
         headerName: 'ID',
         width: 50,
         sortable: true,
-        renderCell: (params: GridRenderCellParams<typeof Typography>) => (
-            <Typography variant='body1'>
-                {params.row.id}
-            </Typography>
-        ),
+        renderCell: renderCellId,
         renderHeader: renderColumnHeader,
     },
     {
         field: 'name',
         headerName: 'Name',
-        width: 225,
+        width: 200,
         sortable: true,
-        renderCell: (params: GridRenderCellParams<typeof Typography>) => (
-            <Typography variant='body1'>
-                {params.row.name}
-            </Typography>
-        ),
+        renderCell: renderCellLink,
         renderHeader: renderColumnHeader,
     },
     {
         field: 'updated',
         headerName: 'Updated',
-        width: 185,
+        width: 200,
         sortable: true,
-        renderCell: (params: GridRenderCellParams<typeof Typography>) => (
-            <Typography variant='body1'>
-                {params.row.updated}
-            </Typography>
-        ),
+        type: 'string',
+        valueGetter: getUpdatedDate,
         renderHeader: renderColumnHeader,
     },
     {
@@ -76,15 +72,14 @@ const columns: GridColDef[] = [
         width: 400,
         flex: 1,
         sortable: true,
-        renderCell: (params: GridRenderCellParams<typeof Typography>) => (
-            <Typography variant='body1'>
-                {params.row.message}
-            </Typography>
-        ),
+        renderCell: renderCellExpand,
         renderHeader: renderColumnHeader,
     }
 ];
 
+/**
+ * Initial Grid Column Visibility Model State
+ */
 const initialColumnVisibilityState: GridColumnVisibilityModel = {
     id: false,
     name: true,
@@ -93,7 +88,7 @@ const initialColumnVisibilityState: GridColumnVisibilityModel = {
     message: true,
 };
 
-// TODO : Finish implement this component
+// TODO : Add Platform Statuses DataGrid
 // DOCS : https://mui.com/x/react-data-grid/
 const OutagesCard = () => {
     const dispatch = useAppDispatch();
@@ -159,14 +154,14 @@ const OutagesCard = () => {
 
     return (
         <Paper elevation={0}>
-            <Card>
+            <Card sx={{ my: 6, px: 4 }}>
                 <CardHeader
                     title='Outages'
                     subheader={`${new Date().toLocaleString()}`}
                     status={overallStatus}
                     onClick={handleRefresh}
                 />
-                <CardContent>
+                <CardContentPaper>
                     <DataGridHeader />
                     <DataGridWrapper>
                         <DataGrid
@@ -179,14 +174,18 @@ const OutagesCard = () => {
                                     }],
                                 },
                             }}
+                            loading={isLoading}
+                            autoHeight
+                            hideFooterSelectedRowCount
+                            disableSelectionOnClick
+                            density='standard'
+                            rowSpacingType='border'
                             getRowHeight={() => 'auto'}
                             getEstimatedRowHeight={() => 200}
-                            autoHeight
-                            density='standard'
-                            rowSpacingType="border"
                             getRowId={handleGetRowId}
-                            getRowClassName={(params) => `super-app-theme--${params.row.status.toUpperCase()}`}
-                            loading={isLoading}
+                            getRowClassName={(params: GridRowClassNameParams<GridValidRowModel>) =>
+                                `super-app-theme--${params.row.status.toUpperCase()}`
+                            }
                             pageSize={pageSize}
                             onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
                             rowsPerPageOptions={[5, 10, 25]}
@@ -209,13 +208,13 @@ const OutagesCard = () => {
                                 '& .super-app-theme--UP': {
                                     bgcolor: (theme) =>
                                         getBackgroundColor(
-                                            theme.palette.success.main,
+                                            theme.custom.palette.green,
                                             theme.palette.mode
                                         ),
                                     '&:hover': {
                                         bgcolor: (theme) =>
                                             getHoverBackgroundColor(
-                                                theme.palette.success.main,
+                                                theme.custom.palette.green,
                                                 theme.palette.mode,
                                             ),
                                     },
@@ -223,13 +222,13 @@ const OutagesCard = () => {
                                 '& .super-app-theme--LIMITED': {
                                     bgcolor: (theme) =>
                                         getBackgroundColor(
-                                            theme.palette.warning.main,
+                                            theme.custom.palette.yellow,
                                             theme.palette.mode
                                         ),
                                     '&:hover': {
                                         bgcolor: (theme) =>
                                             getHoverBackgroundColor(
-                                                theme.palette.warning.main,
+                                                theme.custom.palette.yellow,
                                                 theme.palette.mode,
                                             ),
                                     },
@@ -237,13 +236,13 @@ const OutagesCard = () => {
                                 '& .super-app-theme--DOWN': {
                                     bgcolor: (theme) =>
                                         getBackgroundColor(
-                                            theme.palette.error.main,
+                                            theme.custom.palette.red,
                                             theme.palette.mode
                                         ),
                                     '&:hover': {
                                         bgcolor: (theme) =>
                                             getHoverBackgroundColor(
-                                                theme.palette.error.main,
+                                                theme.custom.palette.red,
                                                 theme.palette.mode
                                             ),
                                     },
@@ -251,7 +250,7 @@ const OutagesCard = () => {
                             }}
                         />
                     </DataGridWrapper>
-                </CardContent>
+                </CardContentPaper>
             </Card>
         </Paper>
     );
