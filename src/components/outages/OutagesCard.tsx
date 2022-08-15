@@ -1,15 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useMemo, useState } from 'react';
-import { Typography } from '@mui/material';
-import { GridColDef, GridCellParams, GridColumnVisibilityModel, GridRowModel, GridRenderCellParams, GridRowClassNameParams, GridValidRowModel } from '@mui/x-data-grid';
+import { useTheme } from '@mui/material';
+import {
+    GridColDef,
+    GridCellParams,
+    GridColumnVisibilityModel,
+    GridRowModel,
+    GridRowClassNameParams,
+    GridValidRowModel
+} from '@mui/x-data-grid';
 
 import {
+    backgroundStyles,
     DataGrid,
     DataGridHeader,
     DataGridToolbar,
     DataGridWrapper,
-    getBackgroundColor,
-    getHoverBackgroundColor,
     getUpdatedDate,
     LinearProgress,
     NoRowsOverlay,
@@ -21,9 +26,8 @@ import {
     SortedAscendingIcon,
     SortedDescendingIcon
 } from '../styled/DataGrid.styled';
-import { Card, CardContent, CardContentPaper, CardHeader, Paper } from '../styled/PaperCard.styled';
+import { Card, CardContentPaper, CardHeader, Paper } from '../styled/PaperCard.styled';
 import { useGetServicesQuery, useGetStatusesQuery } from '../../services/rockstarApi';
-import { useAppDispatch } from '../../app/hooks';
 import { getStatusesCount } from '../../helpers';
 import { RockstarStatus } from '../../constants';
 
@@ -90,12 +94,13 @@ const initialColumnVisibilityState: GridColumnVisibilityModel = {
 
 // TODO : Add Platform Statuses DataGrid
 // DOCS : https://mui.com/x/react-data-grid/
-const OutagesCard = () => {
-    const dispatch = useAppDispatch();
+export const OutagesCard = () => {
+    const theme = useTheme();
 
     const [pageSize, setPageSize] = useState<number>(10);
     const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(initialColumnVisibilityState);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data: servicesResults, isLoading: servicesIsLoading, refetch: servicesRefetch } = useGetServicesQuery('getServicesDG', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
@@ -134,7 +139,7 @@ const OutagesCard = () => {
         return result;
     }, [statusesResults, isLoading]);
 
-    const handleRefresh = () => {
+    const handleRefetch = () => {
         servicesRefetch();
         statusesRefetch();
     };
@@ -159,7 +164,7 @@ const OutagesCard = () => {
                     title='Outages'
                     subheader={`${new Date().toLocaleString()}`}
                     status={overallStatus}
-                    onClick={handleRefresh}
+                    onClick={handleRefetch}
                 />
                 <CardContentPaper>
                     <DataGridHeader />
@@ -204,50 +209,7 @@ const OutagesCard = () => {
                             onCellClick={(params: GridCellParams) => {
                                 console.log(params.row);
                             }}
-                            sx={{
-                                '& .super-app-theme--UP': {
-                                    bgcolor: (theme) =>
-                                        getBackgroundColor(
-                                            theme.custom.palette.green,
-                                            theme.palette.mode
-                                        ),
-                                    '&:hover': {
-                                        bgcolor: (theme) =>
-                                            getHoverBackgroundColor(
-                                                theme.custom.palette.green,
-                                                theme.palette.mode,
-                                            ),
-                                    },
-                                },
-                                '& .super-app-theme--LIMITED': {
-                                    bgcolor: (theme) =>
-                                        getBackgroundColor(
-                                            theme.custom.palette.yellow,
-                                            theme.palette.mode
-                                        ),
-                                    '&:hover': {
-                                        bgcolor: (theme) =>
-                                            getHoverBackgroundColor(
-                                                theme.custom.palette.yellow,
-                                                theme.palette.mode,
-                                            ),
-                                    },
-                                },
-                                '& .super-app-theme--DOWN': {
-                                    bgcolor: (theme) =>
-                                        getBackgroundColor(
-                                            theme.custom.palette.red,
-                                            theme.palette.mode
-                                        ),
-                                    '&:hover': {
-                                        bgcolor: (theme) =>
-                                            getHoverBackgroundColor(
-                                                theme.custom.palette.red,
-                                                theme.palette.mode
-                                            ),
-                                    },
-                                },
-                            }}
+                            sx={backgroundStyles(theme)}
                         />
                     </DataGridWrapper>
                 </CardContentPaper>
@@ -255,5 +217,3 @@ const OutagesCard = () => {
         </Paper>
     );
 };
-
-export default OutagesCard;

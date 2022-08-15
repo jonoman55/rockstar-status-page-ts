@@ -32,6 +32,7 @@ import {
 } from '@mui/icons-material';
 import { styled, alpha, darken, lighten, useTheme, Theme } from '@mui/material/styles';
 
+import { ToolTip } from '../controls';
 import { StatusChip, StatusChipProps } from '../shared';
 import { CardMediaBrandLogo, RefreshButton, StatusAvatar } from './PaperCard.styled';
 import { appActions } from '../../reducers/appSlice';
@@ -39,7 +40,6 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RockstarSupport } from '../../images';
 
 import type { Children, OutageRow, Status, StatusType } from '../../types';
-import { ToolTip } from '../controls';
 
 /* <---------- Start Of Not In Use Components ----------> */
 /**
@@ -803,8 +803,8 @@ export const linkStyles = (theme: Theme) => {
                     theme.custom.palette.main,
                     theme.palette.action.focusOpacity
                 )
-        }
-    }
+        },
+    };
 };
 
 /**
@@ -982,7 +982,7 @@ export const getBackgroundColor = (color: string, mode: string): string => {
  * @param {string} mode Palette Mode (light or dark)
  * @returns {string} Hover Background Color
  */
-export const getHoverBackgroundColor = (color: string, mode: string) => {
+export const getHoverBackgroundColor = (color: string, mode: string): string => {
     return mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
 };
 
@@ -994,5 +994,57 @@ export const getHoverBackgroundColor = (color: string, mode: string) => {
  */
 export const getUpdatedDate = (params: GridValueGetterParams): string => {
     return `${new Date(params.row.updated).toLocaleString()}`;
+};
+
+/**
+ * DataGrid Background Styles Theme
+ * @param {Theme} theme 
+ * @returns Background Styles
+ */
+export const backgroundStyles = (theme: Theme) => {
+    return {
+        '& .super-app-theme--UP': {
+            bgcolor:
+                getBackgroundColor(
+                    theme.custom.palette.green,
+                    theme.palette.mode
+                ),
+            '&:hover': {
+                bgcolor:
+                    getHoverBackgroundColor(
+                        theme.custom.palette.green,
+                        theme.palette.mode,
+                    ),
+            },
+        },
+        '& .super-app-theme--LIMITED': {
+            bgcolor:
+                getBackgroundColor(
+                    theme.custom.palette.yellow,
+                    theme.palette.mode
+                ),
+            '&:hover': {
+                bgcolor:
+                    getHoverBackgroundColor(
+                        theme.custom.palette.yellow,
+                        theme.palette.mode,
+                    ),
+            },
+        },
+        '& .super-app-theme--DOWN': {
+            bgcolor:
+                getBackgroundColor(
+                    theme.custom.palette.red,
+                    theme.palette.mode
+                ),
+            '&:hover': {
+                bgcolor:
+                    getHoverBackgroundColor(
+                        theme.custom.palette.red,
+                        theme.palette.mode
+                    ),
+            },
+        },
+    };
 };
 /* <---------- End Of In Use Components ----------> */

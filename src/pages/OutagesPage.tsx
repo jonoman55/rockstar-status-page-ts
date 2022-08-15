@@ -1,4 +1,4 @@
-import OutagesCard from '../components/outages/OutagesCard';
+import { OutagesCard } from '../components';
 
 const OutagePage = () => <OutagesCard />;
 
