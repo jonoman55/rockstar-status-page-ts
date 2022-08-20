@@ -688,6 +688,17 @@ export const SortedDescendingIcon = (): JSX.Element => <ExpandMoreIcon className
 export const SortedAscendingIcon = (): JSX.Element => <ExpandLessIcon className="icon" />;
 
 /**
+ * DataGrid Components
+ */
+export const dataGridComponents = {
+    Toolbar: DataGridToolbar,
+    ColumnSortedDescendingIcon: SortedDescendingIcon,
+    ColumnSortedAscendingIcon: SortedAscendingIcon,
+    NoRowsOverlay: NoRowsOverlay,
+    LoadingOverlay: LinearProgress,
+};
+
+/**
  * Column Header Props Interface
  */
 interface ColumnHeaderProps {

@@ -1,105 +1,17 @@
-import { useMemo, useState } from 'react';
-import { useTheme } from '@mui/material';
-import {
-    GridColDef,
-    GridCellParams,
-    GridColumnVisibilityModel,
-    GridRowModel,
-    GridRowClassNameParams,
-    GridValidRowModel
-} from '@mui/x-data-grid';
+import { useCallback, useMemo } from 'react';
 
-import {
-    backgroundStyles,
-    DataGrid,
-    DataGridHeader,
-    DataGridToolbar,
-    DataGridWrapper,
-    getUpdatedDate,
-    LinearProgress,
-    NoRowsOverlay,
-    renderCellExpand,
-    renderCellId,
-    renderCellLink,
-    renderCellStatusChip,
-    renderColumnHeader,
-    SortedAscendingIcon,
-    SortedDescendingIcon
-} from '../styled/DataGrid.styled';
+import { ServicesDataGrid } from './ServicesDataGrid';
+import { DataGridHeader, DataGridWrapper } from '../styled/DataGrid.styled';
 import { Card, CardContentPaper, CardHeader, Paper } from '../styled/PaperCard.styled';
 import { useGetServicesQuery, useGetStatusesQuery } from '../../services/rockstarApi';
 import { getStatusesCount } from '../../helpers';
 import { RockstarStatus } from '../../constants';
 
-import type { OutageRow, OutagesDataGrid, Status, StatusType } from '../../types';
-
-/**
- * DataGrid Column Definitions
- */
-const columns: GridColDef[] = [
-    {
-        field: 'id',
-        headerName: 'ID',
-        width: 50,
-        sortable: true,
-        renderCell: renderCellId,
-        renderHeader: renderColumnHeader,
-    },
-    {
-        field: 'name',
-        headerName: 'Name',
-        width: 200,
-        sortable: true,
-        renderCell: renderCellLink,
-        renderHeader: renderColumnHeader,
-    },
-    {
-        field: 'updated',
-        headerName: 'Updated',
-        width: 200,
-        sortable: true,
-        type: 'string',
-        valueGetter: getUpdatedDate,
-        renderHeader: renderColumnHeader,
-    },
-    {
-        field: 'status',
-        headerName: 'Status',
-        width: 100,
-        sortable: true,
-        renderCell: renderCellStatusChip,
-        renderHeader: renderColumnHeader,
-    },
-    {
-        field: 'message',
-        headerName: 'Message',
-        width: 400,
-        flex: 1,
-        sortable: true,
-        renderCell: renderCellExpand,
-        renderHeader: renderColumnHeader,
-    }
-];
-
-/**
- * Initial Grid Column Visibility Model State
- */
-const initialColumnVisibilityState: GridColumnVisibilityModel = {
-    id: false,
-    name: true,
-    updated: true,
-    status: true,
-    message: true,
-};
+import type { OutageRow, Status, StatusType } from '../../types';
 
 // TODO : Add Platform Statuses DataGrid
 // DOCS : https://mui.com/x/react-data-grid/
 export const OutagesCard = () => {
-    const theme = useTheme();
-
-    const [pageSize, setPageSize] = useState<number>(10);
-    const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(initialColumnVisibilityState);
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data: servicesResults, isLoading: servicesIsLoading, refetch: servicesRefetch } = useGetServicesQuery('getServicesDG', {
         refetchOnReconnect: true,
@@ -139,19 +51,10 @@ export const OutagesCard = () => {
         return result;
     }, [statusesResults, isLoading]);
 
-    const handleRefetch = () => {
+    const handleRefetch = useCallback(() => {
         servicesRefetch();
         statusesRefetch();
-    };
-
-    const handleGetRowId = (e: GridRowModel) => {
-        return e.id as number;
-    };
-
-    const data: OutagesDataGrid = {
-        columns: columns,
-        rows: rows,
-    };
+    }, [servicesRefetch, statusesRefetch]);
     
     // console.log(rows);
     // console.log(servicesResults);
@@ -169,47 +72,9 @@ export const OutagesCard = () => {
                 <CardContentPaper>
                     <DataGridHeader />
                     <DataGridWrapper>
-                        <DataGrid
-                            {...data}
-                            initialState={{
-                                sorting: {
-                                    sortModel: [{
-                                        field: 'status',
-                                        sort: 'desc'
-                                    }],
-                                },
-                            }}
-                            loading={isLoading}
-                            autoHeight
-                            hideFooterSelectedRowCount
-                            disableSelectionOnClick
-                            density='standard'
-                            rowSpacingType='border'
-                            getRowHeight={() => 'auto'}
-                            getEstimatedRowHeight={() => 200}
-                            getRowId={handleGetRowId}
-                            getRowClassName={(params: GridRowClassNameParams<GridValidRowModel>) =>
-                                `super-app-theme--${params.row.status.toUpperCase()}`
-                            }
-                            pageSize={pageSize}
-                            onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
-                            rowsPerPageOptions={[5, 10, 25]}
-                            pagination
-                            components={{
-                                Toolbar: DataGridToolbar,
-                                ColumnSortedDescendingIcon: SortedDescendingIcon,
-                                ColumnSortedAscendingIcon: SortedAscendingIcon,
-                                NoRowsOverlay: NoRowsOverlay,
-                                LoadingOverlay: LinearProgress,
-                            }}
-                            columnVisibilityModel={columnVisibilityModel}
-                            onColumnVisibilityModelChange={(newModel: GridColumnVisibilityModel) => {
-                                setColumnVisibilityModel(newModel);
-                            }}
-                            onCellClick={(params: GridCellParams) => {
-                                console.log(params.row);
-                            }}
-                            sx={backgroundStyles(theme)}
+                        <ServicesDataGrid
+                            rows={rows}
+                            isLoading={isLoading}
                         />
                     </DataGridWrapper>
                 </CardContentPaper>
