@@ -147,14 +147,50 @@ export type Indicator = {
 /**
  * Outage DataGrid Row
  */
-export type OutageRow = Status;
+export type ServiceRow = Service;
+
+/**
+ * Services Outages DataGrid Columns & Rows
+ */
+export type ServicesData = {
+    columns: GridColDef<any, any, any>[];
+    rows: ServiceRow[];
+};
+
+export type DataGridPlatform = {
+    platform_name: string;
+    platform_status: string;
+};
+
+/**
+ * Platform DataGrid Row
+ */
+export type StatusRow = {
+    id: number;
+    name: string;
+    updated: string;
+    message: string;
+    status: string;
+    platforms: DataGridPlatform[];
+};
+
+/**
+ * Platform Status DataGrid Row
+ */
+export type PlatformStatusRow = {
+    id?: number;
+    service: string;
+    name: string;
+    updated: string;
+    status: string;
+};
 
 /**
  * Outages DataGrid Columns & Rows
  */
-export type OutagesDataGrid = {
+export type PlatformStatusesData = {
     columns: GridColDef<any, any, any>[];
-    rows: OutageRow[];
+    rows: PlatformStatusRow[];
 };
 
 /**

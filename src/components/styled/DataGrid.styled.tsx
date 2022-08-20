@@ -1,3 +1,4 @@
+// DOCS : https://mui.com/x/react-data-grid/
 import { Fragment, memo, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Chip, Divider, IconButton, Pagination, Popper, Typography } from '@mui/material';
@@ -39,7 +40,7 @@ import { appActions } from '../../reducers/appSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RockstarSupport } from '../../images';
 
-import type { Children, OutageRow, Status, StatusType } from '../../types';
+import type { Children, ServiceRow, Status, StatusType } from '../../types';
 
 /* <---------- Start Of Not In Use Components ----------> */
 /**
@@ -690,12 +691,16 @@ export const SortedAscendingIcon = (): JSX.Element => <ExpandLessIcon className=
 /**
  * DataGrid Components
  */
-export const dataGridComponents = {
-    Toolbar: DataGridToolbar,
-    ColumnSortedDescendingIcon: SortedDescendingIcon,
-    ColumnSortedAscendingIcon: SortedAscendingIcon,
-    NoRowsOverlay: NoRowsOverlay,
-    LoadingOverlay: LinearProgress,
+export const dataGridComponents = (
+    hideToolbar: boolean = false
+) => {
+    return {
+        Toolbar: !hideToolbar ? DataGridToolbar : null,
+        ColumnSortedDescendingIcon: SortedDescendingIcon,
+        ColumnSortedAscendingIcon: SortedAscendingIcon,
+        NoRowsOverlay: NoRowsOverlay,
+        LoadingOverlay: LinearProgress,
+    };
 };
 
 /**
@@ -822,7 +827,7 @@ export const linkStyles = (theme: Theme) => {
  * Grid Cell Props Interface
  */
 export interface GridCellProps {
-    service: OutageRow | Status;
+    service: ServiceRow | Status;
 };
 
 /**
@@ -852,7 +857,7 @@ export function renderCellLink(params: GridRenderCellParams<typeof Typography>):
 /**
  * Grid Cell Expand Props Interface
  */
-interface GridCellExpandProps {
+export interface GridCellExpandProps {
     value: string;
     width: number;
 };
@@ -947,7 +952,11 @@ export const GridCellExpand = memo(function GridCellExpand(
                 <Popper
                     open={showFullCell && anchorEl !== null}
                     anchorEl={anchorEl}
-                    style={{ width, marginLeft: -17, display: 'inline-flex' }}
+                    style={{
+                        width,
+                        // marginLeft: -17, // commented out to resolve Popper warning
+                        display: 'inline-flex'
+                    }}
                     popperOptions={{
                         placement: 'auto'
                     }}
@@ -975,6 +984,33 @@ export function renderCellExpand(params: GridRenderCellParams<string>): JSX.Elem
     return (
         <GridCellExpand value={params.row.message || ''} width={params.colDef.computedWidth} />
     );
+};
+
+/**
+ * Grid Cell Text Props
+ */
+export interface GridCellTextProps {
+    text: string;
+};
+
+/**
+ * Memoized Grid Text
+ */
+export const GridCellText = memo(({ text }: GridCellTextProps) => (
+    <Typography variant='body2'>
+        {text}
+    </Typography>
+));
+
+/**
+ * Render Grid Cell Text
+ * @param {GridRenderCellParams} params Grid Render Cell Params
+ * @returns {JSX.Element} Rendered Text Component
+ */
+export function renderCellText(params: GridRenderCellParams<typeof Typography>): JSX.Element {
+    return (
+        <GridCellText text={params.row.service} />
+    )
 };
 
 /**

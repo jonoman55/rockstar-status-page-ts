@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '@mui/material';
 import {
-    GridColDef,
     GridCellParams,
     GridColumnVisibilityModel,
     GridRowModel,
@@ -10,68 +9,21 @@ import {
     GridRowHeightParams,
     GridRowHeightReturnValue
 } from '@mui/x-data-grid';
+import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
 
-import {
-    DataGrid,
-    backgroundStyles,
-    dataGridComponents,
-    getUpdatedDate,
-    renderCellExpand,
-    renderCellId,
-    renderCellLink,
-    renderCellStatusChip,
-    renderColumnHeader,
-} from '../styled/DataGrid.styled';
+import { DataGrid, backgroundStyles, dataGridComponents } from '../styled/DataGrid.styled';
 
-import type { OutageRow, OutagesDataGrid } from '../../types';
+import { serviceColumns } from './columnDefs';
+import type { ServiceRow, ServicesData } from '../../types';
 
-/**
- * DataGrid Column Definitions
- */
-const columns: GridColDef[] = [
-    {
-        field: 'id',
-        headerName: 'ID',
-        width: 50,
-        sortable: true,
-        renderCell: renderCellId,
-        renderHeader: renderColumnHeader,
+const initialState: GridInitialStateCommunity = {
+    sorting: {
+        sortModel: [{
+            field: 'status',
+            sort: 'desc'
+        }],
     },
-    {
-        field: 'name',
-        headerName: 'Name',
-        width: 200,
-        sortable: true,
-        renderCell: renderCellLink,
-        renderHeader: renderColumnHeader,
-    },
-    {
-        field: 'updated',
-        headerName: 'Updated',
-        width: 200,
-        sortable: true,
-        type: 'string',
-        valueGetter: getUpdatedDate,
-        renderHeader: renderColumnHeader,
-    },
-    {
-        field: 'status',
-        headerName: 'Status',
-        width: 100,
-        sortable: true,
-        renderCell: renderCellStatusChip,
-        renderHeader: renderColumnHeader,
-    },
-    {
-        field: 'message',
-        headerName: 'Message',
-        width: 400,
-        flex: 1,
-        sortable: true,
-        renderCell: renderCellExpand,
-        renderHeader: renderColumnHeader,
-    }
-];
+};
 
 /**
  * Initial Grid Column Visibility Model State
@@ -89,9 +41,9 @@ const initialColumnVisibilityState: GridColumnVisibilityModel = {
  */
 interface Props {
     /**
-     * Outage Row Array
+     * Service Rows
      */
-    rows: OutageRow[],
+    rows: ServiceRow[],
     /**
      * Loading State
      */
@@ -134,25 +86,18 @@ export const ServicesDataGrid: React.FC<Props> = ({ rows, isLoading }): JSX.Elem
     };
 
     const handleOnCellClick = (params: GridCellParams) => {
-        console.log(params.row);
+        // console.log(params.row);
     };
 
-    const data: OutagesDataGrid = {
-        columns: columns,
+    const data: ServicesData = {
+        columns: serviceColumns,
         rows: rows,
     };
 
     return (
         <DataGrid
             {...data}
-            initialState={{
-                sorting: {
-                    sortModel: [{
-                        field: 'status',
-                        sort: 'desc'
-                    }],
-                },
-            }}
+            initialState={initialState}
             autoHeight
             hideFooterSelectedRowCount
             disableSelectionOnClick
@@ -167,7 +112,7 @@ export const ServicesDataGrid: React.FC<Props> = ({ rows, isLoading }): JSX.Elem
             pageSize={pageSize}
             onPageSizeChange={handleOnPageSizeChange}
             rowsPerPageOptions={[5, 10, 25]}
-            components={dataGridComponents}
+            components={dataGridComponents()}
             columnVisibilityModel={columnVisibilityModel}
             onColumnVisibilityModelChange={handleOnColumnVisibilityModelChange}
             onCellClick={handleOnCellClick}
