@@ -10,9 +10,10 @@
 - [x] Fix Sidebar bug where it doesn't close after clicking Outages (on first render)
 - [x] Add last updated date from API to ServiceDetails Page
 - [x] Finish implementing Outages page with DataGrid component
-- [ ] Add Platform Statuses DataGrid to Outages page
+- [ ] Add Grid to Outages Page and Add Platform Statuses DataGrid
 - [ ] Add badge to menu icon in header or FAB with the number of services/platforms that aren't UP
 - [ ] Add banner for when there is a known outage
 - [ ] Add a notification alerts for when service or platform statuses change
 - [ ] Fix StatusAvatar by weighting the Status (UP, DOWN, LIMITED) rather than based on count
+- [ ] Convert TabNav to a NavBar (ButtonGroup/ToggleButtonGroup) 
 - [ ] Deploy to Netlify
