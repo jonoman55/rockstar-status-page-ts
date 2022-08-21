@@ -13,11 +13,11 @@
 - [x] Add Grid to Outages Page and Add Platform Statuses DataGrid
 - [x] Add service name header to Platforms DataGrid and updated styles
 - [x] Convert TabNav to a LinkBar (Button Group) 
+- [x] Fix the Sidebar (Drawer) bug where it doesn't close onClick
 - [ ] Fix Platform DataGrid Header styles in mobile
 - [ ] Add badge to menu icon in header or FAB with the number of services/platforms that aren't UP
 - [ ] Add banner for when there is a known outage with link to Outages page
 - [ ] Add a notification alerts for when service or platform statuses change
 - [ ] Fix StatusAvatar by weighting the Status (UP, DOWN, LIMITED) rather than based on count
-- [ ] Fix the Sidebar (Drawer) bug where it doesn't close onClick
 - [ ] Remove all unused components
 - [ ] Deploy to Netlify
