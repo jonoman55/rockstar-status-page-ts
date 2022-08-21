@@ -35,6 +35,7 @@ const Header: React.FC = (): JSX.Element => {
         dispatch(appActions.setTabValue(0));
         dispatch(appActions.setTargetHref('/all'));
         dispatch(appActions.setIsServiceRoute(false));
+        dispatch(appActions.setServicePageId(0));
     }, [dispatch]);
 
     return (
