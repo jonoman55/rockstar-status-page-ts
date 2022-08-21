@@ -4,19 +4,19 @@ import type { LinkItem } from "../types";
 
 export const LinkItems: LinkItem[] = [
     {
-        id: 0, text: 'All', description: 'All Rockstar Services and Statuses', icon: <Apps />, type: 'internal', href: '/all'
+        id: 0, text: 'All', description: 'All Rockstar Services and Statuses', icon: <Apps />, type: 'internal', to: '/all'
     },
     {
-        id: 1, text: 'Services', description: 'Rockstar Services', icon: <Storage />, type: 'internal', href: '/services'
+        id: 1, text: 'Services', description: 'Rockstar Services', icon: <Storage />, type: 'internal', to: '/services'
     },
     {
-        id: 2, text: 'Statuses', description: 'Rockstar Statuses', icon: <RssFeed />, type: 'internal', href: '/statuses'
+        id: 2, text: 'Statuses', description: 'Rockstar Statuses', icon: <RssFeed />, type: 'internal', to: '/statuses'
     },
     {
-        id: 3, text: 'API', description: 'API Status', icon: <Api />, type: 'internal', href: '/api'
+        id: 3, text: 'API', description: 'API Status', icon: <Api />, type: 'internal', to: '/api'
     },
     {
-        id: 4, text: 'Outages', description: 'Check Known Outages', icon: <AppsOutage />, type: 'internal', href: '/outages'
+        id: 4, text: 'Outages', description: 'Check Known Outages', icon: <AppsOutage />, type: 'internal', to: '/outages'
     },
     {
         id: 5, text: 'API Routes', description: 'Backend API Routes', icon: <Lan />, type: 'external', href: `${process.env.REACT_APP_BACKEND_API_URL}`

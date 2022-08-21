@@ -1,6 +1,6 @@
 import { useTheme, Box, Icon } from '@mui/material';
 import {
-    Store, 
+    Store,
     NotificationsActive as Alert,
     Security as Authentication,
     Download as Downloads,
@@ -25,7 +25,11 @@ import {
 import { PlatformType } from '../../constants/PlatformType';
 import { RockstarWhiteLogo } from '../../images';
 
-export const PlatformIcon: React.FC<{ platform: string; }> = ({ platform }) => {
+interface Props {
+    platform: string;
+};
+
+export const PlatformIcon: React.FC<Props> = ({ platform }): JSX.Element => {
     const theme = useTheme();
     switch (platform) {
         case PlatformType.PC:
@@ -56,12 +60,12 @@ export const PlatformIcon: React.FC<{ platform: string; }> = ({ platform }) => {
                     sx={{ color: theme.custom.palette.xboxCloud, width: 'auto' }}
                 />
             );
-        case PlatformType.XboxSeriesXS: 
+        case PlatformType.XboxSeriesXS:
             return (
                 <Icon
                     component={Xbox}
                     sx={{ color: theme.custom.palette.green, width: 'auto' }}
-            />
+                />
             )
         case PlatformType.PS3:
             return (

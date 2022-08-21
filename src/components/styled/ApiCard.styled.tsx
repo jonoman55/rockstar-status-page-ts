@@ -1,4 +1,4 @@
-import { Box, CardContent as MuiCardContent, Typography, Link, LinkProps } from '@mui/material';
+import { Box, CardContent as MuiCardContent, Stack as MuiStack, Typography, Link, LinkProps } from '@mui/material';
 import { styled, lighten, darken } from '@mui/material/styles';
 
 export const Container = styled(Box)(({ theme }) => ({
@@ -65,4 +65,10 @@ export const CardContent = styled(MuiCardContent)(({ theme }) => ({
     padding: theme.spacing(4, 2, 2, 2),
     marginTop: theme.spacing(2),
     fontWeight: 'bold',
+}));
+
+export const Stack = styled(MuiStack)(({ theme }) => ({
+    paddingTop: theme.spacing(2),
+    alignItems: 'center',
+    justifyContent: 'space-between'
 }));

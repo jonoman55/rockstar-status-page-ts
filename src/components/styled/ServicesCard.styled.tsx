@@ -1,4 +1,4 @@
-import { Box, Card as MuiCard, CardContent as MuiCardContent, Typography } from '@mui/material';
+import { Box, Card as MuiCard, CardContent as MuiCardContent, Stack as MuiStack, Typography } from '@mui/material';
 import { styled, darken, lighten } from '@mui/material/styles';
 
 export const CardContent = styled(MuiCardContent)(({ theme }) => ({
@@ -48,4 +48,10 @@ export const UpdatedBox = styled(Box)(({ theme }) => ({
     flexDirection: 'row',
     alignItems: 'flex-start',
     padding: theme.spacing(1, 0),
+}));
+
+export const Stack = styled(MuiStack)(({ theme }) => ({
+    paddingTop: theme.spacing(1.5),
+    alignItems: 'center',
+    justifyContent: 'space-between'
 }));

@@ -10,7 +10,11 @@ const styles = {
         : theme.palette.action.disabledBackground,
 };
 
-export const StatusIcon: React.FC<{ status: StatusType; }> = ({ status }) => {
+interface Props {
+    status: StatusType;
+};
+
+export const StatusIcon: React.FC<Props> = ({ status }): JSX.Element => {
     switch (status) {
         case 'up':
             return <OfflinePin fontSize='large' sx={{ ...styles, color: (theme) => theme.custom.palette.brightGreen }} />;

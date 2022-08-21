@@ -97,6 +97,24 @@ export type ServicePlatforms = {
 export type Status = Service & ServicePlatforms;
 
 /**
+ * Tooltip Placement
+ */
+export type Placement =
+    "bottom-end"
+    | "bottom-start"
+    | "bottom"
+    | "left-end"
+    | "left-start"
+    | "left"
+    | "right-end"
+    | "right-start"
+    | "right"
+    | "top-end"
+    | "top-start"
+    | "top"
+    | undefined
+
+/**
  * Drawer Anchor
  */
 export type Anchor = 'top' | 'left' | 'bottom' | 'right';
@@ -111,29 +129,33 @@ export type LinkType = 'internal' | 'external' | 'other' | 'settings';
  */
 export type LinkItem = {
     /**
-     * Tab ID
+     * Link ID
      */
     id: number;
     /**
-     * Tooltip Text
+     * Link Tooltip Text
      */
     text: string;
     /**
-     * Description
+     * Link Description
      */
     description: string;
     /**
-     * Icon
+     * Link Icon
      */
-    icon: ReactNode | ReactElement<any, string | JSXElementConstructor<any>> | undefined;
+    icon: ReactElement<any, string | JSXElementConstructor<any>> | undefined;
     /**
      * Link Type
      */
     type: LinkType;
     /**
-     * Link Path
+     * Link Path (For external links)
      */
-    href: string;
+    to?: string;
+    /**
+     * Link href (For external links)
+     */
+    href?: string;
 };
 
 /**

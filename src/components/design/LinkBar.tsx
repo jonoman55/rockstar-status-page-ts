@@ -17,11 +17,16 @@ export const LinkBar = (): JSX.Element => {
     const links: LinkItem[] = useMemo(() => LinkItems.slice(0, 4), []);
 
     const { tabValue, targetHref } = useAppSelector((state) => state.app);
+    
+    const selected: boolean = useMemo<boolean>(
+        () => pathname === targetHref,
+        [pathname, targetHref]
+    );
 
     const handleClick = useCallback(
-        (id: number, href: string) => () => {
+        (id: number, to: string) => () => {
             dispatch(appActions.setTabValue(id));
-            dispatch(appActions.setTargetHref(href));
+            dispatch(appActions.setTargetHref(to));
             dispatch(appActions.setIsServiceRoute(false));
             dispatch(appActions.setServicePageId(0));
             dispatch(appActions.setDrawerOpen(false));
@@ -29,23 +34,18 @@ export const LinkBar = (): JSX.Element => {
         [dispatch]
     );
 
-    const selected: boolean = useMemo<boolean>(
-        () => pathname === targetHref,
-        [pathname, targetHref]
-    );
-
     return (
         <AppBar position='static' elevation={2}>
             <Toolbar disableGutters>
                 <Container disableGutters>
                     <Stack>
-                        {links.map(({ id, href, text }: LinkItem, index: number) => (
+                        {links.map(({ id, to, text }: LinkItem, index: number) => (
                             <ButtonLink
                                 key={index}
                                 text={text}
-                                to={href}
+                                to={to!}
                                 selected={selected && tabValue === id}
-                                onClick={handleClick(id, href)}
+                                onClick={handleClick(id, to!)}
                             />
                         ))}
                     </Stack>

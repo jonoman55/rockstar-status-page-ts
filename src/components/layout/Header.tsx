@@ -18,11 +18,44 @@ const Header: React.FC = (): JSX.Element => {
     
     const { targetHref, drawerOpen } = useAppSelector((state) => state.app);
 
+    // Handle LinkBar selected ButtonLink
+    const handleLinkBarChange = useCallback(() => {
+        if (pathname === '/all') {
+            dispatch(appActions.setTabValue(0));
+            dispatch(appActions.setTargetHref(pathname));
+            dispatch(appActions.setDrawerOpen(false));
+        }
+        if (pathname === '/services') {
+            dispatch(appActions.setTabValue(1));
+            dispatch(appActions.setTargetHref(pathname));
+            dispatch(appActions.setDrawerOpen(false));
+        }
+        if (pathname === '/statuses') {
+            dispatch(appActions.setTabValue(2));
+            dispatch(appActions.setTargetHref(pathname));
+            dispatch(appActions.setDrawerOpen(false));
+        }
+        if (pathname === '/api') {
+            dispatch(appActions.setTabValue(3));
+            dispatch(appActions.setTargetHref(pathname));
+            dispatch(appActions.setDrawerOpen(false));
+        }
+        if (pathname === '/outages') {
+            dispatch(appActions.setTargetHref(pathname));
+            dispatch(appActions.setDrawerOpen(false));
+        }
+    }, [pathname, dispatch]);
+
+    useEffect(() => {
+        handleLinkBarChange();
+    }, [handleLinkBarChange]);
+
     // Close Drawer if in open state on load
     const handleDrawerOpen = useCallback(() => { 
         if (pathname === targetHref) {
-            console.log('closing drawer');
-            if (drawerOpen) dispatch(appActions.setDrawerOpen(false));
+            if (drawerOpen) {
+                dispatch(appActions.setDrawerOpen(false));
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname, targetHref, dispatch]);
@@ -31,7 +64,8 @@ const Header: React.FC = (): JSX.Element => {
         handleDrawerOpen();
     }, [handleDrawerOpen]);
 
-    const handleClick = useCallback(() => {
+    // Handle Home Click
+    const handleHomeClick = useCallback(() => {
         dispatch(appActions.setTabValue(0));
         dispatch(appActions.setTargetHref('/all'));
         dispatch(appActions.setIsServiceRoute(false));
@@ -45,7 +79,7 @@ const Header: React.FC = (): JSX.Element => {
                     <Sidebar />
                 </Box>
                 <ToolTip title='Home' placement='bottom' component={
-                    <LinkBox to='/all' onClick={handleClick}>
+                    <LinkBox to='/all' onClick={handleHomeClick}>
                         <RockstarIcon sx={{ height: 50, width: 50 }} />
                     </LinkBox>}
                 />

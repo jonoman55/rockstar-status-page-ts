@@ -1,15 +1,15 @@
 import { useMemo } from 'react';
-import { useTheme, Divider, Typography, Stack } from '@mui/material';
+import { useTheme, Divider, Typography } from '@mui/material';
 
 import { RockstarSpinner } from '../design';
 import { StatusChip } from '../shared';
 import { Card, CardMedia, CardHeader, CardFooter } from '../styled/PaperCard.styled';
-import { Container, CardContent, Title, Updated, DetailsLink } from '../styled/ApiCard.styled';
+import { Container, CardContent, Title, Updated, DetailsLink, Stack } from '../styled/ApiCard.styled';
 import { useGetApiStatusQuery } from '../../services/rockstarApi';
 
 import type { StatusType } from '../../types';
 
-export const ApiCard: React.FC = () => {
+export const ApiCard: React.FC = (): JSX.Element => {
     const theme = useTheme();
 
     const { data: apiStatus, isLoading, refetch } = useGetApiStatusQuery('getApiStatus', {
@@ -39,7 +39,7 @@ export const ApiCard: React.FC = () => {
                     <DetailsLink href={`${process.env.REACT_APP_BACKEND_API_URL}`} target='_blank'>
                         <Title variant='h6'>{apiStatus?.message}</Title>
                         <Divider sx={{ pb: 1 }} />
-                        <Stack direction='row' spacing={4} sx={{ pt: 2, alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Stack direction='row' spacing={4}>
                             <Typography variant='h6' sx={{ pr: 1 }}>Status</Typography>
                             <StatusChip  status={`${apiStatus?.status}`} theme={theme} />
                         </Stack>

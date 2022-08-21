@@ -1,5 +1,5 @@
 import { Fragment, memo, useCallback, useMemo } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTheme, Box, Stack, Typography, Divider, Grid } from '@mui/material';
 import { sortBy } from 'lodash';
 
@@ -28,15 +28,18 @@ import { RockstarStatus } from '../../constants';
 
 import type { Status, Platform, StatusType } from '../../types';
 
+interface IndicatorItemProps {
+    status: StatusType;
+};
 
-const IndicatorItem = ({ status }: { status: StatusType }) => (
+const IndicatorItem: React.FC<IndicatorItemProps> = ({ status }): JSX.Element => (
     <IndicatorPaper>
         <StatusIcon status={status} />
         <IndicatorStatus>{status?.toUpperCase()}</IndicatorStatus>
     </IndicatorPaper>
 );
 
-const StatusIndicatorsGrid = () => (
+const StatusIndicatorsGrid = (): JSX.Element => (
     <IndicatorsGridPaper>
         <IndicatorTitle variant='h6'>Status Indicators</IndicatorTitle>
         <Divider sx={{ pb: 1 }} />
@@ -50,36 +53,48 @@ const StatusIndicatorsGrid = () => (
     </IndicatorsGridPaper>
 );
 
-export const StatusIndicators = () => (
+export const StatusIndicators = (): JSX.Element => (
     <IndicatorsContainer>
         <StatusIndicatorsGrid />
     </IndicatorsContainer>
 );
 
-export const Title = () => (
+export const Title = (): JSX.Element => (
     <RockstarLinkStack direction='row' spacing={2}>
         <RockstarLinkIcon />
-        <RockstarLink href={process.env.REACT_APP_ROCKSTAR_SERVICE_URL} target='_blank' variant='h5'>
+        <RockstarLink href={`${process.env.REACT_APP_ROCKSTAR_SERVICE_URL}`} target='_blank' variant='h5'>
             Service Status
         </RockstarLink>
     </RockstarLinkStack>
 );
 
-export const Updated = ({ updated }: { updated: string }) => (
+interface UpdatedProps {
+    updated: string;
+}
+
+export const Updated: React.FC<UpdatedProps> = ({ updated }): JSX.Element => (
     <FlexText gutterBottom sx={{ textTransform: 'uppercase', textAlign: 'center', pb: 2 }}>
         Updated&nbsp;{`${updated}`}
     </FlexText>
 );
 
-export const Image = ({ id }: { id: number; }) => (
+interface ImageProps {
+    id: number;
+};
+
+export const Image: React.FC<ImageProps> = ({ id }): JSX.Element => (
     <CardImageBox>
         <CardMediaBrandLogo id={id} />
     </CardImageBox>
 );
 
-export const PlatformsList = memo(({ platforms }: { platforms: Platform[]; }) => {
+interface PlatformsListProps {
+    platforms: Platform[];
+};
+
+export const PlatformsList = memo(({ platforms }: PlatformsListProps): JSX.Element => {
     const theme = useTheme();
-    const sortedPlatforms = useMemo(() => sortBy(platforms, 'name'), [platforms]);
+    const sortedPlatforms: Platform[] = useMemo(() => sortBy(platforms, 'name'), [platforms]);
     return (
         <Fragment>
             {sortedPlatforms?.map((platform: Platform, idx: number) => (
@@ -89,10 +104,7 @@ export const PlatformsList = memo(({ platforms }: { platforms: Platform[]; }) =>
                             <PlatformIcon platform={platform?.name} />
                             <Typography sx={{ pl: 2 }}>{platform?.name}</Typography>
                         </Box>
-                        <StatusChip
-                            status={`${platform?.status}`}
-                            theme={theme}
-                        />
+                        <StatusChip status={`${platform?.status}`} theme={theme} />
                     </PlatformWrapper>
                 </PlatformItem>
             ))}
@@ -100,7 +112,11 @@ export const PlatformsList = memo(({ platforms }: { platforms: Platform[]; }) =>
     );
 });
 
-export const StatusGridItems = memo(({ statuses }: { statuses: Status[]; }) => {
+interface StatusGridItemsProps {
+    statuses: Status[];
+};
+
+export const StatusGridItems = memo(({ statuses }: StatusGridItemsProps): JSX.Element => {
     const dispatch = useAppDispatch();
 
     const handleClick = useCallback((status: Status) => () => {
@@ -112,20 +128,22 @@ export const StatusGridItems = memo(({ statuses }: { statuses: Status[]; }) => {
     return (
         <Fragment>
             {statuses?.map((status: Status, index: number) => (
-                <Grid item key={index} component={NavLink} to={`/service/${status?.id}`} xs={12} sm={12} md={6} lg={4} xl={3} onClick={handleClick(status)} sx={{
-                    textDecoration: 'none'
-                }}>
+                <Grid
+                    key={index}
+                    item
+                    component={Link}
+                    to={`/service/${status?.id}`}
+                    xs={12} sm={12} md={6} lg={4} xl={3}
+                    onClick={handleClick(status)}
+                    sx={{ textDecoration: 'none' }}
+                >
                     <StatusCard>
                         <Image id={status?.id} />
-                        <CardName variant='h6' gutterBottom paragraph>
-                            {status?.name}
-                        </CardName>
+                        <CardName variant='h6' gutterBottom paragraph>{status?.name}</CardName>
                         <Divider variant='middle' />
                         <Stack direction='column' spacing={1} sx={{ pt: 2 }}>
                             {status?.services_platforms && (
-                                <PlatformsList
-                                    platforms={status?.services_platforms}
-                                />
+                                <PlatformsList platforms={status?.services_platforms} />
                             )}
                         </Stack>
                     </StatusCard>

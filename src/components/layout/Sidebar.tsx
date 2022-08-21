@@ -1,9 +1,8 @@
 import { useCallback, useMemo, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Box, ClickAwayListener, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, PopperPlacementType } from '@mui/material';
+import { Box, ClickAwayListener, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { DarkMode, LightMode, Menu as MenuIcon } from '@mui/icons-material';
 
-import { ToolTip } from '../controls';
+import { ListItemLinkButton, ListItemLink, ToolTip } from '../controls';
 import { ListSubheader, IconButton, Switch } from '../styled/Sidebar.styled';
 import { appActions } from '../../reducers/appSlice';
 import { toggleTheme } from '../../reducers/themeSlice';
@@ -11,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useBreakpoint } from '../../hooks';
 import { LinkItems } from '../../constants';
 
-import type { LinkItem, Anchor } from '../../types';
+import type { LinkItem, Anchor, Placement } from '../../types';
 
 /**
  * Sidebar List Props
@@ -29,31 +28,21 @@ interface ListProps {
 
 const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
     const matches: boolean = useBreakpoint('sm', 'up');
+
+    const internalLinks: LinkItem[] = useMemo(() =>
+        LinkItems.filter((i) => i.type !== 'external' && i.type !== 'other'),
+        []
+    );
+
+    const externalLinks: LinkItem[] = useMemo(() =>
+        LinkItems.filter((i) => i.type === 'external'),
+        []
+    );
 
     const darkTheme: boolean = useAppSelector((state) => state.theme.darkTheme);
 
-    const placement: PopperPlacementType = useMemo(() => matches ? 'right' : 'top-end', [matches]);
-
-    const handleClick = useCallback(
-        (id: number, href: string) => () => {
-            if (id <= 3) {
-                dispatch(appActions.setTabValue(id));
-                dispatch(appActions.setIsServiceRoute(false));
-                dispatch(appActions.setDrawerOpen(false));
-                dispatch(appActions.setTargetHref(href));
-                navigate(href);
-            } else {
-                dispatch(appActions.setTabValue(0));
-                dispatch(appActions.setIsServiceRoute(true));
-                dispatch(appActions.setDrawerOpen(false));
-                dispatch(appActions.setTargetHref(href));
-                navigate(href);
-            }
-        },
-        [navigate, dispatch]
-    );
+    const placement: Placement = useMemo(() => matches ? 'right' : 'top-end', [matches]);
 
     return (
         <Box
@@ -63,33 +52,24 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
             onKeyDown={toggleDrawer(false)}
         >
             <List component='nav' subheader={<ListSubheader>Status Pages</ListSubheader>}>
-                {LinkItems.filter((i) => i.type !== 'external' && i.type !== 'other').map(
-                    ({ text, icon, id, href }: LinkItem, index: number) => (
-                        <ListItem key={index} disablePadding>
-                            <ToolTip title={text} placement={placement} sx={{ width: '100%' }} component={
-                                <ListItemButton onClick={handleClick(id, href)}>
-                                    <ListItemIcon sx={{ color: 'primary.contrastText' }}>
-                                        {icon}
-                                    </ListItemIcon>
-                                    <ListItemText primary={text} sx={{ color: 'primary.contrastText' }} />
-                                </ListItemButton>}
-                            />
-                        </ListItem>
-                    )
-                )}
+                {internalLinks.map(({ text, icon, to, id }: LinkItem) => (
+                    <ListItemLink
+                        key={id}
+                        primary={text}
+                        to={`${to}`}
+                        icon={icon}
+                    />
+                ))}
             </List>
             <List subheader={<ListSubheader>External Links</ListSubheader>}>
-                {LinkItems.filter((i) => i.type === 'external').map(({ text, icon, href }: LinkItem, index: number) => (
-                    <ListItem key={index} disablePadding>
-                        <ToolTip title={text} placement={placement} sx={{ width: '100%' }} component={
-                            <ListItemButton href={`${href}`} target='_blank'>
-                                <ListItemIcon sx={{ color: 'primary.contrastText' }}>
-                                    {icon}
-                                </ListItemIcon>
-                                <ListItemText primary={text} sx={{ color: 'primary.contrastText' }} />
-                            </ListItemButton>}
-                        />
-                    </ListItem>
+                {externalLinks.map(({ text, icon, href, id }: LinkItem) => (
+                    <ListItemLinkButton
+                        key={id}
+                        primary={text}
+                        href={`${href}`}
+                        icon={icon}
+                        placement={placement}
+                    />
                 ))}
             </List>
             <List subheader={<ListSubheader>Settings</ListSubheader>}>
@@ -107,9 +87,7 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
                             edge="end"
                             onChange={() => dispatch(toggleTheme())}
                             checked={darkTheme}
-                            inputProps={{
-                                'aria-labelledby': 'switch-list-label-theme'
-                            }}
+                            inputProps={{ 'aria-labelledby': 'switch-list-label-theme' }}
                         />}
                     />
                 </ListItem>
@@ -152,10 +130,6 @@ const Sidebar: React.FC = (): JSX.Element => {
                             anchor={anchor}
                             open={drawerOpen}
                             onClose={toggleDrawer(false)}
-                        // onOpen={toggleDrawer(true)}
-                        // onClick={toggleDrawer(false)}
-                        // onClose={(_, reason) => reason === 'backdropClick' && toggleDrawer(false)}
-                        // ModalProps={{ onBackdropClick: toggleDrawer(false) }}
                         >
                             <SidebarList
                                 anchor={anchor}
