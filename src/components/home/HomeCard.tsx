@@ -10,7 +10,7 @@ import { getStatusesCount } from '../../helpers';
 
 import type { Status, StatusType } from '../../types';
 
-export const HomeCard: React.FC = () => {
+export const HomeCard: React.FC = (): JSX.Element => {
     const { data: updatedResult, isLoading: updatedIsLoading } = useGetUpdatedQuery('getUpdated', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
@@ -21,7 +21,12 @@ export const HomeCard: React.FC = () => {
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
 
-    const statuses = useMemo<Status[]>(() => {
+    const isLoading: boolean = useMemo(
+        () => statusesIsLoading || updatedIsLoading,
+        [statusesIsLoading, updatedIsLoading]
+    );
+
+    const statuses: Status[] = useMemo<Status[]>(() => {
         const results: Status[] = [];
         if (!statusesIsLoading && statusesResults) {
             statusesResults?.filter(
@@ -36,7 +41,7 @@ export const HomeCard: React.FC = () => {
         return results;
     }, [statusesResults, statusesIsLoading]);
 
-    const overallStatus = useMemo<StatusType>(() => {
+    const overallStatus: StatusType = useMemo<StatusType>(() => {
         let result: StatusType;
         if (!statusesIsLoading && statuses) {
             const highest = getStatusesCount(
@@ -49,7 +54,7 @@ export const HomeCard: React.FC = () => {
         return result;
     }, [statuses, statusesIsLoading]);
 
-    return statusesIsLoading || updatedIsLoading ? <RockstarSpinner /> : (
+    return isLoading ? <RockstarSpinner /> : (
         <Paper elevation={0}>
             <Card>
                 <CardHeader

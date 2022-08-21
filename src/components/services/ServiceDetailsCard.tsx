@@ -14,12 +14,21 @@ import { fetchStatus } from '../../helpers';
 import type { Service, StatusType } from '../../types';
 
 interface Props {
+    /**
+     * Rockstar Service
+     */
     service: Service,
+    /**
+     * Service ID
+     */
     serviceId: number;
+    /**
+     * Refetch Function
+     */
     refetchService: () => void;
 };
 
-export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetchService }) => {
+export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetchService }): JSX.Element => {
     const theme = useTheme();
 
     const { data, isLoading, refetch } = useGetStatusQuery(serviceId, {
@@ -27,7 +36,7 @@ export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetc
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
 
-    const statusStatus = useMemo<StatusType>(() => {
+    const statusStatus: StatusType = useMemo<StatusType>(() => {
         let result: StatusType;
         if (!isLoading && data) {
             result = data?.status?.toLowerCase() as StatusType;
@@ -35,7 +44,7 @@ export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetc
         return result;
     }, [data, isLoading]);
 
-    const serviceStatus = useMemo<StatusType>(() => {
+    const serviceStatus: StatusType = useMemo<StatusType>(() => {
         let result: StatusType;
         if (service) {
             result = fetchStatus(service?.status?.toLowerCase() as StatusType);
@@ -58,9 +67,7 @@ export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetc
                     onClick={handleClick}
                 />
                 <CardImage id={serviceId} />
-                {data?.message && (
-                    <HtmlMessage message={data?.message} />
-                )}
+                {data?.message && <HtmlMessage message={data?.message} />}
                 <CardContent>
                     <Divider sx={{ pb: 2 }} />
                     <UpdatedBox>

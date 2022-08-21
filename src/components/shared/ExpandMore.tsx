@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import { IconButton, IconButtonProps } from '@mui/material';
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;

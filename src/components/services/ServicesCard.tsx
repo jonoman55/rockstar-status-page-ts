@@ -11,7 +11,7 @@ import { RockstarStatus } from '../../constants';
 
 import type { Service, StatusType } from '../../types';
 
-export const ServicesCard: React.FC = () => {
+export const ServicesCard: React.FC = (): JSX.Element => {
     const theme = useTheme();
 
     const { data: servicesResults, isLoading: servicesIsLoading, refetch } = useGetServicesQuery('getServices', {
@@ -19,7 +19,7 @@ export const ServicesCard: React.FC = () => {
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
 
-    const services = useMemo<Service[]>(() => {
+    const services: Service[] = useMemo<Service[]>(() => {
         const results: Service[] = [];
         if (!servicesIsLoading && servicesResults) {
             servicesResults.forEach((service: Service) => {
@@ -29,7 +29,7 @@ export const ServicesCard: React.FC = () => {
         return results;
     }, [servicesResults, servicesIsLoading]);
 
-    const overallStatus = useMemo<StatusType>(() => {
+    const overallStatus: StatusType = useMemo<StatusType>(() => {
         let result: StatusType;
         if (!servicesIsLoading && services) {
             const highest = getStatusesCount(

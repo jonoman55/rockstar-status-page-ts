@@ -2,6 +2,7 @@ import { useCallback } from "react"
 
 import { rockstarApi } from "../services/rockstarApi";
 import { useAppDispatch } from "../app/hooks";
+import type { Service, Status } from "../types";
 
 /**
  * Rockstar API custom hook
@@ -25,17 +26,23 @@ export const useRockstarApi = () => {
         return dispatch(rockstarApi.endpoints.getServices.initiate('getServices')).unwrap();
     }, [dispatch]);
 
-    const fetchService = useCallback((arg: { id: number }) => {
-        return dispatch(rockstarApi.endpoints.getService.initiate(arg)).unwrap();
-    }, [dispatch]);
+    const fetchService = useCallback(
+        ({ id }: { id: number; }): Promise<Service> => {
+            return dispatch(rockstarApi.endpoints.getService.initiate(id)).unwrap();
+        },
+        [dispatch]
+    );
 
     const fetchStatuses = useCallback(() => {
         return dispatch(rockstarApi.endpoints.getStatuses.initiate('getStatuses')).unwrap();
     }, [dispatch]);
 
-    const fetchStatus = useCallback((arg: { id: number }) => {
-        return dispatch(rockstarApi.endpoints.getStatus.initiate(arg)).unwrap();
-    }, [dispatch]);
+    const fetchStatus = useCallback(
+        ({ id }: { id: number; }): Promise<Status> => {
+            return dispatch(rockstarApi.endpoints.getStatus.initiate(id)).unwrap();
+        },
+        [dispatch]
+    );
 
     return {
         fetchApiStatus,

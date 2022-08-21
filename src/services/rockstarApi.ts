@@ -39,7 +39,7 @@ export const rockstarApi = createApi({
             transformResponse: (services: Service[]) => services,
         }),
         getService: builder.query({
-            query: (id) => ({
+            query: (id: number) => ({
                 url: `/services/${id}`,
                 responseHandler: async (res: Response) => await res.json() as Service,
             }),
@@ -53,7 +53,7 @@ export const rockstarApi = createApi({
             transformResponse: (statuses: Status[]) => statuses,
         }),
         getStatus: builder.query({
-            query: (id) => ({
+            query: (id: number) => ({
                 url: `/statuses/${id}`,
                 responseHandler: async (res: Response) => await res.json() as Status,
             }),

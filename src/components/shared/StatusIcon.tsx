@@ -11,6 +11,9 @@ const styles = {
 };
 
 interface Props {
+    /**
+     * Status Type
+     */
     status: StatusType;
 };
 

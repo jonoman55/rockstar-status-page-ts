@@ -3,7 +3,13 @@ import { Chip, Theme } from "@mui/material";
 import { styleStatus } from "../../helpers";
 
 export interface StatusChipProps {
+    /**
+     * Status - UP, LIMITED, DOWN
+     */
     status: string;
+    /**
+     * MUI Theme
+     */
     theme: Theme;
 };
 

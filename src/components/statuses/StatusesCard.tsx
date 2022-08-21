@@ -11,7 +11,7 @@ import { getStatusesCount } from '../../helpers';
 
 import type { Status, StatusType } from '../../types';
 
-export const StatusesCard: React.FC = () => {
+export const StatusesCard: React.FC = (): JSX.Element => {
     const theme = useTheme();
 
     const { data: statusesResults, isLoading: statusesIsLoading, refetch } = useGetStatusesQuery('getStatuses', {
@@ -19,7 +19,7 @@ export const StatusesCard: React.FC = () => {
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
 
-    const statuses = useMemo<Status[]>(() => {
+    const statuses: Status[] = useMemo<Status[]>(() => {
         const results: Status[] = [];
         if (!statusesIsLoading && statusesResults) {
             statusesResults.forEach((status: Status) => {
@@ -29,7 +29,7 @@ export const StatusesCard: React.FC = () => {
         return results;
     }, [statusesResults, statusesIsLoading]);
 
-    const overallStatus = useMemo<StatusType>(() => {
+    const overallStatus: StatusType = useMemo<StatusType>(() => {
         let result: StatusType;
         if (!statusesIsLoading && statuses) {
             const highest = getStatusesCount(
