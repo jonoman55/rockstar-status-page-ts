@@ -1,4 +1,5 @@
 import { JSXElementConstructor, LazyExoticComponent, LegacyRef, ReactElement, ReactNode } from "react";
+import { TooltipProps } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 
 /**
@@ -99,20 +100,7 @@ export type Status = Service & ServicePlatforms;
 /**
  * Tooltip Placement
  */
-export type Placement =
-    "bottom-end"
-    | "bottom-start"
-    | "bottom"
-    | "left-end"
-    | "left-start"
-    | "left"
-    | "right-end"
-    | "right-start"
-    | "right"
-    | "top-end"
-    | "top-start"
-    | "top"
-    | undefined
+export type Placement = TooltipProps['placement']
 
 /**
  * Drawer Anchor

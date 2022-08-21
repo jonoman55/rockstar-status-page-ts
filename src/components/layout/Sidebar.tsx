@@ -58,6 +58,7 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
                         primary={text}
                         to={`${to}`}
                         icon={icon}
+                        placement={placement}
                     />
                 ))}
             </List>
