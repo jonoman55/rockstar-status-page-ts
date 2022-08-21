@@ -18,4 +18,5 @@
 - [ ] Add banner for when there is a known outage with link to Outages page
 - [ ] Add a notification alerts for when service or platform statuses change
 - [ ] Fix StatusAvatar by weighting the Status (UP, DOWN, LIMITED) rather than based on count
+- [ ] Remove all unused components
 - [ ] Deploy to Netlify
