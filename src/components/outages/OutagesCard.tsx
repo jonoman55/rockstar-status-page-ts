@@ -106,18 +106,6 @@ export const OutagesCard: React.FC = (): JSX.Element => {
         return results;
     }, [platformStatusRows]);
 
-    // const serviceNames = useMemo(() => {
-    //     const results: string[] = [];
-    //     if (platformStatusRows) {
-    //         Object.values(groupBy(platformStatusRows, 'service')).forEach(
-    //             (rows) => rows.map((row) => row.service).forEach(
-    //                 (service) => results.push(service)
-    //             )
-    //         );
-    //     }
-    //     return uniq(results);
-    // }, [platformStatusRows]);
-
     /**
      * Overall Status
      */
