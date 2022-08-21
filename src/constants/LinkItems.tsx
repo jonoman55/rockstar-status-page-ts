@@ -22,7 +22,7 @@ export const LinkItems: LinkItem[] = [
         id: 5, text: 'API Routes', description: 'Backend API Routes', icon: <Lan />, type: 'external', href: `${process.env.REACT_APP_BACKEND_API_URL}`
     },
     {
-        id: 6, text: 'GitHub Repo', description: 'Source Code', icon: <GitHub />, type: 'external', href: `${process.env.REACT_APP_GITHUB_URL}`
+        id: 6, text: 'GitHub Repo', description: 'Source Code', icon: <GitHub />, type: 'external', href: `${process.env.REACT_APP_GITHUB_REPO_URL}`
     },
     {
         id: 7, text: 'Rockstar Support', description: 'Rockstar Support Twitter Account', icon: <Twitter />, type: 'external', href: `${process.env.REACT_APP_ROCKSTAR_TWITTER_URL}`
