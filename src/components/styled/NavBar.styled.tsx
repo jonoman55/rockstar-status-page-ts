@@ -20,7 +20,7 @@ export const HomeButton = styled(({ ...props }: ToggleButtonProps) =>
     '&:hover': {
         color: theme.custom.palette.main,
     },
-})) as unknown as typeof NavLink | typeof MuiToggleButton;;
+})) as unknown as typeof NavLink | typeof MuiToggleButton;
 
 export const ToggleButton = styled(({ ...props }: ToggleButtonProps & NavLinkProps) =>
     <MuiToggleButton {...props} />, {

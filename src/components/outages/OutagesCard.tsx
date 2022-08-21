@@ -1,12 +1,12 @@
-import { useCallback, useMemo } from 'react';
+import { Fragment, useCallback, useMemo } from 'react';
 import { Grid } from '@mui/material';
-import { groupBy } from 'lodash';
+import { groupBy, uniq } from 'lodash';
 
 import { ServicesDataGrid } from './ServicesDataGrid';
 import { PlatformsDataGrid } from './PlatformsDataGrid';
 import { platformColumns as columns } from './columnDefs';
-import { DataGridHeader, DataGridWrapper } from '../styled/DataGrid.styled';
-import { Card, CardContentPaper, CardHeader, Paper } from '../styled/PaperCard.styled';
+import { DataGridWrapper, GridHeader, PlatformHeader } from '../styled/DataGrid.styled';
+import { Card, CardContentPaper as CardContent, CardHeader, Paper } from '../styled/PaperCard.styled';
 import { useGetServicesQuery, useGetStatusesQuery } from '../../services/rockstarApi';
 import { getStatusesCount } from '../../helpers';
 import { RockstarStatus } from '../../constants';
@@ -21,7 +21,7 @@ import type {
     StatusType
 } from '../../types';
 
-export const OutagesCard = () => {
+export const OutagesCard: React.FC = (): JSX.Element => {
     /**
      * RTK Fetch Services Query
      */
@@ -73,15 +73,15 @@ export const OutagesCard = () => {
     const platformStatusRows: PlatformStatusRow[] = useMemo<PlatformStatusRow[]>(() => {
         const results: PlatformStatusRow[] = [];
         if (!isLoading && statusesResults) {
-            statusesResults?.forEach(({ name, updated, services_platforms }: Status) => {
+            statusesResults?.forEach(({ id, name, updated, services_platforms }: Status) => {
                 services_platforms.forEach((p: Platform, index: number) => {
                     return results.push({
-                        id: index,
+                        id: id,
                         service: name,
                         updated: updated,
                         name: p.name,
                         status: p.status
-                    });     
+                    });
                 });
             });
         }
@@ -94,16 +94,29 @@ export const OutagesCard = () => {
     const platformsStatusData: PlatformStatusesData[] = useMemo(() => {
         const results: PlatformStatusesData[] = [];
         if (platformStatusRows) {
-            const groupedRows = groupBy(platformStatusRows, 'service');
-            Object.values(groupedRows).forEach((rows: PlatformStatusRow[]) => {
-                results.push({
-                    columns,
-                    rows
-                });
-            });
+            Object.values(groupBy(platformStatusRows, 'service')).forEach(
+                (rows: PlatformStatusRow[]) => {
+                    results.push({
+                        columns,
+                        rows
+                    });
+                }
+            );
         }
         return results;
     }, [platformStatusRows]);
+
+    // const serviceNames = useMemo(() => {
+    //     const results: string[] = [];
+    //     if (platformStatusRows) {
+    //         Object.values(groupBy(platformStatusRows, 'service')).forEach(
+    //             (rows) => rows.map((row) => row.service).forEach(
+    //                 (service) => results.push(service)
+    //             )
+    //         );
+    //     }
+    //     return uniq(results);
+    // }, [platformStatusRows]);
 
     /**
      * Overall Status
@@ -112,9 +125,9 @@ export const OutagesCard = () => {
         let result: StatusType;
         if (!isLoading && statusesResults) {
             const highest = getStatusesCount(
-                statusesResults.map((s: Status) => {
-                    return s.status?.toLowerCase() as RockstarStatus;
-                })
+                statusesResults.map(
+                    (s: Status) => s.status?.toLowerCase() as RockstarStatus
+                )
             );
             result = highest?.toString().toLowerCase() as StatusType;
         }
@@ -133,13 +146,13 @@ export const OutagesCard = () => {
         <Paper elevation={0}>
             <Card>
                 <CardHeader
-                    title='Services & Statuses'
+                    title='Services & Platform Statuses'
                     subheader={`${new Date().toLocaleString()}`}
                     status={overallStatus}
                     onClick={handleRefetch}
                 />
-                <CardContentPaper>
-                    <DataGridHeader />
+                <CardContent>
+                    <GridHeader />
                     <Grid container spacing={0}>
                         <Grid item xs={12}>
                             <DataGridWrapper>
@@ -151,16 +164,21 @@ export const OutagesCard = () => {
                         </Grid>
                         {platformsStatusData.map((data: PlatformStatusesData, index: number) => (
                             <Grid key={index} item xs={12} sm={12} md={6} lg={6} xl={6}>
-                                <DataGridWrapper>
-                                    <PlatformsDataGrid
-                                        data={data}
-                                        isLoading={isLoading}
-                                    />
-                                </DataGridWrapper>
+                                <Fragment>
+                                    {uniq(data.rows.map((row: PlatformStatusRow) => row.service)).map((service: string, i: number) => (
+                                        <PlatformHeader key={i} name={service} />
+                                    ))}
+                                    <DataGridWrapper>
+                                        <PlatformsDataGrid
+                                            data={data}
+                                            isLoading={isLoading}
+                                        />
+                                    </DataGridWrapper>
+                                </Fragment>
                             </Grid>
                         ))}
                     </Grid>
-                </CardContentPaper>
+                </CardContent>
             </Card>
         </Paper>
     );

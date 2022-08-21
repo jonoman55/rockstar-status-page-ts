@@ -11,11 +11,14 @@ import {
 } from '@mui/x-data-grid';
 import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
 
+import { serviceColumns } from './columnDefs';
 import { DataGrid, backgroundStyles, dataGridComponents } from '../styled/DataGrid.styled';
 
-import { serviceColumns } from './columnDefs';
 import type { ServiceRow, ServicesData } from '../../types';
 
+/**
+ * Initial DataGrid State
+ */
 const initialState: GridInitialStateCommunity = {
     sorting: {
         sortModel: [{
@@ -52,7 +55,7 @@ interface Props {
 
 /**
  * Services DataGrid
- * @param props rows: OutageRow[], isLoading: boolean
+ * @param props rows, isLoading
  * @returns {JSX.Element} ServicesDataGrid
  */
 export const ServicesDataGrid: React.FC<Props> = ({ rows, isLoading }): JSX.Element => {

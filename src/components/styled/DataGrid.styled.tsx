@@ -31,10 +31,10 @@ import {
     Visibility as VisibilityIcon,
     VisibilityOff as VisibilityOffIcon
 } from '@mui/icons-material';
-import { styled, alpha, darken, lighten, useTheme, Theme } from '@mui/material/styles';
+import { styled, alpha, darken, lighten, useTheme, Theme, CSSObject } from '@mui/material/styles';
 
 import { ToolTip } from '../controls';
-import { StatusChip, StatusChipProps } from '../shared';
+import { StatusChip as StatusTypeChip, StatusChipProps as StatusTypeChipProps } from '../shared';
 import { CardMediaBrandLogo, RefreshButton, StatusAvatar } from './PaperCard.styled';
 import { appActions } from '../../reducers/appSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -280,7 +280,7 @@ export const DataGridCardImage = (): JSX.Element => (
 /**
  * DataGrid Status
  */
-type DataGridStatus = 'connected' | 'disconnected';
+export type DataGridStatus = 'connected' | 'disconnected';
 
 /**
  * DataGird Footer Status
@@ -327,10 +327,10 @@ export const DataGridPagination = (props: {
 /**
  * Memoized Grid Cell StatusChip Component
  */
-export const GridCellStatusTypeChip = memo(({ status }: StatusChipProps) => {
+export const GridCellStatusTypeChip = memo(({ status }: StatusTypeChipProps) => {
     const theme = useTheme();
     return (
-        <StatusChip
+        <StatusTypeChip
             status={status}
             theme={theme}
         />
@@ -501,9 +501,9 @@ export const DataGridWrapper = (props: {
 );
 
 /**
- * Styled DataGrid Header Box
+ * Styled Header Box
  */
-export const DataGridHeaderBox = styled(MuiPaper)(({ theme }) => ({
+export const HeaderBox = styled(MuiPaper)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
@@ -539,7 +539,7 @@ export const DataGridHeaderBox = styled(MuiPaper)(({ theme }) => ({
 /**
  * Styled DataGrid Header Image Box
  */
-export const StyledImageBox = styled(Box)(({ theme }) => ({
+export const ImageBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
@@ -552,12 +552,12 @@ export const StyledImageBox = styled(Box)(({ theme }) => ({
 }));
 
 /**
- * DataGrid Header With Image
+ * Grid Header With Image
  * @returns {JSX.Element} DataGrid Header Component
  */
-export const DataGridHeader = (): JSX.Element => (
-    <DataGridHeaderBox elevation={1}>
-        <StyledImageBox>
+export const GridHeader = (): JSX.Element => (
+    <HeaderBox elevation={1}>
+        <ImageBox>
             <Box
                 component='img'
                 src={RockstarSupport}
@@ -565,14 +565,52 @@ export const DataGridHeader = (): JSX.Element => (
                 height={50}
                 width={200}
             />
-        </StyledImageBox>
-    </DataGridHeaderBox>
+        </ImageBox>
+    </HeaderBox>
+);
+
+/**
+ * Styled Platform Header Paper
+ */
+export const PlatformHeaderPaper = styled(MuiPaper)(({ theme }) => ({
+    padding: theme.spacing(1),
+    color: theme.custom.palette.main,
+    borderRadius: 0,
+    backgroundColor: theme.palette.mode === 'light'
+        ? 'rgba(0, 0, 0, 0.04)'
+        : 'rgba(255, 255, 255, 0.08)',
+    borderRight: theme.palette.mode === 'light'
+        ? '1px solid rgba(224, 224, 224, 1)'
+        : '1px solid rgba(81, 81, 81, 1)',
+    borderLeft: theme.palette.mode === 'light'
+        ? '1px solid rgba(224, 224, 224, 1)'
+        : '1px solid rgba(81, 81, 81, 1)',
+}));
+
+/**
+ * Platform Header Props
+ */
+interface PlatformHeaderProps {
+    name: string;
+};
+
+/**
+ * Platform Header With Service Name
+ * @param {PlatformHeaderProps} name Service Name 
+ * @returns {JSX.Element} Platform DataGrid Header
+ */
+export const PlatformHeader: React.FC<PlatformHeaderProps> = ({ name }): JSX.Element => (
+    <PlatformHeaderPaper elevation={0}>
+        <Typography variant='h6' textAlign='center'>
+            {name}
+        </Typography>
+    </PlatformHeaderPaper>
 );
 
 /**
  * Styled DataGrid Overlay
  */
-export const StyledGridDataOverlay = styled('div')(({ theme }) => ({
+export const GridDataOverlay = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -601,7 +639,7 @@ export const StyledGridDataOverlay = styled('div')(({ theme }) => ({
  * @returns {JSX.Element} No Rows Overlay Component
  */
 export const NoRowsOverlay = (): JSX.Element => (
-    <StyledGridDataOverlay>
+    <GridDataOverlay>
         <svg width="120" height="100" viewBox="0 0 184 152" aria-hidden focusable="false">
             <g fill="none" fillRule="evenodd">
                 <g transform="translate(24 31.67)">
@@ -630,7 +668,7 @@ export const NoRowsOverlay = (): JSX.Element => (
             </g>
         </svg>
         <Box sx={{ mt: 1 }}>No Rows</Box>
-    </StyledGridDataOverlay>
+    </GridDataOverlay>
 );
 
 /**
@@ -733,7 +771,7 @@ export function renderColumnHeader(params: GridColumnHeaderParams): JSX.Element 
 /**
  * Styled Data Grid Status Chip
  */
-export const StyledStatusChip = styled(Chip)(({ theme }) => ({
+export const StatusChip = styled(Chip)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     '& .MuiChip-label': {
         width: '75px',
@@ -747,31 +785,51 @@ export const StyledStatusChip = styled(Chip)(({ theme }) => ({
 }));
 
 /**
+ * DataGrid Status Chip Props
+ */
+interface StatusChipProps {
+    status: string;
+};
+
+/**
+ * Create DataGrid Status Chip Styles
+ * @param {string} status Status (UP, LIMITED, DOWN)
+ * @param {Theme} theme MUI Theme
+ * @returns {CSSObject} StatusChip Styles
+ */
+export const statusChipStyles = (status: string, theme: Theme): CSSObject => {
+    return {
+        backgroundColor: theme.palette.mode === 'dark'
+            ? lighten(status.toUpperCase() === 'UP'
+                ? theme.custom.palette.green
+                : status.toUpperCase() === 'DOWN'
+                    ? theme.custom.palette.red
+                    : theme.custom.palette.orange,
+                theme.palette.action.selectedOpacity
+            )
+            : darken(status.toUpperCase() === 'UP'
+                ? theme.custom.palette.green
+                : status.toUpperCase() === 'DOWN'
+                    ? theme.custom.palette.red
+                    : theme.custom.palette.orange,
+                theme.palette.action.focusOpacity
+            ),
+
+    };
+};
+
+/**
  * Memoized Grid Cell Status Chip
  */
-export const GridCellStatusChip = memo(({ status }: { status: string; }) => (
-    <StyledStatusChip
-        label={status.toUpperCase()}
-        sx={{
-            bgcolor: (theme) => theme.palette.mode === 'dark'
-                ? lighten(status.toUpperCase() === 'UP'
-                    ? theme.custom.palette.green
-                    : status.toUpperCase() === 'DOWN'
-                        ? theme.custom.palette.red
-                        : theme.custom.palette.orange,
-                    theme.palette.action.selectedOpacity
-                )
-                : darken(status.toUpperCase() === 'UP'
-                    ? theme.custom.palette.green
-                    : status.toUpperCase() === 'DOWN'
-                        ? theme.custom.palette.red
-                        : theme.custom.palette.orange,
-                    theme.palette.action.focusOpacity
-                )
-
-        }}
-    />
-));
+export const GridCellStatusChip = memo(({ status }: StatusChipProps) => {
+    const theme = useTheme();
+    return (
+        <StatusChip
+            label={status.toUpperCase()}
+            sx={statusChipStyles(status, theme)}
+        />
+    );
+});
 
 /**
  * Render Grid Cell Status Chip
@@ -779,7 +837,9 @@ export const GridCellStatusChip = memo(({ status }: { status: string; }) => (
  * @returns {JSX.Element} Rendered Status Chip Component
  */
 export function renderCellStatusChip(params: GridRenderCellParams<typeof Chip>): JSX.Element {
-    return <GridCellStatusChip status={params.row.status} />
+    return (
+        <GridCellStatusChip status={params.row.status} />
+    );
 };
 
 /**
@@ -803,9 +863,9 @@ export function renderCellId(params: GridRenderCellParams<typeof Typography>): J
 /**
  * Create Link Styles
  * @param {Theme} theme MUI Theme
- * @returns Link Styles
+ * @returns {CSSObject} Link Styles
  */
-export const linkStyles = (theme: Theme) => {
+export const linkStyles = (theme: Theme): CSSObject => {
     return {
         textDecoration: 'none',
         color: 'inherit',
@@ -826,7 +886,7 @@ export const linkStyles = (theme: Theme) => {
 /**
  * Grid Cell Props Interface
  */
-export interface GridCellProps {
+interface GridCellProps {
     service: ServiceRow | Status;
 };
 
@@ -851,13 +911,13 @@ export const GridCellLink = memo((props: GridCellProps) => {
 export function renderCellLink(params: GridRenderCellParams<typeof Typography>): JSX.Element {
     return (
         <GridCellLink service={params.row} />
-    )
+    );
 };
 
 /**
  * Grid Cell Expand Props Interface
  */
-export interface GridCellExpandProps {
+interface GridCellExpandProps {
     value: string;
     width: number;
 };
@@ -989,7 +1049,7 @@ export function renderCellExpand(params: GridRenderCellParams<string>): JSX.Elem
 /**
  * Grid Cell Text Props
  */
-export interface GridCellTextProps {
+interface GridCellTextProps {
     text: string;
 };
 
@@ -1010,7 +1070,7 @@ export const GridCellText = memo(({ text }: GridCellTextProps) => (
 export function renderCellText(params: GridRenderCellParams<typeof Typography>): JSX.Element {
     return (
         <GridCellText text={params.row.service} />
-    )
+    );
 };
 
 /**
@@ -1044,11 +1104,11 @@ export const getUpdatedDate = (params: GridValueGetterParams): string => {
 };
 
 /**
- * DataGrid Background Styles Theme
- * @param {Theme} theme 
- * @returns Background Styles
+ * Create DataGrid Background Styles
+ * @param {Theme} theme MUI Theme
+ * @returns {CSSObject} Background Styles
  */
-export const backgroundStyles = (theme: Theme) => {
+export const backgroundStyles = (theme: Theme): CSSObject => {
     return {
         '& .super-app-theme--UP': {
             bgcolor:

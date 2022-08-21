@@ -13,10 +13,12 @@ import { DataGrid, backgroundStyles, dataGridComponents } from '../styled/DataGr
 
 import type { PlatformStatusesData } from '../../types';
 
+/**
+ * Initial DataGrid State
+ */
 const initialState: GridInitialStateCommunity = {
     columns: {
         columnVisibilityModel: {
-            // Hide columns status and traderName, the other columns will remain visible
             id: false,
             service: false,
             name: true,
@@ -37,7 +39,7 @@ const initialState: GridInitialStateCommunity = {
  */
 interface Props {
     /**
-     * Platform Statuses Data
+     * Platform Statuses Data (columns and rows)
      */
     data: PlatformStatusesData,
     /**
@@ -47,15 +49,15 @@ interface Props {
 };
 
 /**
- * Services DataGrid
- * @param props PlatformStatusesData: columns and rows, isLoading: boolean
- * @returns {JSX.Element} ServicesDataGrid
+ * Platforms DataGrid
+ * @param props PlatformStatusesData, isLoading
+ * @returns {JSX.Element} PlatformsDataGrid
  */
 export const PlatformsDataGrid: React.FC<Props> = ({ data, isLoading }): JSX.Element => {
     const theme = useTheme();
 
     const handleGetRowId = (row: GridRowModel) => {
-        return row.id as number;
+        return row.name as string;
     };
 
     const handleGetRowHeight = (_params: GridRowHeightParams) => {
