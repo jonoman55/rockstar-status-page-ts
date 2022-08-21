@@ -13,14 +13,14 @@ export const rockstarApi = createApi({
         getApiStatus: builder.query({
             query: () => ({
                 url: `/`,
-                responseHandler: async (res: Response) => await res.json(),
+                responseHandler: async (res: Response) => await res.json() as Api,
             }),
             transformResponse: (api: Api) => api,
         }),
         getAll: builder.query({
             query: () => ({ 
                 url: `/all`,
-                responseHandler: async (res: Response) => await res.json(),
+                responseHandler: async (res: Response) => await res.json() as All,
             }),
             transformResponse: (all: All) => all,
         }),
