@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 
-import { TabNav } from '../design';
+import { LinkBar } from '../design';
 
 import { ChildProps } from '../../interfaces';
 
@@ -11,7 +11,7 @@ import { ChildProps } from '../../interfaces';
  */
 export const PageItem = (props: ChildProps): JSX.Element => (
     <Fragment>
-        <TabNav />
+        <LinkBar />
         {props.children}
     </Fragment>
 );

@@ -1,5 +1,5 @@
 import { OutagesCard } from '../components';
 
-const OutagePage = () => <OutagesCard />;
+const OutagePage = (): JSX.Element => <OutagesCard />;
 
 export default OutagePage;

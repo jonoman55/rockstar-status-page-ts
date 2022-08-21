@@ -6,7 +6,7 @@ import { useServicesQuery } from '../hooks';
 import { ServiceQueryProps } from '../interfaces';
 import type { Service } from '../types';
 
-const ServicePage = () => {
+const ServicePage = (): JSX.Element => {
     const { id } = useParams();
 
     const serviceId: number = useMemo(() => parseInt(id as string), [id]);
@@ -16,9 +16,11 @@ const ServicePage = () => {
     const service: Service = useMemo<Service>(() => {
         let result: Service[] = [];
         if (!isLoading && services) {
-            result.push(services.filter(
-                (s: Service) => s.id === serviceId
-            ).shift() as Service);
+            result.push(
+                services.filter(
+                    (s: Service) => s.id === serviceId
+                ).shift() as Service
+            );
         }
         return result.shift() as Service;
     }, [isLoading, serviceId, services]);

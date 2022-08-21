@@ -30,6 +30,9 @@ export const ToggleButton = styled(({ ...props }: ToggleButtonProps & NavLinkPro
     padding: theme.spacing(1),
     ...(!selected && {
         color: theme.palette.primary.contrastText,
+        '&:hover': {
+            color: theme.custom.palette.main,
+        },
     }),
     ...(selected && {
         '&:hover': {

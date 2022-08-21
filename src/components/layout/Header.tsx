@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 
@@ -39,12 +39,16 @@ const Header: React.FC = () => {
     }, [pathname, targetHref]);
 
     // Close Drawer if in open state on load
-    useEffect(() => { 
-        if (drawerOpen) {
-            dispatch(appActions.setDrawerOpen(false));
+    const handleDrawerOpen = useCallback(() => { 
+        if (targetHref === pathname && drawerOpen) {
+            dispatch(appActions.setDrawerOpen(!drawerOpen));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [pathname, targetHref, dispatch]);
+
+    useEffect(() => {
+        handleDrawerOpen();
+    }, [handleDrawerOpen]);
 
     const handleClick = () => {
         dispatch(appActions.setTabValue(0));
