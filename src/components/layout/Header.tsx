@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useEffect } from 'react';
 import { Box } from '@mui/material';
 
 import Sidebar from './Sidebar';
@@ -11,37 +10,19 @@ import { toggleTheme } from '../../reducers/themeSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { usePathname } from '../../hooks';
 
-const Header: React.FC = () => {
+const Header: React.FC = (): JSX.Element => {
     const pathname = usePathname();
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
 
     const { darkTheme } = useAppSelector((state) => state.theme);
     
-    const { servicePageId, targetHref, drawerOpen } = useAppSelector((state) => state.app);
-
-    const pageId = useMemo(() => parseInt(pathname.slice(-1)), [pathname]);
-
-    // Set Service Page ID
-    useEffect(() => {
-        if (servicePageId !== pageId) {
-            dispatch(appActions.setServicePageId(pageId));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pathname]);
-
-    // Handle Sidebar Navigation
-    useEffect(() => {
-        if (targetHref !== pathname && !pathname.includes('/service/')) {
-            navigate(targetHref);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pathname, targetHref]);
+    const { targetHref, drawerOpen } = useAppSelector((state) => state.app);
 
     // Close Drawer if in open state on load
     const handleDrawerOpen = useCallback(() => { 
-        if (targetHref === pathname && drawerOpen) {
-            dispatch(appActions.setDrawerOpen(!drawerOpen));
+        if (pathname === targetHref) {
+            console.log('closing drawer');
+            if (drawerOpen) dispatch(appActions.setDrawerOpen(false));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname, targetHref, dispatch]);
@@ -50,10 +31,11 @@ const Header: React.FC = () => {
         handleDrawerOpen();
     }, [handleDrawerOpen]);
 
-    const handleClick = () => {
+    const handleClick = useCallback(() => {
         dispatch(appActions.setTabValue(0));
         dispatch(appActions.setTargetHref('/all'));
-    };
+        dispatch(appActions.setIsServiceRoute(false));
+    }, [dispatch]);
 
     return (
         <AppBar position='static' elevation={2} pathname={pathname}>

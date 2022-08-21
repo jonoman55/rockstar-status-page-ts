@@ -1,4 +1,5 @@
 import { useCallback, useMemo, Fragment } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, ClickAwayListener, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, PopperPlacementType } from '@mui/material';
 import { DarkMode, LightMode, Menu as MenuIcon } from '@mui/icons-material';
 
@@ -11,7 +12,6 @@ import { useBreakpoint } from '../../hooks';
 import { LinkItems } from '../../constants';
 
 import type { LinkItem, Anchor } from '../../types';
-import { useNavigate } from 'react-router-dom';
 
 /**
  * Sidebar List Props
@@ -33,21 +33,27 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
     const matches: boolean = useBreakpoint('sm', 'up');
 
     const darkTheme: boolean = useAppSelector((state) => state.theme.darkTheme);
-    const { targetHref, isServiceRoute } = useAppSelector((state) => state.app);
 
     const placement: PopperPlacementType = useMemo(() => matches ? 'right' : 'top-end', [matches]);
 
-    const handleClick = (id: number, href: string) => () => {
-        if (id <= 3) {
-            dispatch(appActions.setTabValue(id));
-        }
-        dispatch(appActions.setTargetHref(href));
-        if (isServiceRoute) {
-            if (targetHref) {
-                navigate(targetHref);
+    const handleClick = useCallback(
+        (id: number, href: string) => () => {
+            if (id <= 3) {
+                dispatch(appActions.setTabValue(id));
+                dispatch(appActions.setIsServiceRoute(false));
+                dispatch(appActions.setDrawerOpen(false));
+                dispatch(appActions.setTargetHref(href));
+                navigate(href);
+            } else {
+                dispatch(appActions.setTabValue(0));
+                dispatch(appActions.setIsServiceRoute(true));
+                dispatch(appActions.setDrawerOpen(false));
+                dispatch(appActions.setTargetHref(href));
+                navigate(href);
             }
-        }
-    };
+        },
+        [navigate, dispatch]
+    );
 
     return (
         <Box

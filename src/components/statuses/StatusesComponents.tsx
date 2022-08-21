@@ -1,25 +1,36 @@
-import { Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Box, Typography, Divider, Stack, List, ListItemIcon, ListItem, ListItemText, Grid } from '@mui/material';
-import { Theme } from '@mui/material/styles';
+import { Box, Typography, Divider, Stack, List, ListItemIcon, ListItem, ListItemText, Grid, Theme } from '@mui/material';
 
-import { PlatformIcon, StatusChip } from '../shared';
 import { FlexText } from '../controls';
+import { PlatformIcon, StatusChip } from '../shared';
 import { StatusCard, UpdatedBox, Title } from '../styled/StatusesCard.styled';
+import { appActions } from '../../reducers/appSlice';
+import { useAppDispatch } from '../../app/hooks';
 
 import type { Platform, Status } from '../../types';
 
-export const StatusesGridItems: React.FC<{ statuses: Status[], theme: Theme }> = ({ statuses, theme }) => (
-    <Grid container spacing={2}>
-        {statuses?.map((status: Status, index: number) => (
-            <Grid item key={index} component={NavLink} to={`/service/${status?.id}`} xs={12} sm={12} md={12} lg={12} sx={{
-                textDecoration: 'none'
-            }}>
-                <StatusItem status={status} theme={theme} />
-            </Grid>
-        ))}
-    </Grid>
-);
+export const StatusesGridItems: React.FC<{ statuses: Status[], theme: Theme }> = ({ statuses, theme }) => {
+    const dispatch = useAppDispatch();
+
+    const handleClick = useCallback((status: Status) => () => {
+        dispatch(appActions.setServicePageId(status.id));
+        dispatch(appActions.setIsServiceRoute(true));
+        dispatch(appActions.setTargetHref(`/service/${status.id}`));
+    }, [dispatch]);
+
+    return (
+        <Grid container spacing={2}>
+            {statuses?.map((status: Status, index: number) => (
+                <Grid item key={index} component={NavLink} to={`/service/${status?.id}`} xs={12} sm={12} md={12} lg={12} xl={12} onClick={handleClick(status)} sx={{
+                    textDecoration: 'none'
+                }}>
+                    <StatusItem status={status} theme={theme} />
+                </Grid>
+            ))}
+        </Grid>
+    );
+};
 
 export const StatusItem: React.FC<{ status: Status, theme: Theme }> = ({ status, theme }) => (
     <StatusCard>

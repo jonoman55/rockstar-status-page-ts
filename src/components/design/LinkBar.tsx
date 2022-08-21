@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCallback, useMemo } from 'react';
 import { Container, Toolbar } from '@mui/material';
 
@@ -7,22 +6,28 @@ import { AppBar, Stack } from '../styled/LinkBar.styled';
 import { appActions } from '../../reducers/appSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { usePathname } from '../../hooks';
-import { LinkItems as links } from '../../constants';
+import { LinkItems } from '../../constants';
 
 import type { LinkItem } from '../../types';
 
 export const LinkBar = (): JSX.Element => {
-    const pathname = usePathname();
     const dispatch = useAppDispatch();
+    const pathname = usePathname();
 
-    const navLinks: LinkItem[] = useMemo(() => links.slice(0, 4), []);
+    const links: LinkItem[] = useMemo(() => LinkItems.slice(0, 4), []);
 
     const { tabValue, targetHref } = useAppSelector((state) => state.app);
 
-    const handleClick = useCallback((id: number, href: string) => () => {
-        dispatch(appActions.setTabValue(id));
-        dispatch(appActions.setTargetHref(href));
-    }, [dispatch]);
+    const handleClick = useCallback(
+        (id: number, href: string) => () => {
+            dispatch(appActions.setTabValue(id));
+            dispatch(appActions.setTargetHref(href));
+            dispatch(appActions.setIsServiceRoute(false));
+            dispatch(appActions.setServicePageId(0));
+            dispatch(appActions.setDrawerOpen(false));
+        },
+        [dispatch]
+    );
 
     const selected: boolean = useMemo<boolean>(
         () => pathname === targetHref,
@@ -34,7 +39,7 @@ export const LinkBar = (): JSX.Element => {
             <Toolbar disableGutters>
                 <Container disableGutters>
                     <Stack>
-                        {navLinks.map(({ id, href, text }: LinkItem, index: number) => (
+                        {links.map(({ id, href, text }: LinkItem, index: number) => (
                             <ButtonLink
                                 key={index}
                                 text={text}

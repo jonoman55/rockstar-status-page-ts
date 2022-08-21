@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Divider, Grid, Stack, Typography } from '@mui/material';
 import { Theme } from '@mui/material/styles';
@@ -6,20 +6,32 @@ import { Theme } from '@mui/material/styles';
 import { FlexText } from '../controls';
 import { StatusChip } from '../shared';
 import { ServiceCard, UpdatedBox, Title } from '../styled/ServicesCard.styled';
+import { appActions } from '../../reducers/appSlice';
+import { useAppDispatch } from '../../app/hooks';
 
 import type { Service } from '../../types';
 
-export const ServicesGridItems: React.FC<{ services: Service[], theme: Theme }> = ({ services, theme }) => (
-    <Grid container spacing={2}>
-        {services.map((service: Service, index: number) => (
-            <Grid component={NavLink} to={`/service/${service?.id}`} item key={index} xs={12} sm={12} md={12} lg={6} sx={{
-                textDecoration: 'none'
-            }}>
-                <ServiceGridItem service={service} theme={theme} />
-            </Grid>
-        ))}
-    </Grid>
-);
+export const ServicesGridItems: React.FC<{ services: Service[], theme: Theme }> = ({ services, theme }) => {
+    const dispatch = useAppDispatch();
+
+    const handleClick = useCallback((service: Service) => () => {
+        dispatch(appActions.setServicePageId(service.id));
+        dispatch(appActions.setIsServiceRoute(true));
+        dispatch(appActions.setTargetHref(`/service/${service.id}`));
+    }, [dispatch]);
+
+    return (
+        <Grid container spacing={2}>
+            {services.map((service: Service, index: number) => (
+                <Grid component={NavLink} to={`/service/${service?.id}`} item key={index} xs={12} sm={12} md={12} lg={6} xl={6} onClick={handleClick(service)} sx={{
+                    textDecoration: 'none'
+                }}>
+                    <ServiceGridItem service={service} theme={theme} />
+                </Grid>
+            ))}
+        </Grid>
+    );
+};
 
 export const ServiceMessage: React.FC<{ message: string; }> = ({ message }) => (
     <Fragment>

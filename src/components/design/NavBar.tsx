@@ -14,20 +14,19 @@ export const NavBar: React.FC<{ services: Service[]; }> = ({ services }) => {
     const { servicePageId, navbarAlignment } = useAppSelector((state) => state.app);
 
     const setSelected = useCallback(({ id }: Service) => {
-        if (id === servicePageId) {
-            dispatch(appActions.setServicePageId(id));
-            dispatch(appActions.setIsServiceRoute(true));
-        }
-    }, [dispatch, servicePageId]);
+        dispatch(appActions.setServicePageId(id));
+        dispatch(appActions.setIsServiceRoute(true));
+        dispatch(appActions.setTargetHref(`/service/${id}`));
+    }, [dispatch]);
 
     const handleChange = (_event: React.MouseEvent<HTMLElement, MouseEvent>, newAlignment: string) => {
         dispatch(appActions.setNavbarAlignment(newAlignment));
-        dispatch(appActions.setIsServiceRoute(true));
     };
 
     const handleClick = () => {
         dispatch(appActions.setTabValue(0));
         dispatch(appActions.setTargetHref('/all'));
+        dispatch(appActions.setIsServiceRoute(false));
     };
 
     return (

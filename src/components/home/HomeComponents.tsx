@@ -1,4 +1,4 @@
-import { Fragment, memo, useMemo } from 'react';
+import { Fragment, memo, useCallback, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTheme, Box, Stack, Typography, Divider, Grid } from '@mui/material';
 import { sortBy } from 'lodash';
@@ -22,9 +22,12 @@ import {
     RockstarLinkStack,
     StatusCard
 } from '../styled/HomeCard.styled';
+import { appActions } from '../../reducers/appSlice';
+import { useAppDispatch } from '../../app/hooks';
 import { RockstarStatus } from '../../constants';
 
 import type { Status, Platform, StatusType } from '../../types';
+
 
 const IndicatorItem = ({ status }: { status: StatusType }) => (
     <IndicatorPaper>
@@ -97,27 +100,37 @@ export const PlatformsList = memo(({ platforms }: { platforms: Platform[]; }) =>
     );
 });
 
-export const StatusGridItems = memo(({ statuses }: { statuses: Status[]; }) => (
-    <Fragment>
-        {statuses?.map((status: Status, index: number) => (
-            <Grid item key={index} component={NavLink} to={`/service/${status?.id}`} xs={12} sm={12} md={6} lg={4} xl={3} sx={{
-                textDecoration: 'none'
-            }}>
-                <StatusCard>
-                    <Image id={status?.id} />
-                    <CardName variant='h6' gutterBottom paragraph>
-                        {status?.name}
-                    </CardName>
-                    <Divider variant='middle' />
-                    <Stack direction='column' spacing={1} sx={{ pt: 2 }}>
-                        {status?.services_platforms && (
-                            <PlatformsList
-                                platforms={status?.services_platforms}
-                            />
-                        )}
-                    </Stack>
-                </StatusCard>
-            </Grid>
-        ))}
-    </Fragment>
-));
+export const StatusGridItems = memo(({ statuses }: { statuses: Status[]; }) => {
+    const dispatch = useAppDispatch();
+
+    const handleClick = useCallback((status: Status) => () => {
+        dispatch(appActions.setServicePageId(status.id));
+        dispatch(appActions.setIsServiceRoute(true));
+        dispatch(appActions.setTargetHref(`/service/${status.id}`));
+    }, [dispatch]);
+
+    return (
+        <Fragment>
+            {statuses?.map((status: Status, index: number) => (
+                <Grid item key={index} component={NavLink} to={`/service/${status?.id}`} xs={12} sm={12} md={6} lg={4} xl={3} onClick={handleClick(status)} sx={{
+                    textDecoration: 'none'
+                }}>
+                    <StatusCard>
+                        <Image id={status?.id} />
+                        <CardName variant='h6' gutterBottom paragraph>
+                            {status?.name}
+                        </CardName>
+                        <Divider variant='middle' />
+                        <Stack direction='column' spacing={1} sx={{ pt: 2 }}>
+                            {status?.services_platforms && (
+                                <PlatformsList
+                                    platforms={status?.services_platforms}
+                                />
+                            )}
+                        </Stack>
+                    </StatusCard>
+                </Grid>
+            ))}
+        </Fragment>
+    );
+});
