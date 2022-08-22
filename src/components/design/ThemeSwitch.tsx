@@ -55,10 +55,10 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 
 interface Props {
     checked: boolean;
-    onChange: ((event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void) | undefined
+    onChange: ((event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void) | undefined;
 };
 
-export const ThemeSwitch = ({ checked, onChange }: Props) => (
+export const ThemeSwitch: React.FC<Props> = ({ checked, onChange }): JSX.Element => (
     <MaterialUISwitch
         checked={checked}
         onChange={onChange}
