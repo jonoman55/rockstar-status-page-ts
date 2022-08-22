@@ -21,7 +21,7 @@ export const Container = styled(Box)<BoxProps>(({
     height: '100%',
 }));
 
-export const Body: React.FC<ChildProps> = (props) => {
+export const Body: React.FC<ChildProps> = (props): JSX.Element => {
     const theme = useTheme();
     const body = document.querySelector('body') as HTMLBodyElement;
     body.style.backgroundColor = theme.palette.primary.dark;
