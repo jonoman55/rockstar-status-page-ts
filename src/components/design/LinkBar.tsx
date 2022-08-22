@@ -43,7 +43,7 @@ export const LinkBar = (): JSX.Element => {
                             <ButtonLink
                                 key={index}
                                 text={text}
-                                to={to!}
+                                to={`${to}`}
                                 selected={selected && tabValue === id}
                                 onClick={handleClick(id, to!)}
                             />
