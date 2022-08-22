@@ -7,9 +7,9 @@ import { appActions } from '../../reducers/appSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { usePathname } from '../../hooks';
 
-export const TabNav: React.FC = () => {
-    const navigate = useNavigate();
+export const TabNav = (): JSX.Element => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const pathname = usePathname();
 
     const { tabValue, targetHref } = useAppSelector((state) => state.app);
