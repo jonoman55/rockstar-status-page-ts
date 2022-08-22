@@ -13,7 +13,7 @@ const SpinnerProgress = styled(CircularProgress)(({ theme }) => ({
     color: theme.custom.palette.main,
 }));
 
-export const Spinner = () => (
+export const Spinner = (): JSX.Element => (
     <SpinnerBox>
         <SpinnerProgress />
     </SpinnerBox>
