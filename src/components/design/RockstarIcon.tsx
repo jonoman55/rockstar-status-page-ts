@@ -4,9 +4,9 @@ import { RockstarLogo } from '../../images';
 
 interface Props {
     sx: SxProps;
-}
+};
 
-export const RockstarIcon = ({ sx }: Props) => (
+export const RockstarIcon = ({ sx }: Props): JSX.Element => (
     <Box
         component='img'
         src={RockstarLogo}
