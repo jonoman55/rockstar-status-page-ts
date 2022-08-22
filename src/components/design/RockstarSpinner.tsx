@@ -14,10 +14,9 @@ const Container = styled(Box)(({ theme }) => ({
 const LoadingImage = styled('img')(({ theme }) => ({
     border: `1px solid ${theme.palette.action.disabled}`,
     borderRadius: '1rem',
-    // borderColor:  theme.palette.action.disabled,
 }));
 
-export const RockstarSpinner: React.FC = () => (
+export const RockstarSpinner = (): JSX.Element => (
     <Container>
         <LoadingImage src={Loading} alt='Loading...' />
     </Container>
