@@ -9,7 +9,7 @@ interface ThemeState {
 };
 
 const initialState: ThemeState = {
-    darkMode: Boolean(theme) ? true : false
+    darkMode: Boolean(theme) ? false : true
 };
 
 const themeSlice = createSlice({
