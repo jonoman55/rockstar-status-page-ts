@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { getItem } from '../hooks';
 
-const theme = getItem('theme') as string;
+const theme: string = getItem('theme') as string;
 
 interface ThemeState {
     darkMode: boolean;
