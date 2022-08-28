@@ -5,7 +5,7 @@ import {
     CardMedia as MuiCardMedia,
     CardContent as MuiCardContent,
     CardActions as MuiCardActions,
-    CardContentProps,
+    CardContentProps as MuiCardContentProps,
 } from '@mui/material';
 import { styled, Avatar, IconButton, SxProps } from '@mui/material';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
@@ -60,7 +60,7 @@ export const CardActions = styled(MuiCardActions)(({
     display: 'flex',
 }));
 
-export const CardContentPaper = styled(({ ...props }: CardContentProps) =>
+export const CardContentPaper = styled(({ ...props }: MuiCardContentProps) =>
     <MuiCardContent component={MuiPaper} elevation={1} {...props} />
 )(({ theme }) => ({
     display: 'flex',
@@ -77,13 +77,14 @@ interface CardHeaderProps {
     title: string;
     subheader: string;
     status: StatusType;
-    onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
+    onRefreshClick: React.MouseEventHandler<HTMLButtonElement>;
+    onAvatarClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-export const CardHeader: React.FC<CardHeaderProps> = ({ title, subheader, status, onClick }): JSX.Element => (
+export const CardHeader: React.FC<CardHeaderProps> = ({ title, subheader, status, onRefreshClick, onAvatarClick }): JSX.Element => (
     <MuiCardHeader
-        avatar={<StatusAvatar status={status} />}
-        action={<RefreshButton onClick={onClick} />}
+        avatar={<StatusAvatar status={status} onClick={onAvatarClick} />}
+        action={<RefreshButton onClick={onRefreshClick} />}
         title={title}
         subheader={subheader}
         sx={{ textAlign: 'right' }}
@@ -111,7 +112,7 @@ export const CardMediaBrandLogo: React.FC<{ id: number }> = ({ id }): JSX.Elemen
 );
 
 interface RefreshButtonProps {
-    onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 export const RefreshButton: React.FC<RefreshButtonProps> = ({ onClick }): JSX.Element => (
@@ -120,10 +121,17 @@ export const RefreshButton: React.FC<RefreshButtonProps> = ({ onClick }): JSX.El
     </IconButton>
 );
 
-export const StatusAvatar: React.FC<{ status: StatusType; }> = ({ status }): JSX.Element => (
-    <Avatar aria-label='status-icon' sx={{ bgcolor: 'inherit' }}>
-        <StatusIcon status={status} />
-    </Avatar>
+interface StatusAvatarProps {
+    status: StatusType;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>; 
+};
+
+export const StatusAvatar: React.FC<StatusAvatarProps> = ({ status, onClick }): JSX.Element => (
+    <IconButton onClick={onClick} sx={{ m: 0, p: 0 }}>
+        <Avatar aria-label='status-icon' sx={{ bgcolor: 'inherit' }}>
+            <StatusIcon status={status} />
+        </Avatar>
+    </IconButton>
 );
 
 export const CardFooter: React.FC<{ sx?: SxProps; }> = ({ sx }): JSX.Element => (

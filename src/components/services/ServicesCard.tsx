@@ -72,7 +72,7 @@ export const ServicesCard: React.FC = (): JSX.Element => {
     /**
      * Handle Refetch
      */
-    const handleClick = useCallback<() => void>(() => {
+    const handleRefreshClick = useCallback<() => void>(() => {
         refetch();
     }, [refetch]);
 
@@ -83,7 +83,7 @@ export const ServicesCard: React.FC = (): JSX.Element => {
                     title='Rockstar Services'
                     subheader={`${new Date().toLocaleString()}`}
                     status={overallStatus}
-                    onClick={handleClick}
+                    onRefreshClick={handleRefreshClick}
                 />
                 <CardMedia id={6} />
                 <CardContent>

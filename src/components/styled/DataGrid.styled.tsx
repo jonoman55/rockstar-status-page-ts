@@ -229,7 +229,7 @@ interface StyledCardHeaderProps {
     title: string;
     subheader: string;
     status: StatusType;
-    onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 /**

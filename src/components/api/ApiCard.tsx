@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { useTheme, Divider, Typography } from '@mui/material';
+import { useCallback, useMemo } from 'react';
+import { useTheme, Divider, Typography, Theme } from '@mui/material';
 
 import { RockstarSpinner } from '../design';
 import { StatusChip } from '../shared';
@@ -10,14 +10,14 @@ import { useGetApiStatusQuery } from '../../services/rockstarApi';
 import type { StatusType } from '../../types';
 
 export const ApiCard: React.FC = (): JSX.Element => {
-    const theme = useTheme();
+    const theme: Theme = useTheme();
 
     const { data: apiStatus, isLoading, refetch } = useGetApiStatusQuery('getApiStatus', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
 
-    const status = useMemo<StatusType>(() => {
+    const status: StatusType = useMemo<StatusType>(() => {
         let result: StatusType;
         if (!isLoading && apiStatus) {
             result = apiStatus?.status?.toLowerCase() as StatusType;
@@ -25,14 +25,18 @@ export const ApiCard: React.FC = (): JSX.Element => {
         return result;
     }, [isLoading, apiStatus]);
 
+    const handleRefreshClick = useCallback<() => void>(() => {
+        refetch();
+    }, [refetch]);
+
     return isLoading ? <RockstarSpinner /> : (
         <Container>
             <Card elevation={2}>
                 <CardHeader
                     title='Rockstar Services Status API'
                     subheader={`${new Date().toLocaleString()}`}
-                    status={status as StatusType}
-                    onClick={refetch}
+                    status={status}
+                    onRefreshClick={handleRefreshClick}
                 />
                 <CardMedia id={4} />
                 <CardContent>

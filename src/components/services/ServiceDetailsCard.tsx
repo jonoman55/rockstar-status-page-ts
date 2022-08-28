@@ -142,7 +142,7 @@ export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ service
     /**
      * Handle Refetch
      */
-    const handleClick = useCallback<() => void>(() => {
+    const handleRefreshClick = useCallback<() => void>(() => {
         refetch();
         refetchService();
     }, [refetch, refetchService]);
@@ -154,7 +154,7 @@ export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ service
                     title={`${data?.name}`}
                     subheader={`${new Date().toLocaleString()}`}
                     status={overallStatus}
-                    onClick={handleClick}
+                    onRefreshClick={handleRefreshClick}
                 />
                 <CardImage id={serviceId} />
                 {data?.message && <HtmlMessage message={data?.message} />}

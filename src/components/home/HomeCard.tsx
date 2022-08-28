@@ -72,7 +72,7 @@ export const HomeCard: React.FC = (): JSX.Element => {
             };
             // Add Service Status values to state
             if (!isLoading && statusesResults) {
-                statusesResults.forEach((s) =>
+                statusesResults.forEach((s: Status) =>
                     statusItems.statuses.push({
                         name: s.name,
                         status: s.status.toLowerCase(),
@@ -127,7 +127,7 @@ export const HomeCard: React.FC = (): JSX.Element => {
     /**
      * Handle Refetch
      */
-    const handleClick = useCallback<() => void>(() => {
+    const handleRefreshClick = useCallback<() => void>(() => {
         statusesRefetch();
         updatedRefetch();
     }, [statusesRefetch, updatedRefetch]);
@@ -139,7 +139,7 @@ export const HomeCard: React.FC = (): JSX.Element => {
                     title='Service Status'
                     subheader={`${new Date().toLocaleString()}`}
                     status={overallStatus}
-                    onClick={handleClick}
+                    onRefreshClick={handleRefreshClick}
                 />
                 <CardMedia id={1} />
                 <CardContent>

@@ -123,9 +123,9 @@ export const OutagesCard: React.FC = (): JSX.Element => {
     }, [statusesResults, isLoading]);
 
     /**
-     * Handle Refresh/Refetch
+     * Handle Refetch Click
      */
-    const handleRefetch = useCallback(() => {
+    const handleRefreshClick = useCallback<() => void>(() => {
         servicesRefetch();
         statusesRefetch();
     }, [servicesRefetch, statusesRefetch]);
@@ -137,7 +137,7 @@ export const OutagesCard: React.FC = (): JSX.Element => {
                     title='Services & Platform Statuses'
                     subheader={`${new Date().toLocaleString()}`}
                     status={overallStatus}
-                    onClick={handleRefetch}
+                    onRefreshClick={handleRefreshClick}
                 />
                 <CardContent>
                     <GridHeader />
