@@ -14,7 +14,7 @@ const Header: React.FC = (): JSX.Element => {
     const pathname = usePathname();
     const dispatch = useAppDispatch();
 
-    const { darkTheme } = useAppSelector((state) => state.theme);
+    const { darkMode } = useAppSelector((state) => state.theme);
     
     const { targetHref, drawerOpen } = useAppSelector((state) => state.app);
 
@@ -84,9 +84,9 @@ const Header: React.FC = (): JSX.Element => {
                     </LinkBox>}
                 />
                 <Box sx={{ width: 78, height: 50 }}>
-                    <ToolTip title={darkTheme ? 'Light Mode' : 'Dark Mode'} placement='bottom' component={
+                    <ToolTip title={darkMode ? 'Light Mode' : 'Dark Mode'} placement='bottom' component={
                         <ThemeSwitch
-                            checked={darkTheme}
+                            checked={darkMode}
                             onChange={() => dispatch(toggleTheme())}
                         />}
                     />

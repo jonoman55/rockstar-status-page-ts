@@ -5,11 +5,11 @@ import { getItem } from '../hooks';
 const theme = getItem('theme') as string;
 
 interface ThemeState {
-    darkTheme: boolean;
+    darkMode: boolean;
 }
 
 const initialState: ThemeState = {
-    darkTheme: Boolean(theme) ?? false
+    darkMode: Boolean(theme) ? true : false
 };
 
 const themeSlice = createSlice({
@@ -17,10 +17,10 @@ const themeSlice = createSlice({
     initialState,
     reducers: {
         toggleTheme: (state: ThemeState) => {
-            state.darkTheme = !state.darkTheme;
+            state.darkMode = !state.darkMode;
             localStorage.setItem(
                 'theme',
-                state.darkTheme.toString()
+                state.darkMode.toString()
             );
         },
     },

@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import { createTheme, CssBaseline, Theme, ThemeProvider } from '@mui/material';
 
 import { SnackbarProvider } from './contexts/AlertContext';
 import { ErrorFallback, LoadingContainer } from './components';
@@ -12,8 +12,8 @@ const Routes: React.LazyExoticComponent<() => JSX.Element> = lazy(
 );
 
 const App: React.FC = (): JSX.Element => {
-    const theme = useAppSelector((state) => state.theme);
-    const activeTheme = createTheme(theme.darkTheme ? darkTheme : lightTheme);
+    const darkMode: boolean = useAppSelector((state) => state.theme.darkMode);
+    const activeTheme: Theme = createTheme(darkMode ? darkTheme : lightTheme);
     return (
         <ThemeProvider theme={activeTheme}>
             <SnackbarProvider>

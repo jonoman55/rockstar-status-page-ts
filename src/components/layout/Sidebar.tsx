@@ -40,7 +40,7 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
         []
     );
 
-    const darkTheme: boolean = useAppSelector((state) => state.theme.darkTheme);
+    const darkMode: boolean = useAppSelector((state) => state.theme.darkMode);
 
     const placement: Placement = useMemo(() => matches ? 'right' : 'top-end', [matches]);
 
@@ -76,18 +76,18 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
             <List subheader={<ListSubheader>Settings</ListSubheader>}>
                 <ListItem>
                     <ListItemIcon sx={{ color: 'primary.contrastText' }}>
-                        {darkTheme ? <DarkMode /> : <LightMode />}
+                        {darkMode ? <DarkMode /> : <LightMode />}
                     </ListItemIcon>
                     <ListItemText
                         id="switch-list-label-theme"
-                        primary={darkTheme ? 'Dark Mode' : 'Light Mode'}
+                        primary={darkMode ? 'Dark Mode' : 'Light Mode'}
                         sx={{ color: 'primary.contrastText' }}
                     />
-                    <ToolTip title={`Toggle ${darkTheme ? 'Light Mode' : 'Dark Mode'}`} placement={matches ? 'right' : 'top'} component={
+                    <ToolTip title={`Toggle ${darkMode ? 'Light Mode' : 'Dark Mode'}`} placement={matches ? 'right' : 'top'} component={
                         <Switch
                             edge="end"
                             onChange={() => dispatch(toggleTheme())}
-                            checked={darkTheme}
+                            checked={darkMode}
                             inputProps={{ 'aria-labelledby': 'switch-list-label-theme' }}
                         />}
                     />
