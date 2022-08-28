@@ -272,3 +272,25 @@ export type StatusItems = {
      */
     statuses: StatusItem[];
 };
+
+/**
+ * Status Menu Item
+ */
+export type StatusMenuItem = {
+    /**
+     * Item Name
+     */
+    name: string;
+    /**
+     * Item Status
+     */
+    status: StatusType;
+    /**
+     * Item Link
+     */
+    to?: string;
+    /**
+     * Service Page ID
+     */
+    id?: number;
+};

@@ -134,6 +134,24 @@ export const fetchStatus = (status: StatusType): StatusType => {
 };
 
 /**
+ * Convert To StatusType
+ * @param {string} status Status Type
+ * @returns {StatusType} up, limited, down or undefined
+ */
+export const convertToStatus = (status: string): StatusType => {
+    switch (status?.toLowerCase()) {
+        case 'up':
+            return RockstarStatus.UP;
+        case 'down':
+            return RockstarStatus.LIMITED;
+        case 'limited':
+            return RockstarStatus.DOWN;
+        default:
+            return undefined;
+    };
+};
+
+/**
  * Get The Hightest Rockstar Status Count
  * @param {RockstarStatus[]} statuses RockstarStatus
  * @returns {string | number | undefined} The greatest status count

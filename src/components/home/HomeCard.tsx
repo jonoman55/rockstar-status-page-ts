@@ -1,15 +1,20 @@
-import { useCallback, useMemo } from 'react';
+import { Fragment, useCallback, useMemo, useState } from 'react';
 import { Divider, Grid } from '@mui/material';
 
 import { RockstarSpinner } from '../design';
 import { StatusGridItems, StatusIndicators, Title, Updated } from './HomeComponents';
 import { Paper, Card, CardHeader, CardMedia, CardContent, CardFooter } from '../styled/PaperCard.styled';
 import { useGetStatusesQuery, useGetUpdatedQuery } from '../../services/rockstarApi';
-import { getHighestStatusCount } from '../../helpers';
+import { convertToStatus, getHighestStatusCount } from '../../helpers';
 
-import type { Platform, Status, StatusItem, StatusItems, StatusType } from '../../types';
+import type { Platform, Status, StatusItem, StatusItems, StatusMenuItem, StatusType } from '../../types';
+import { StatusMenu } from '../shared';
 
 export const HomeCard: React.FC = (): JSX.Element => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const open: boolean = Boolean(anchorEl);
+
     const { data: updatedResult, isLoading: updatedIsLoading, refetch: updatedRefetch } = useGetUpdatedQuery('getUpdated', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
@@ -125,6 +130,24 @@ export const HomeCard: React.FC = (): JSX.Element => {
     );
 
     /**
+     * Create Menu Items
+     */
+    const menuItems: StatusMenuItem[] = useMemo<StatusMenuItem[]>(() => {
+        const items: StatusMenuItem[] = [];
+        if (!isLoading && statusesResults) {
+            statusesResults.forEach((s: Status) =>
+                items.push({
+                    name: s.name,
+                    status: convertToStatus(s.status),
+                    to: `/service/${s.id}`,
+                    id: s.id
+                })
+            );
+        }
+        return items;
+    }, [isLoading, statusesResults]);
+
+    /**
      * Handle Refetch
      */
     const handleRefreshClick = useCallback<() => void>(() => {
@@ -132,29 +155,54 @@ export const HomeCard: React.FC = (): JSX.Element => {
         updatedRefetch();
     }, [statusesRefetch, updatedRefetch]);
 
+    /**
+     * Handle Avatar Click and Open Status Menu
+     */
+    const handleAvatarClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    /**
+     * Handle Menu Close
+     */
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     return isLoading ? <RockstarSpinner /> : (
-        <Paper elevation={0}>
-            <Card>
-                <CardHeader
-                    title='Service Status'
-                    subheader={`${new Date().toLocaleString()}`}
-                    status={overallStatus}
-                    onRefreshClick={handleRefreshClick}
+        <Fragment>
+            <Paper elevation={0}>
+                <Card>
+                    <CardHeader
+                        title='Service Status'
+                        subheader={`${new Date().toLocaleString()}`}
+                        status={overallStatus}
+                        onRefreshClick={handleRefreshClick}
+                        onAvatarClick={handleAvatarClick}
+                    />
+                    <CardMedia id={1} />
+                    <CardContent>
+                        <Title />
+                        <Updated updated={`${updatedResult?.updated}`} />
+                        <Divider variant='middle' sx={{ pt: 1 }} />
+                        <Grid container spacing={{ xs: 2, md: 3 }} sx={{ p: 2 }}>
+                            {statuses && (
+                                <StatusGridItems statuses={statuses} />
+                            )}
+                        </Grid>
+                        <StatusIndicators />
+                    </CardContent>
+                    <CardFooter />
+                </Card>
+            </Paper>
+            {open && (
+                <StatusMenu
+                    open={open}
+                    anchorEl={anchorEl}
+                    handleClose={handleClose}
+                    menuItems={menuItems}
                 />
-                <CardMedia id={1} />
-                <CardContent>
-                    <Title />
-                    <Updated updated={`${updatedResult?.updated}`} />
-                    <Divider variant='middle' sx={{ pt: 1 }} />
-                    <Grid container spacing={{ xs: 2, md: 3 }} sx={{ p: 2 }}>
-                        {statuses && (
-                            <StatusGridItems statuses={statuses} />
-                        )}
-                    </Grid>
-                    <StatusIndicators />
-                </CardContent>
-                <CardFooter />
-            </Card>
-        </Paper>
+            )}
+        </Fragment>
     );
 };
