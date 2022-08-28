@@ -1,4 +1,4 @@
-import { JSXElementConstructor, LazyExoticComponent, LegacyRef, ReactElement, ReactNode } from "react";
+import { JSXElementConstructor, LazyExoticComponent, LegacyRef, ReactElement, ReactNode, PropsWithChildren } from "react";
 import { TooltipProps } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 
@@ -6,6 +6,11 @@ import { GridColDef } from "@mui/x-data-grid";
  * React Node and JSX Elements
  */
 export type Children = ReactNode | JSX.Element | JSX.Element[];
+
+/**
+ * Props With Children - New to React 18
+ */
+export type ChildrenProps = PropsWithChildren;
 
 /**
  * React Lazy Component
