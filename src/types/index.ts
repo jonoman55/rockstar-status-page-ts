@@ -243,6 +243,8 @@ export type CustomPalette = {
     }
 };
 
+export type StatusItemType = 'service' | 'platform';
+
 /**
  * Status Item
  */
@@ -255,6 +257,10 @@ export type StatusItem = {
      * Status
      */
     status: string;
+    /**
+     * Type
+     */
+    type?: StatusItemType
 };
 
 /**

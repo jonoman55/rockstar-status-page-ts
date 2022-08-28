@@ -13,10 +13,7 @@ type Builder = EndpointBuilder<BaseQueryFn<string | FetchArgs, unknown, FetchBas
  * @returns api or file
  */
 const getApiPath = (): ApiPath => {
-    if (Boolean(process.env.REACT_APP_API_TESTING) === true) {
-        return 'file';
-    }
-    return 'api';
+    return Boolean(process.env.REACT_APP_API_TESTING) ? 'api' : 'file';
 };
 
 const apiPath: ApiPath = getApiPath();
