@@ -136,9 +136,22 @@ export const fetchStatus = (status: StatusType): StatusType => {
 /**
  * Get The Hightest Rockstar Status Count
  * @param {RockstarStatus[]} statuses RockstarStatus
- * @returns { string | number | undefined} The greatest status count
+ * @returns {string | number | undefined} The greatest status count
  */
 export const getStatusesCount = (statuses: RockstarStatus[]): string | number | undefined => {
+    return lodash.head(lodash(statuses)
+        .countBy()
+        .entries()
+        .maxBy(lodash.last)
+    );
+};
+
+/**
+ * Get The Hightest Rockstar Status Count
+ * @param {string[]} statuses statuses string array
+ * @returns {string | number | undefined} The highest status count
+ */
+export const getHighestStatusCount = (statuses: string[]): string | number | undefined => {
     return lodash.head(lodash(statuses)
         .countBy()
         .entries()

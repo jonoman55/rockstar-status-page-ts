@@ -28,6 +28,11 @@ export type DivRef = LegacyRef<HTMLDivElement> | undefined;
 export type StatusType = 'up' | 'down' | 'limited' | undefined;
 
 /**
+ * Rockstar API URL Path Extension
+ */
+export type ApiPath = 'api' | 'file';
+
+/**
  * Scroll Zoom Styles
  */
 export type ZoomStyles = {
@@ -236,4 +241,28 @@ export type CustomPalette = {
         downloads: string;
         pc: string;
     }
+};
+
+/**
+ * Status Item
+ */
+export type StatusItem = {
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Status
+     */
+    status: string;
+};
+
+/**
+ * Status Item Array
+ */
+export type StatusItems = {
+    /**
+     * Status Item Array
+     */
+    statuses: StatusItem[];
 };

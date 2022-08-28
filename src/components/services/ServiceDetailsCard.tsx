@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { Divider, useTheme } from '@mui/material';
+import { Divider, Theme, useTheme } from '@mui/material';
 
 import { FlexText } from '../controls';
 import { RockstarSpinner } from '../design';
@@ -9,11 +9,14 @@ import { UpdatedBox } from '../styled/StatusesCard.styled';
 import { CardHeader } from '../styled/PaperCard.styled';
 import { Card, CardContent, Paper } from '../styled/ServiceDetailsCard.styled';
 import { useGetStatusQuery } from '../../services/rockstarApi';
-import { fetchStatus } from '../../helpers';
+import { fetchStatus, getHighestStatusCount } from '../../helpers';
 
-import type { Service, StatusType } from '../../types';
+import type { Platform, Service, StatusItem, StatusItems, StatusType } from '../../types';
 
-interface Props {
+/**
+ * Service Details Card Props
+ */
+interface IServiceDetailsCardProps {
     /**
      * Rockstar Service
      */
@@ -28,14 +31,17 @@ interface Props {
     refetchService: () => void;
 };
 
-export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetchService }): JSX.Element => {
-    const theme = useTheme();
+export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ serviceId, service, refetchService }): JSX.Element => {
+    const theme: Theme = useTheme();
 
     const { data, isLoading, refetch } = useGetStatusQuery(serviceId, {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
 
+    /**
+     * Get Status's Status
+     */
     const statusStatus: StatusType = useMemo<StatusType>(() => {
         let result: StatusType;
         if (!isLoading && data) {
@@ -44,15 +50,99 @@ export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetc
         return result;
     }, [data, isLoading]);
 
+    /**
+     * Get Service's Status
+     */
     const serviceStatus: StatusType = useMemo<StatusType>(() => {
         let result: StatusType;
         if (service) {
             result = fetchStatus(service?.status?.toLowerCase() as StatusType);
         }
-        return result;
+        return result as StatusType;
     }, [service]);
 
-    const handleClick = useCallback(() => {
+    /**
+     * Get Platforms
+     */
+    const platforms: Platform[] = useMemo<Platform[]>(() => {
+        const results: Platform[] = [];
+        if (!isLoading && data?.services_platforms) {
+            data?.services_platforms.forEach(
+                (p: Platform) => results.push(p)
+            );
+        }
+        return results;
+    }, [isLoading, data]);
+
+    /**
+     * Get Overall Status
+     */
+    const overallStatus: StatusType = useMemo<StatusType>(
+        () => {
+            // Initial State
+            let statusItems: StatusItems = {
+                statuses: []
+            };
+            // Add Service and Status values to state
+            if (serviceStatus && statusStatus) {
+                const service_status: string = serviceStatus?.toString() as string;
+                const status_status: string = statusStatus?.toString() as string;
+                statusItems.statuses = [
+                    { name: 'Service', status: service_status },
+                    { name: 'Status', status: status_status },
+                ];
+            }
+            // Add Platform values to state
+            if (!isLoading && data && data?.services_platforms) {
+                data?.services_platforms.forEach((p) => {
+                    statusItems.statuses.push({
+                        name: p.name,
+                        status: p.status.toLowerCase(),
+                    });
+                });
+            }
+            // Get All Statuses from state
+            const statuses: StatusItem[] = Object.values(statusItems.statuses);
+            // Get All Status Values
+            const allStatusValues = statuses.map((v) => v.status.toLowerCase());
+            // Get Service and Status values
+            const overallValues: StatusItem[] = Object.values(statuses).filter(
+                (v) => v.name === 'Service' || v.name === 'Status'
+            );
+            // Get Service and Status statuses
+            const overallStatusValues: string[] = overallValues.map((s) => s.status);
+            // Check if Service and Status statuses are all UP
+            const isOverallAllUp: boolean = overallValues.every((v) => v.status === 'up');
+            // Get Platform values
+            const platformValues: StatusItem[] = Object.values(statuses).filter(
+                (v) => v.name !== 'Service' && v.name !== 'Status'
+            );
+            // Get Platform statuses
+            const platformStatusValues: string[] = platformValues.map((s) => s.status);
+            // Check if Platform statuses are all UP
+            const isPlatformsAllUp: boolean = platformValues.every((v) => v.status === 'up');
+            // All UP
+            if (isOverallAllUp && isPlatformsAllUp) return 'up';
+            // Service OR Status DOWN
+            if (overallStatusValues.includes('down')) return 'down';
+            // Service OR Status LIMITED
+            if (overallStatusValues.includes('limited')) return 'limited';
+            // Service/Status AND Platforms DOWN
+            if (overallStatusValues.includes('down') && platformStatusValues.includes('down')) return 'down';
+            // Service/Status AND Platforms LIMITED
+            if (overallStatusValues.includes('limited') && platformStatusValues.includes('limited')) return 'limited';
+            // Get highest status value count
+            const highestValue = getHighestStatusCount(allStatusValues) as StatusType;
+            // return highest status
+            return highestValue;
+        },
+        [isLoading, data, serviceStatus, statusStatus]
+    );
+
+    /**
+     * Handle Refetch
+     */
+    const handleClick = useCallback<() => void>(() => {
         refetch();
         refetchService();
     }, [refetch, refetchService]);
@@ -63,7 +153,7 @@ export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetc
                 <CardHeader
                     title={`${data?.name}`}
                     subheader={`${new Date().toLocaleString()}`}
-                    status={serviceStatus as StatusType}
+                    status={overallStatus}
                     onClick={handleClick}
                 />
                 <CardImage id={serviceId} />
@@ -82,9 +172,9 @@ export const ServiceDetailsCard: React.FC<Props> = ({ serviceId, service, refetc
                         service={serviceStatus}
                         theme={theme}
                     />
-                    {data?.services_platforms && (
+                    {platforms.length > 0 && (
                         <PlatformsListItem
-                            platforms={data?.services_platforms}
+                            platforms={platforms}
                             theme={theme}
                         />
                     )}
