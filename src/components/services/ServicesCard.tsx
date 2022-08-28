@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Theme, useTheme } from '@mui/material';
 
 import { RockstarSpinner } from '../design';
@@ -69,6 +69,13 @@ export const ServicesCard: React.FC = (): JSX.Element => {
         [services, servicesIsLoading]
     );
 
+    /**
+     * Handle Refetch
+     */
+    const handleClick = useCallback<() => void>(() => {
+        refetch();
+    }, [refetch]);
+
     return servicesIsLoading ? <RockstarSpinner /> : (
         <Paper elevation={0}>
             <Card>
@@ -76,7 +83,7 @@ export const ServicesCard: React.FC = (): JSX.Element => {
                     title='Rockstar Services'
                     subheader={`${new Date().toLocaleString()}`}
                     status={overallStatus}
-                    onClick={refetch}
+                    onClick={handleClick}
                 />
                 <CardMedia id={6} />
                 <CardContent>
