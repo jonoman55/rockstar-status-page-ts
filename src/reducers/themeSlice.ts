@@ -6,7 +6,7 @@ const theme = getItem('theme') as string;
 
 interface ThemeState {
     darkMode: boolean;
-}
+};
 
 const initialState: ThemeState = {
     darkMode: Boolean(theme) ? true : false
