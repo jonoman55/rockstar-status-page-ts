@@ -14,6 +14,7 @@ import { CardActionBox, StatusIcon } from '../shared';
 import { fetchImage, fetchCardImage } from '../../helpers';
 
 import type { StatusType } from '../../types';
+import { ToolTip } from '../controls';
 
 export const Paper = styled(MuiPaper)(({ theme }) => ({
     height: '100%',
@@ -78,12 +79,13 @@ interface CardHeaderProps {
     subheader: string;
     status: StatusType;
     onRefreshClick: React.MouseEventHandler<HTMLButtonElement>;
+    disabledAvatarClick?: boolean;
     onAvatarClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-export const CardHeader: React.FC<CardHeaderProps> = ({ title, subheader, status, onRefreshClick, onAvatarClick }): JSX.Element => (
+export const CardHeader: React.FC<CardHeaderProps> = ({ title, subheader, status, onRefreshClick, disabledAvatarClick, onAvatarClick }): JSX.Element => (
     <MuiCardHeader
-        avatar={<StatusAvatar status={status} onClick={onAvatarClick} />}
+        avatar={<RenderStatusAvatar status={status} disabled={disabledAvatarClick} onClick={onAvatarClick} />}
         action={<RefreshButton onClick={onRefreshClick} />}
         title={title}
         subheader={subheader}
@@ -123,15 +125,26 @@ export const RefreshButton: React.FC<RefreshButtonProps> = ({ onClick }): JSX.El
 
 interface StatusAvatarProps {
     status: StatusType;
-    onClick?: React.MouseEventHandler<HTMLButtonElement>; 
+    disabled?: boolean;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-export const StatusAvatar: React.FC<StatusAvatarProps> = ({ status, onClick }): JSX.Element => (
-    <IconButton onClick={onClick} sx={{ m: 0, p: 0 }}>
+export const StatusAvatar: React.FC<StatusAvatarProps> = ({ status, disabled, onClick }): JSX.Element => (
+    <IconButton disabled={disabled} onClick={onClick} sx={{ m: 0, p: 0 }}>
         <Avatar aria-label='status-icon' sx={{ bgcolor: 'inherit' }}>
             <StatusIcon status={status} />
         </Avatar>
     </IconButton>
+);
+
+const RenderStatusAvatar = ({ status, disabled, onClick }: StatusAvatarProps): JSX.Element => (
+    disabled ? (
+        <StatusAvatar status={status} disabled={disabled} onClick={onClick} />
+    ) : (
+        <ToolTip title='Status Menu' placement='top' component={
+            <StatusAvatar status={status} disabled={disabled} onClick={onClick} />}
+        />
+    )
 );
 
 export const CardFooter: React.FC<{ sx?: SxProps; }> = ({ sx }): JSX.Element => (

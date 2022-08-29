@@ -37,6 +37,7 @@ export const ApiCard: React.FC = (): JSX.Element => {
                     subheader={`${new Date().toLocaleString()}`}
                     status={status}
                     onRefreshClick={handleRefreshClick}
+                    disabledAvatarClick={true}
                 />
                 <CardMedia id={4} />
                 <CardContent>

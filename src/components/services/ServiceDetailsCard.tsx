@@ -155,6 +155,7 @@ export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ service
                     subheader={`${new Date().toLocaleString()}`}
                     status={overallStatus}
                     onRefreshClick={handleRefreshClick}
+                    disabledAvatarClick={true}
                 />
                 <CardImage id={serviceId} />
                 {data?.message && <HtmlMessage message={data?.message} />}

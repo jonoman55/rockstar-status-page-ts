@@ -84,6 +84,7 @@ export const ServicesCard: React.FC = (): JSX.Element => {
                     subheader={`${new Date().toLocaleString()}`}
                     status={overallStatus}
                     onRefreshClick={handleRefreshClick}
+                    disabledAvatarClick={true}
                 />
                 <CardMedia id={6} />
                 <CardContent>

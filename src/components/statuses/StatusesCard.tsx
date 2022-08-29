@@ -84,6 +84,7 @@ export const StatusesCard: React.FC = (): JSX.Element => {
                     subheader={`${new Date().toLocaleString()}`}
                     status={overallStatus as StatusType}
                     onRefreshClick={handleRefreshClick}
+                    disabledAvatarClick={true}
                 />
                 <CardMedia id={10} />
                 <CardContent>
