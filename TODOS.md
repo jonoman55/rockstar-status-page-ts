@@ -15,8 +15,8 @@
 - [x] Convert TabNav to a LinkBar (Button Group) 
 - [x] Fix the Sidebar (Drawer) bug where it doesn't close onClick
 - [x] Fix StatusAvatar by weighting the Status (UP, DOWN, LIMITED) rather than based on count
+- [x] Make StatusAvatar clickable with menu showing all statuses on all route
 - [ ] Fix Platform DataGrid Header styles in mobile
-- [ ] Make StatusAvatar clickable with menu showing all statuses
 - [ ] Add Badge to Menu Icon in Header or FAB with the number of services/platforms that aren't UP
 - [ ] Add banner for when there is a known outage with link to Outages page
 - [ ] Add a notification alerts for when service or platform statuses change
