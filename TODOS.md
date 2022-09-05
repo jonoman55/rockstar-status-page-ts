@@ -17,8 +17,8 @@
 - [x] Fix StatusAvatar by weighting the Status (UP, DOWN, LIMITED) rather than based on count
 - [x] Make StatusAvatar clickable with menu showing all statuses on all route
 - [x] Add Badge to Menu Icon in Header with the number of services/platforms that aren't UP
+- [ ] Finish implementing OutageBar
+- [ ] Add dynamic OutageBar alerts for when service or platform statuses change
 - [ ] Fix Platform DataGrid Header styles in mobile
-- [ ] Add banner for when there is a known outage with link to Outages page
-- [ ] Add a notification alerts for when service or platform statuses change
 - [ ] Remove all unused components
 - [ ] Deploy to Netlify
