@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTheme } from '@mui/material';
+import { Theme, useTheme } from '@mui/material';
 import {
     GridCellParams,
     GridColumnVisibilityModel,
@@ -23,7 +23,7 @@ const initialState: GridInitialStateCommunity = {
     sorting: {
         sortModel: [{
             field: 'status',
-            sort: 'desc'
+            sort: 'asc'
         }],
     },
 };
@@ -59,7 +59,7 @@ interface Props {
  * @returns {JSX.Element} ServicesDataGrid
  */
 export const ServicesDataGrid: React.FC<Props> = ({ rows, isLoading }): JSX.Element => {
-    const theme = useTheme();
+    const theme: Theme = useTheme();
 
     const [pageSize, setPageSize] = useState<number>(10);
     const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(initialColumnVisibilityState);

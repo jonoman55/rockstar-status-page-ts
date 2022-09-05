@@ -31,6 +31,7 @@ export const StatusMenu = ({ open, anchorEl, handleClose, menuItems }: StatusMen
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
+                disableScrollLock
                 MenuListProps={{
                     'aria-labelledby': 'status-button',
                 }}

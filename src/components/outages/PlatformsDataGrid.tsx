@@ -29,7 +29,7 @@ const initialState: GridInitialStateCommunity = {
     sorting: {
         sortModel: [{
             field: 'status',
-            sort: 'desc'
+            sort: 'asc'
         }],
     },
 };

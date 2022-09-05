@@ -10,11 +10,9 @@ type Builder = EndpointBuilder<BaseQueryFn<string | FetchArgs, unknown, FetchBas
 
 /**
  * Get API URL Path Extension
- * @returns api or file
+ * @returns {ApiPath} api or file
  */
-const getApiPath = (): ApiPath => {
-    return Boolean(process.env.REACT_APP_API_TESTING) ? 'api' : 'file';
-};
+const getApiPath = (): ApiPath => Boolean(process.env.REACT_APP_API_TESTING) ? 'api' : 'file';
 
 const apiPath: ApiPath = getApiPath();
 
@@ -28,28 +26,28 @@ export const rockstarApi = createApi({
     endpoints: (builder: Builder) => ({
         getApiStatus: builder.query<Api, any>({
             query: (): string | FetchArgs => ({
-                url: `/`,
+                url: '/',
                 responseHandler: async (res: Response) => await res.json() as Api,
             }),
             transformResponse: (api: Api): Api | Promise<Api> => api as Api,
         }),
         getAll: builder.query<All, any>({
             query: (): string | FetchArgs => ({ 
-                url: `/all`,
+                url: '/all',
                 responseHandler: async (res: Response) => await res.json() as All,
             }),
             transformResponse: (all: All): All | Promise<All> => all as All,
         }),
         getUpdated: builder.query<Updated, any>({
             query: (): string | FetchArgs => ({
-                url: `/updated`,
+                url: '/updated',
                 responseHandler: async (res: Response) => await res.json() as Updated,
             }),
             transformResponse: (updated: Updated): Updated | Promise<Updated> => updated as Updated,
         }),
         getServices: builder.query<Service[], any>({
             query: (): string | FetchArgs => ({
-                url: `/services`,
+                url: '/services',
                 responseHandler: async (res: Response) => await res.json() as Service[],
             }),
             transformResponse: (services: Service[]): Service[] | Promise<Service[]> => services as Service[],
@@ -63,7 +61,7 @@ export const rockstarApi = createApi({
         }),
         getStatuses: builder.query<Status[], any>({
             query: (): string | FetchArgs => ({
-                url: `/statuses`,
+                url: '/statuses',
                 responseHandler: async (res: Response) => await res.json() as Status[],
             }),
             transformResponse: (statuses: Status[]): Status[] | Promise<Status[]> => statuses as Status[],

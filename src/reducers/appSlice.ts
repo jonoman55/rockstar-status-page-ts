@@ -8,6 +8,7 @@ interface AppState {
     targetHref: string;
     isServiceRoute: boolean;
     showToolbar: boolean;
+    outageCount: number;
 };
 
 const initialState: AppState = {
@@ -18,6 +19,7 @@ const initialState: AppState = {
     targetHref: '/all',
     isServiceRoute: false,
     showToolbar: true,
+    outageCount: 0,
 };
 
 const appSlice = createSlice({
@@ -45,6 +47,9 @@ const appSlice = createSlice({
         },
         setShowToolbar: (state: AppState, action: PayloadAction<boolean>) => {
             state.showToolbar = action.payload;
+        },
+        setOutageCount: (state: AppState, action: PayloadAction<number>) => {
+            state.outageCount = action.payload;
         },
     },
 });

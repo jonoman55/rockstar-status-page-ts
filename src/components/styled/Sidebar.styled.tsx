@@ -1,4 +1,12 @@
-import { styled, IconButton as MuiIconButton, Switch as MuiSwitch, ListSubheader as MuiListSubheader, ListSubheaderProps } from '@mui/material';
+import {
+    styled,
+    Badge as MuiBadge,
+    BadgeProps as MuiBadgeProps,
+    IconButton as MuiIconButton,
+    Switch as MuiSwitch,
+    ListSubheader as MuiListSubheader,
+    ListSubheaderProps as MuiListSubheaderProps
+} from '@mui/material';
 
 export const Switch = styled(MuiSwitch)(({ theme }) => ({
     '& .MuiSwitch-thumb': {
@@ -14,7 +22,7 @@ export const Switch = styled(MuiSwitch)(({ theme }) => ({
     },
 })); 
 
-export const ListSubheader = styled(MuiListSubheader)<ListSubheaderProps>(({ theme }) => ({
+export const ListSubheader = styled(MuiListSubheader)<MuiListSubheaderProps>(({ theme }) => ({
     fontWeight: 'bold',
     fontSize: 16,
     color: theme.palette.primary.contrastText,
@@ -28,5 +36,20 @@ export const IconButton = styled(MuiIconButton)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     '&:hover': {
         color: theme.palette.secondary.contrastText
+    },
+}));
+
+export const Badge = styled(MuiBadge)<MuiBadgeProps>(({ theme }) => ({
+    '& .MuiBadge-badge': {
+      backgroundColor: theme.custom.palette.brightRed,
+    },
+}));
+
+export const OutagesBadge = styled(Badge)<MuiBadgeProps>(({ theme }) => ({
+    '& .MuiBadge-badge': {
+      right: -3,
+      top: 13,
+      backgroundColor: theme.custom.palette.brightRed,
+      padding: '0 4px',
     },
 }));

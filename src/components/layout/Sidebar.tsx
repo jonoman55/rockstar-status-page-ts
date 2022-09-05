@@ -1,9 +1,9 @@
 import { useCallback, useMemo, Fragment } from 'react';
-import { Box, ClickAwayListener, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { BadgeOrigin, Box, ClickAwayListener, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { DarkMode, LightMode, Menu as MenuIcon } from '@mui/icons-material';
 
 import { ListItemLinkButton, ListItemLink, ToolTip } from '../controls';
-import { ListSubheader, IconButton, Switch } from '../styled/Sidebar.styled';
+import { Badge, ListSubheader, IconButton, Switch } from '../styled/Sidebar.styled';
 import { appActions } from '../../reducers/appSlice';
 import { toggleTheme } from '../../reducers/themeSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -26,23 +26,33 @@ interface ListProps {
     toggleDrawer: (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => void;
 };
 
+const badgeAnchorOrigin: BadgeOrigin = {
+    vertical: 'top',
+    horizontal: 'right',
+};
+
 const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element => {
     const dispatch = useAppDispatch();
     const matches: boolean = useBreakpoint('sm', 'up');
 
-    const internalLinks: LinkItem[] = useMemo(() =>
+    const outageCount: number = useAppSelector((state) => state.app.outageCount);
+
+    const darkMode: boolean = useAppSelector((state) => state.theme.darkMode);
+
+    const placement: Placement = useMemo<Placement>(
+        () => matches ? 'right' : 'top-end',
+        [matches]
+    );
+
+    const internalLinks: LinkItem[] = useMemo<LinkItem[]>(() =>
         LinkItems.filter((i) => i.type !== 'external' && i.type !== 'other'),
         []
     );
 
-    const externalLinks: LinkItem[] = useMemo(() =>
+    const externalLinks: LinkItem[] = useMemo<LinkItem[]>(() =>
         LinkItems.filter((i) => i.type === 'external'),
         []
     );
-
-    const darkMode: boolean = useAppSelector((state) => state.theme.darkMode);
-
-    const placement: Placement = useMemo(() => matches ? 'right' : 'top-end', [matches]);
 
     return (
         <Box
@@ -52,15 +62,25 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
             onKeyDown={toggleDrawer(false)}
         >
             <List component='nav' subheader={<ListSubheader>Status Pages</ListSubheader>}>
-                {internalLinks.map(({ text, icon, to, id }: LinkItem) => (
-                    <ListItemLink
-                        key={id}
-                        primary={text}
-                        to={`${to}`}
-                        icon={icon}
-                        placement={placement}
-                    />
-                ))}
+                {internalLinks.map(({ text, icon, to, id }: LinkItem) =>
+                    text === 'Outages' ? (
+                        <ListItemLink
+                            key={id}
+                            primary={text}
+                            to={`${to}`}
+                            icon={<Badge badgeContent={outageCount} anchorOrigin={badgeAnchorOrigin}>{icon}</Badge>}
+                            placement={placement}
+                        />
+                    ) : (
+                        <ListItemLink
+                            key={id}
+                            primary={text}
+                            to={`${to}`}
+                            icon={icon}
+                            placement={placement}
+                        />
+                    )
+                )}
             </List>
             <List subheader={<ListSubheader>External Links</ListSubheader>}>
                 {externalLinks.map(({ text, icon, href, id }: LinkItem) => (
@@ -104,6 +124,8 @@ const Sidebar: React.FC = (): JSX.Element => {
 
     const drawerOpen: boolean = useAppSelector((state) => state.app.drawerOpen);
 
+    const outageCount: number = useAppSelector((state) => state.app.outageCount);
+
     const toggleDrawer = useCallback(
         (open: boolean) =>
             (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -123,11 +145,13 @@ const Sidebar: React.FC = (): JSX.Element => {
             {([matches ? 'left' : 'bottom'] as const).map((anchor: Anchor) => (
                 <Fragment key={anchor}>
                     <IconButton size='large' onClick={toggleDrawer(true)}>
-                        <MenuIcon fontSize='medium' />
+                        <Badge badgeContent={outageCount}>
+                            <MenuIcon fontSize='medium' />
+                        </Badge>
                     </IconButton>
                     <ClickAwayListener onClickAway={() => toggleDrawer(false)}>
                         <Drawer
-                            variant="temporary"
+                            variant='temporary'
                             anchor={anchor}
                             open={drawerOpen}
                             onClose={toggleDrawer(false)}
