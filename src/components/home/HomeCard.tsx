@@ -6,16 +6,13 @@ import { StatusMenu } from '../shared';
 import { RockstarSpinner } from '../design';
 import { StatusGridItems, StatusIndicators, Title, Updated } from './HomeComponents';
 import { Paper, Card, CardHeader, CardMedia, CardContent, CardFooter } from '../styled/PaperCard.styled';
-import { appActions } from '../../reducers/appSlice';
-import { useGetStatusesQuery, useGetUpdatedQuery } from '../../services/rockstarApi';
-import { useAppDispatch } from '../../app/hooks';
-import { useWindowSize } from '../../hooks';
-import { convertToStatus, getHighestStatusCount } from '../../helpers';
+import { useGetUpdatedQuery } from '../../services/rockstarApi';
+import { useOverallStatus, useWindowSize } from '../../hooks';
+import { convertToStatus } from '../../helpers';
 
-import type { Platform, Status, StatusItem, StatusItems, StatusMenuItem, StatusType } from '../../types';
+import type { Status, StatusMenuItem } from '../../types';
 
 export const HomeCard: React.FC<{}> = (): JSX.Element => {
-    const dispatch = useAppDispatch();
     const size: number[] = useWindowSize();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -28,12 +25,21 @@ export const HomeCard: React.FC<{}> = (): JSX.Element => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [size]);
 
-    const { data: updatedResult, isLoading: updatedIsLoading, refetch: updatedRefetch } = useGetUpdatedQuery('getUpdated', {
+    const {
+        data: updatedResult,
+        isLoading: updatedIsLoading,
+        refetch: updatedRefetch
+    } = useGetUpdatedQuery('getUpdated', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
 
-    const { data: statusesResults, isLoading: statusesIsLoading, refetch: statusesRefetch } = useGetStatusesQuery('getAllStatuses', {
+    const {
+        isLoading: statusesIsLoading,
+        statuses: statusesResults,
+        refetch: statusesRefetch,
+        overallStatus,
+    } = useOverallStatus('getAllStatuses', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
@@ -63,109 +69,6 @@ export const HomeCard: React.FC<{}> = (): JSX.Element => {
         }
         return results;
     }, [statusesResults, statusesIsLoading]);
-
-    /**
-     * Get Platforms
-     */
-    const platforms: Platform[] = useMemo<Platform[]>(() => {
-        const results: Platform[] = [];
-        if (!isLoading && statusesResults) {
-            statusesResults?.forEach(
-                (s: Status) => s.services_platforms.forEach(
-                    (p: Platform) => results.push(p)
-                )
-            );
-        }
-        return results;
-    }, [isLoading, statusesResults]);
-
-    /**
-     * Status Items
-     */
-    const statusItems: StatusItems = useMemo<StatusItems>(() => {
-        // Initial State
-        let statusItems: StatusItems = {
-            statuses: []
-        };
-        // Add Service Status values to state
-        if (!isLoading && statusesResults) {
-            statusesResults.forEach((s: Status) =>
-                statusItems.statuses.push({
-                    name: s.name,
-                    status: s.status.toLowerCase(),
-                    type: 'service'
-                })
-            );
-        }
-        // Add Platform values to state
-        if (!isLoading && platforms) {
-            platforms.forEach((p: Platform) => {
-                statusItems.statuses.push({
-                    name: p.name,
-                    status: p.status.toLowerCase(),
-                    type: 'platform'
-                });
-            });
-        }
-        return statusItems;
-    }, [isLoading, platforms, statusesResults]);
-
-    /**
-     * Get Overall Status
-     */
-    const overallStatus: StatusType = useMemo<StatusType>(() => {
-        // Get All Statuses from state
-        const allStatuses: StatusItem[] = Object.values(statusItems.statuses);
-        // Get All Status Values
-        const allStatusValues = allStatuses.map((v) => v.status.toLowerCase());
-        // Get All Service Statuses from state
-        const serviceValues: StatusItem[] = allStatuses.filter((s) => s.type === 'service');
-        // Get Service and Status statuses
-        const overallStatusValues: string[] = serviceValues.map((s) => s.status);
-        // Check if Service and Status statuses are all UP
-        const isOverallAllUp: boolean = overallStatusValues.every((v) => v === 'up');
-        // Get Platform Statuses from state
-        const platformValues: StatusItem[] = allStatuses.filter((s) => s.type === 'platform');
-        // Get Platform statuses
-        const platformStatusValues: string[] = platformValues.map((s) => s.status);
-        // Check if Platform statuses are all UP
-        const isPlatformsAllUp: boolean = platformStatusValues.every((v) => v === 'up');
-        // All UP
-        if (isOverallAllUp && isPlatformsAllUp) return 'up';
-        // Service Status DOWN
-        if (overallStatusValues.includes('down')) return 'down';
-        // Service Status LIMITED
-        if (overallStatusValues.includes('limited')) return 'limited';
-        // Service Status AND Platforms DOWN
-        if (overallStatusValues.includes('down') && platformStatusValues.includes('down')) return 'down';
-        // Service Status AND Platforms LIMITED
-        if (overallStatusValues.includes('limited') && platformStatusValues.includes('limited')) return 'limited';
-        // Get highest status value count
-        const highestValue = getHighestStatusCount(allStatusValues) as StatusType;
-        // return highest status
-        return highestValue;
-    }, [statusItems]);
-
-    /**
-     * Handle Outage Count
-     */
-    const setOutageCount = useCallback<() => void>(() => {
-        if (!isLoading && overallStatus) {
-            if (overallStatus?.includes('down') || overallStatus?.includes('limited')) {
-                dispatch(appActions.setOutageCount(statusItems.statuses.filter(
-                    (i: StatusItem) => i.type === 'service').filter(
-                        (i: StatusItem) => i.status !== 'up').length
-                ));
-            }
-            if (overallStatus.includes('up')) {
-                dispatch(appActions.setOutageCount(0));
-            }
-        }
-    }, [dispatch, isLoading, overallStatus, statusItems.statuses]);
-
-    useEffect(() => {
-        setOutageCount();
-    }, [setOutageCount]);
 
     /**
      * Create Menu Items

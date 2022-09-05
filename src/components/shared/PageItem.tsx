@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Fragment } from 'react';
 
 import { LinkBar, OutageBar } from '../design';
@@ -13,7 +12,7 @@ import { ChildProps } from '../../interfaces';
 export const PageItem = (props: ChildProps): JSX.Element => (
     <Fragment>
         <LinkBar />
-        {/* <OutageBar /> */}
+        <OutageBar />
         {props.children}
     </Fragment>
 );

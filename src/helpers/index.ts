@@ -200,3 +200,12 @@ export const fetchStatusByCount = (statuses: any[]): string => {
     }
     return indicator?.value?.toLowerCase();
 };
+
+/**
+ * Capitalize the first letter of a string
+ * @param {string} text String to capitalize
+ * @returns {string} Capitalized string
+ */
+export const capitalizeFirstLetter = (text: string): string => {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+};

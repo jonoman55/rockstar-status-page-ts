@@ -1,6 +1,7 @@
-import type { Reducer } from '@reduxjs/toolkit';
+import type { AnyAction, Reducer } from '@reduxjs/toolkit';
 import { configureStore, combineReducers, ThunkAction, Action } from '@reduxjs/toolkit';
 import {
+    Persistor,
     persistStore,
     persistReducer,
     FLUSH,
@@ -9,7 +10,6 @@ import {
     PERSIST,
     PURGE,
     REGISTER,
-    Persistor,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
@@ -41,7 +41,7 @@ const rootReducer = combineReducers({
     [rockstarApi.reducerPath]: rockstarApi.reducer,
 });
 
-const persistedReducer: Reducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer: Reducer<any, AnyAction> = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
     reducer: persistedReducer,

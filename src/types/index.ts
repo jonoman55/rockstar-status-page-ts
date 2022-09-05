@@ -250,6 +250,10 @@ export type StatusItemType = 'service' | 'platform';
  */
 export type StatusItem = {
     /**
+     * ID
+     */
+    id?: number;
+    /**
      * Name
      */
     name: string;
@@ -260,7 +264,7 @@ export type StatusItem = {
     /**
      * Type
      */
-    type?: StatusItemType
+    type?: StatusItemType;
 };
 
 /**
@@ -293,4 +297,49 @@ export type StatusMenuItem = {
      * Service Page ID
      */
     id?: number;
+};
+
+/**
+ * Overall Status
+ */
+export type OverallStatus = {
+    isLoading: boolean;
+    statuses: Status[];
+    platforms: Platform[];
+    statusItems: StatusItems;
+    overallStatus: StatusType;
+    refetch: () => void;
+};
+
+/**
+ * Use Query Options
+ */
+export type UseQueryOptions = {
+    pollingInterval?: number;
+    refetchOnReconnect?: boolean;
+    refetchOnFocus?: boolean;
+    skip?: boolean;
+    refetchOnMountOrArgChange?: boolean | number;
+};
+
+/**
+ * Outage Bar Alert
+ */
+export type OutageBarAlert = {
+    id: number;
+    name: string;
+    status: string;
+    open: boolean;
+};
+
+/**
+ * Outage Bar Alert Notification
+ */
+export type AlertNotification = {
+    text: string;
+    linkText: string;
+    to: string;
+    status: string;
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };

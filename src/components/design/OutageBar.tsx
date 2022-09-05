@@ -1,86 +1,147 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AppBar, Alert, AlertTitle, Box, Collapse, IconButton, Stack, Toolbar, Typography } from '@mui/material';
 import { Error, OfflineBolt, Close as CloseIcon } from '@mui/icons-material';
+import { orderBy } from 'lodash';
 
-type TOutage = {
-    name: string;
-    id: number;
-    status: string;
-};
+import { useOverallStatus } from '../../hooks';
+import { capitalizeFirstLetter } from '../../helpers';
 
-const outageAlerts: TOutage[] = [
-    { name: 'Rockstar Games Launcher', id: 6, status: 'DOWN' },
-    { name: 'Grand Theft Auto Online', id: 3, status: 'LIMITED' },
-    { name: 'Red Dead Online', id: 2, status: 'LIMITED' },
-];
+import type { AlertNotification, OutageBarAlert, StatusItem } from '../../types';
 
+// TODO : Finish implementing the OutageBar
+// TODO : Move useState instances to appSlice reducer
+// TODO : Finish styling the Outage Alert
+// TODO : Create separate components for OutageAlerts and OutageAlert
+// TODO : Add functionality to detect new outages and display alert
+// TODO : Convert to styled components
+// TODO : Add functionality to reopen closed alerts
 export const OutageBar = () => {
-    const outages: TOutage[] = outageAlerts;
+    const [alerts, setAlerts] = useState<number>(0);
+
+    const { isLoading, statusItems } = useOverallStatus('getOverallStatus', {
+        refetchOnReconnect: true,
+        pollingInterval: 1000 * 60 * 5 // 5 min
+    });
+
+    const outages: OutageBarAlert[] = useMemo<OutageBarAlert[]>(() => {
+        const results: OutageBarAlert[] = [];
+        if (!isLoading && statusItems.statuses) {
+            statusItems.statuses.forEach((i: StatusItem) =>
+                i.type === 'service' && i.status.toLowerCase() !== 'up' && results.push({
+                    id: i.id as number,
+                    name: i.name as string,
+                    status: i.status.toUpperCase() as string,
+                    open: true,
+                })
+            );
+        }
+        return orderBy(results, ['status', 'asc']);
+    }, [isLoading, statusItems.statuses]);
+
+    useEffect(() => {
+        if (!isLoading && outages) setAlerts(outages.length);
+    }, [isLoading, outages]);
+
     return (
-        <AppBar component='div' position='static' elevation={2} sx={{ bgcolor: 'transparent', my: 2, backgroundImage: 'none' }}>
-            <Toolbar disableGutters sx={{ bgcolor: 'transparent' }}>
-                <OutageAlerts outages={outages} />
-            </Toolbar>
-        </AppBar>
+        outages.length > 0 && alerts > 0 ? (
+            <AppBar component='div' position='static' elevation={2} sx={{ bgcolor: 'transparent', mt: 3, mb: 1.5, backgroundImage: 'none' }}>
+                <Toolbar disableGutters sx={{ bgcolor: 'transparent' }}>
+                    <OutageAlerts outages={outages} setAlerts={setAlerts} />
+                </Toolbar>
+            </AppBar>
+        ) : null
     );
 };
 
-const capitalizeFirstLetter = (text: string) => {
-    return text.charAt(0).toUpperCase() + text.slice(1);
+interface OutageAlertsProps {
+    outages: OutageBarAlert[];
+    setAlerts: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const OutageAlerts = ({ outages }: { outages: TOutage[]; }) => (
-    outages.length > 0 ? (
-        <Stack sx={{ width: '100%' }} spacing={1}>
-            {outages.map((o: TOutage, index: number) => (
-                <OutageAlert
-                    key={index}
-                    text={`${o.name} is ${capitalizeFirstLetter(o.status.toLowerCase())} — `}
-                    linkText='check it out!'
-                    to={`/service/${o.id}`}
-                    status={o.status}
-                />
-            ))}
-        </Stack>
-    ) : null
-);
+const OutageAlerts = ({ outages, setAlerts }: OutageAlertsProps) => {
+    const [openAlerts, setOpenAlerts] = useState<OutageBarAlert[]>(outages);
 
-type TOutageAlert = {
-    text: string;
-    linkText: string;
-    to: string;
-    status: string;
+    const alertIsOpen = useCallback<(name: string) => boolean>(
+        (name: string) => {
+            const alert: OutageBarAlert[] = openAlerts.filter(
+                (a: OutageBarAlert) => a.name === name
+            );
+            const open: boolean = alert.shift()?.open as boolean;
+            return open;
+        },
+        [openAlerts]
+    );
+
+    const setAlertIsOpen = useCallback<(name: string) => () => void>(
+        (name: string) => () => {
+            return setOpenAlerts(openAlerts.filter(
+                (a: OutageBarAlert) => a.name !== name && {
+                    name: a.name,
+                    status: a.status,
+                    open: !a.open
+                })
+            );
+        },
+        [openAlerts, setOpenAlerts]
+    );
+
+    const setAlertsCount = useCallback<() => void>(
+        () => setAlerts(openAlerts.length),
+        [openAlerts, setAlerts]
+    );
+
+    useEffect(() => {
+        setAlertsCount();
+    }, [openAlerts, setAlertsCount]);
+
+    return (
+        outages.length > 0 ? (
+            <Stack sx={{ width: '100%' }} spacing={1}>
+                {outages.map((o: OutageBarAlert, index: number) => (
+                    <OutageAlert
+                        key={index}
+                        text={`${o.name} is ${capitalizeFirstLetter(o.status.toLowerCase())} — `}
+                        linkText='check it out!'
+                        to={`/service/${o.id}`}
+                        status={o.status}
+                        open={alertIsOpen(o.name)}
+                        setOpen={setAlertIsOpen(o.name)}
+                    />
+                ))}
+            </Stack>
+        ) : null
+    );
 };
 
-const OutageAlert = ({ text, linkText, to, status }: TOutageAlert) => {
-    const [open, setOpen] = useState(true);
-
+// TODO : Move bgcolor and icon functions to helper file as CSSObjects
+// TODO : Covert to styled components
+const OutageAlert = ({ text, linkText, to, status, open, setOpen }: AlertNotification) => {
     const bgcolor = (status: string) => {
         if (status.toLowerCase() === 'down') return 'error.dark';
         if (status.toLowerCase() === 'limited') return 'warning.main';
     };
 
     const icon = (status: string) => {
-        if (status.toLowerCase() === 'down') return <Error fontSize="inherit" />;
-        if (status.toLowerCase() === 'limited') return <OfflineBolt fontSize="inherit" />;
+        if (status.toLowerCase() === 'down') return <Error fontSize='inherit' />;
+        if (status.toLowerCase() === 'limited') return <OfflineBolt fontSize='inherit' />;
     };
 
     return (
         <Box sx={{ width: '100%' }}>
             <Collapse in={open}>
                 <Alert
-                    severity="warning"
-                    variant="filled"
+                    severity='warning'
+                    variant='filled'
                     icon={icon(status)}
                     action={
                         <IconButton
-                            aria-label="close"
-                            color="inherit"
-                            size="medium"
+                            aria-label='close'
+                            color='inherit'
+                            size='medium'
                             onClick={() => setOpen(false)}
                         >
-                            <CloseIcon fontSize="inherit" />
+                            <CloseIcon fontSize='inherit' />
                         </IconButton>
                     }
                     sx={{ color: 'common.white', bgcolor: bgcolor(status) }}
