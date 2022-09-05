@@ -1,5 +1,6 @@
 export * from './LinkBar';
 export * from './NavBar';
+export * from './OutageBar';
 export * from './RockstarIcon';
 export * from './RockstarLogo';
 export * from './RockstarSpinner';

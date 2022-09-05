@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Fragment } from 'react';
 
-import { LinkBar } from '../design';
+import { LinkBar, OutageBar } from '../design';
 
 import { ChildProps } from '../../interfaces';
 
@@ -12,6 +13,7 @@ import { ChildProps } from '../../interfaces';
 export const PageItem = (props: ChildProps): JSX.Element => (
     <Fragment>
         <LinkBar />
+        {/* <OutageBar /> */}
         {props.children}
     </Fragment>
 );

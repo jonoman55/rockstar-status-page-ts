@@ -124,9 +124,9 @@ export const fetchStatus = (status: StatusType): StatusType => {
     switch (status?.toLowerCase()) {
         case 'up':
             return RockstarStatus.UP;
-        case 'down':
-            return RockstarStatus.LIMITED;
         case 'limited':
+            return RockstarStatus.LIMITED;
+        case 'down':
             return RockstarStatus.DOWN;
         default:
             return undefined;
