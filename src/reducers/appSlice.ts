@@ -15,6 +15,7 @@ interface AppState {
     outageAlerts: OutageBarAlert[];
     activeOutages: OutageBarAlert[];
     resetAlerts: boolean;
+    resetAlertsOpen: boolean;
 };
 
 const initialState: AppState = {
@@ -30,6 +31,7 @@ const initialState: AppState = {
     outageAlerts: [],
     activeOutages: [],
     resetAlerts: false,
+    resetAlertsOpen: true
 };
 
 const appSlice = createSlice({
@@ -72,6 +74,9 @@ const appSlice = createSlice({
         },
         setResetAlerts: (state: AppState, action: PayloadAction<boolean>) => {
             state.resetAlerts = action.payload;
+        },
+        setResetAlertsOpen: (state: AppState, action: PayloadAction<boolean>) => {
+            state.resetAlertsOpen = action.payload;
         },
     },
 });

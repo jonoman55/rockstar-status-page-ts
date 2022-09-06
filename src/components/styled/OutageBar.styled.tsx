@@ -1,6 +1,8 @@
 import {
     AppBar as MuiAppBar,
     AppBarProps as MuiAppBarProps,
+    Box as MuiBox,
+    BoxProps as MuiBoxProps,
     Button as MuiButton, 
     ButtonProps as MuiButtonProps, 
     Toolbar as MuiToolbar,
@@ -37,6 +39,12 @@ export const Button = styled(MuiButton)<MuiButtonProps>(({ theme }) => ({
     '&:hover': {
         backgroundColor: theme.custom.palette.main
     },
+}));
+
+export const ResetAlertBox = styled(MuiBox)<MuiBoxProps>(({ theme })=> ({
+    width: '100%', 
+    backgroundColor: theme.palette.primary.dark, 
+    borderRadius: theme.shape.borderRadius 
 }));
 
 /**

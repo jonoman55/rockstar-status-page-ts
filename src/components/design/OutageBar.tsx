@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Link } from 'react-router-dom';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Alert, AlertTitle, Box, Collapse, IconButton, Stack, Typography } from '@mui/material';
@@ -5,7 +6,7 @@ import { useTheme, Theme } from '@mui/material/styles';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { orderBy } from 'lodash';
 
-import { alertIcon, alertStyles, AppBar, Button, linkStyles, severity, Toolbar } from '../styled/OutageBar.styled';
+import { alertIcon, alertStyles, AppBar, Button, linkStyles, ResetAlertBox, severity, Toolbar } from '../styled/OutageBar.styled';
 import { appActions } from '../../reducers/appSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useOverallStatus } from '../../hooks';
@@ -17,6 +18,7 @@ import type { AlertNotification, OutageBarAlert, StatusItem } from '../../types'
 export const OutageBar = () => {
     const dispatch = useAppDispatch();
 
+    const resetAlertsOpen: boolean = useAppSelector((state) => state.app.resetAlertsOpen);
     const activeAlerts: number = useAppSelector((state) => state.app.activeAlerts);
     const activeOutages: OutageBarAlert[] = useAppSelector((state) => state.app.activeOutages);
     const outageAlerts: OutageBarAlert[] = useAppSelector((state) => state.app.outageAlerts);
@@ -48,24 +50,31 @@ export const OutageBar = () => {
     }, [isLoading, statusItems.statuses]);
 
     const setState = useCallback(() => {
+        dispatch(appActions.setActiveAlerts(outages.length));
+        dispatch(appActions.setOutageAlerts(outages));
+        dispatch(appActions.setActiveOutages(outages));
+        dispatch(appActions.setResetAlerts(false));
+    }, [dispatch, outages]);
+
+    const loadState = useCallback(() => {
         if (!isLoading && outages) {
             dispatch(appActions.setOutageAlerts(outages));
         }
-    }, [isLoading, outages, dispatch]);
+        if (!resetAlertsOpen) {
+            setState();
+        }
+    }, [isLoading, outages, resetAlertsOpen, dispatch, setState]);
 
     useEffect(() => {
-        setState();
-    }, [setState]);
+        loadState();
+    }, [loadState]);
 
     const handleReset = useCallback<() => void>(() => {
         if (outages.length > 0 && activeOutages.length === 0 && activeAlerts === 0 && resetAlerts === true) {
-            dispatch(appActions.setActiveAlerts(outages.length));
-            dispatch(appActions.setOutageAlerts(outages));
-            dispatch(appActions.setActiveOutages(outages));
-            dispatch(appActions.setResetAlerts(false));
+            setState();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resetAlerts, dispatch]);
+    }, [resetAlerts, dispatch, setState]);
 
     useEffect(() => {
         handleReset();
@@ -82,10 +91,11 @@ export const OutageBar = () => {
     );
 };
 
-// TODO : Add Close icon to Show Alerts Box
+// TODO : Finish implementing reset alerts window styling
 const OutageAlerts = () => {
     const dispatch = useAppDispatch();
 
+    const resetAlertsOpen: boolean = useAppSelector((state) => state.app.resetAlertsOpen);
     const activeAlerts: number = useAppSelector((state) => state.app.activeAlerts);
     const activeOutages: OutageBarAlert[] = useAppSelector((state) => state.app.activeOutages);
 
@@ -122,8 +132,12 @@ const OutageAlerts = () => {
 
     const handleClick = () => dispatch(appActions.setResetAlerts(true));
 
+    const handleClose = () => dispatch(appActions.setResetAlertsOpen(false));
+
+    const handleOpen = () => dispatch(appActions.setResetAlertsOpen(true));
+
     return (
-        activeAlerts > 0 && activeOutages.length > 0 ? (
+        activeAlerts > 0 && activeOutages.length > 0 && resetAlertsOpen ? (
             <Stack direction='column' sx={{ width: '100%' }} spacing={1}>
                 {activeOutages.map((o: OutageBarAlert, index: number) => (
                     <OutageAlert
@@ -137,8 +151,13 @@ const OutageAlerts = () => {
                     />
                 ))}
             </Stack>
-        ) : activeAlerts === 0 && activeOutages.length === 0 ? (
-            <Box sx={{ width: '100%', bgcolor: 'primary.dark', borderRadius: (theme) => theme.shape.borderRadius }}>
+        ) : activeAlerts === 0 && activeOutages.length === 0 && resetAlertsOpen ? (
+            <ResetAlertBox>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <IconButton onClick={handleClose} sx={{ mr: 1, mt: 1 }}>
+                        <CloseIcon />
+                    </IconButton>
+                </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Stack direction='column' spacing={2} sx={{ my: 2 }}>
                         <Typography variant='h6'>There are active alerts. Would you like to see them?</Typography>
@@ -147,8 +166,18 @@ const OutageAlerts = () => {
                         </Button>
                     </Stack>
                 </Box>
-            </Box>
-        ) : null
+            </ResetAlertBox>
+        ) : (
+            <ResetAlertBox>
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Stack direction='column' spacing={2} sx={{ my: 2 }}>
+                        <Button variant='contained' color='primary' onClick={handleOpen}>
+                            Show Alerts Window
+                        </Button>
+                    </Stack>
+                </Box>
+            </ResetAlertBox>
+        )
     );
 };
 
