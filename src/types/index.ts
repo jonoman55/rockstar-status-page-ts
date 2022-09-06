@@ -1,6 +1,6 @@
-import { JSXElementConstructor, LazyExoticComponent, LegacyRef, ReactElement, ReactNode, PropsWithChildren } from "react";
-import { TooltipProps } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
+import { JSXElementConstructor, LazyExoticComponent, LegacyRef, ReactElement, ReactNode, PropsWithChildren } from 'react';
+import { TooltipProps } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 
 /**
  * React Node and JSX Elements
@@ -121,6 +121,11 @@ export type Anchor = 'top' | 'left' | 'bottom' | 'right';
  * Link Type
  */
 export type LinkType = 'internal' | 'external' | 'other' | 'settings';
+
+/**
+ * Alert Color
+ */
+export type AlertColor = 'error' | 'warning' | 'success' | 'info';
 
 /**
  * Link Item
@@ -265,6 +270,10 @@ export type StatusItem = {
      * Type
      */
     type?: StatusItemType;
+    /**
+     * Message
+     */
+    message?: string;
 };
 
 /**
@@ -330,6 +339,7 @@ export type OutageBarAlert = {
     name: string;
     status: string;
     open: boolean;
+    message?: string;
 };
 
 /**

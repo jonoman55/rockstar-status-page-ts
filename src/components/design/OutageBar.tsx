@@ -1,23 +1,26 @@
 import { Link } from 'react-router-dom';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AppBar, Alert, AlertTitle, Box, Collapse, IconButton, Stack, Toolbar, Typography } from '@mui/material';
-import { Error, OfflineBolt, Close as CloseIcon } from '@mui/icons-material';
+import { useCallback, useEffect, useMemo } from 'react';
+import { Alert, AlertTitle, Box, Collapse, IconButton, Stack, Typography } from '@mui/material';
+import { useTheme, Theme } from '@mui/material/styles';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { orderBy } from 'lodash';
 
+import { alertIcon, alertStyles, AppBar, Button, linkStyles, severity, Toolbar } from '../styled/OutageBar.styled';
+import { appActions } from '../../reducers/appSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useOverallStatus } from '../../hooks';
 import { capitalizeFirstLetter } from '../../helpers';
 
 import type { AlertNotification, OutageBarAlert, StatusItem } from '../../types';
 
-// TODO : Finish implementing the OutageBar
-// TODO : Move useState instances to appSlice reducer
-// TODO : Finish styling the Outage Alert
-// TODO : Create separate components for OutageAlerts and OutageAlert
-// TODO : Add functionality to detect new outages and display alert
-// TODO : Convert to styled components
-// TODO : Add functionality to reopen closed alerts
+// TODO : Fix the state -> reload = reset state
 export const OutageBar = () => {
-    const [alerts, setAlerts] = useState<number>(0);
+    const dispatch = useAppDispatch();
+
+    const activeAlerts: number = useAppSelector((state) => state.app.activeAlerts);
+    const activeOutages: OutageBarAlert[] = useAppSelector((state) => state.app.activeOutages);
+    const outageAlerts: OutageBarAlert[] = useAppSelector((state) => state.app.outageAlerts);
+    const resetAlerts: boolean = useAppSelector((state) => state.app.resetAlerts);
 
     const { isLoading, statusItems } = useOverallStatus('getOverallStatus', {
         refetchOnReconnect: true,
@@ -33,107 +36,131 @@ export const OutageBar = () => {
                     name: i.name as string,
                     status: i.status.toUpperCase() as string,
                     open: true,
+                    message: i?.message,
                 })
             );
         }
-        return orderBy(results, ['status', 'asc']);
+        const orderedResults: OutageBarAlert[] = orderBy(
+            results,
+            ['status', 'asc']
+        );
+        return orderedResults;
     }, [isLoading, statusItems.statuses]);
 
+    const setState = useCallback(() => {
+        if (!isLoading && outages) {
+            dispatch(appActions.setOutageAlerts(outages));
+        }
+    }, [isLoading, outages, dispatch]);
+
     useEffect(() => {
-        if (!isLoading && outages) setAlerts(outages.length);
-    }, [isLoading, outages]);
+        setState();
+    }, [setState]);
+
+    const handleReset = useCallback<() => void>(() => {
+        if (outages.length > 0 && activeOutages.length === 0 && activeAlerts === 0 && resetAlerts === true) {
+            dispatch(appActions.setActiveAlerts(outages.length));
+            dispatch(appActions.setOutageAlerts(outages));
+            dispatch(appActions.setActiveOutages(outages));
+            dispatch(appActions.setResetAlerts(false));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resetAlerts, dispatch]);
+
+    useEffect(() => {
+        handleReset();
+    }, [handleReset]);
 
     return (
-        outages.length > 0 && alerts > 0 ? (
-            <AppBar component='div' position='static' elevation={2} sx={{ bgcolor: 'transparent', mt: 3, mb: 1.5, backgroundImage: 'none' }}>
-                <Toolbar disableGutters sx={{ bgcolor: 'transparent' }}>
-                    <OutageAlerts outages={outages} setAlerts={setAlerts} />
+        outageAlerts.length > 0 ? (
+            <AppBar elevation={2}>
+                <Toolbar disableGutters>
+                    <OutageAlerts />
                 </Toolbar>
             </AppBar>
         ) : null
     );
 };
 
-interface OutageAlertsProps {
-    outages: OutageBarAlert[];
-    setAlerts: React.Dispatch<React.SetStateAction<number>>;
-};
+// TODO : Add Close icon to Show Alerts Box
+const OutageAlerts = () => {
+    const dispatch = useAppDispatch();
 
-const OutageAlerts = ({ outages, setAlerts }: OutageAlertsProps) => {
-    const [openAlerts, setOpenAlerts] = useState<OutageBarAlert[]>(outages);
+    const activeAlerts: number = useAppSelector((state) => state.app.activeAlerts);
+    const activeOutages: OutageBarAlert[] = useAppSelector((state) => state.app.activeOutages);
 
     const alertIsOpen = useCallback<(name: string) => boolean>(
         (name: string) => {
-            const alert: OutageBarAlert[] = openAlerts.filter(
+            const alert: OutageBarAlert[] = activeOutages.filter(
                 (a: OutageBarAlert) => a.name === name
             );
             const open: boolean = alert.shift()?.open as boolean;
             return open;
         },
-        [openAlerts]
+        [activeOutages]
     );
 
     const setAlertIsOpen = useCallback<(name: string) => () => void>(
         (name: string) => () => {
-            return setOpenAlerts(openAlerts.filter(
+            dispatch(appActions.setActiveOutages(activeOutages.filter(
                 (a: OutageBarAlert) => a.name !== name && {
                     name: a.name,
                     status: a.status,
                     open: !a.open
                 })
-            );
+            ));
+            dispatch(appActions.setActiveAlerts(activeOutages.length - 1));
         },
-        [openAlerts, setOpenAlerts]
+        [dispatch, activeOutages]
     );
 
-    const setAlertsCount = useCallback<() => void>(
-        () => setAlerts(openAlerts.length),
-        [openAlerts, setAlerts]
-    );
+    const createMessage = (o: OutageBarAlert): string => {
+        return o.message && o?.message !== ''
+            ? `${o?.message}`
+            : `${o?.name} is ${capitalizeFirstLetter(o?.status?.toLowerCase())}`;
+    };
 
-    useEffect(() => {
-        setAlertsCount();
-    }, [openAlerts, setAlertsCount]);
+    const handleClick = () => dispatch(appActions.setResetAlerts(true));
 
     return (
-        outages.length > 0 ? (
-            <Stack sx={{ width: '100%' }} spacing={1}>
-                {outages.map((o: OutageBarAlert, index: number) => (
+        activeAlerts > 0 && activeOutages.length > 0 ? (
+            <Stack direction='column' sx={{ width: '100%' }} spacing={1}>
+                {activeOutages.map((o: OutageBarAlert, index: number) => (
                     <OutageAlert
                         key={index}
-                        text={`${o.name} is ${capitalizeFirstLetter(o.status.toLowerCase())} — `}
-                        linkText='check it out!'
-                        to={`/service/${o.id}`}
+                        text={createMessage(o)}
+                        linkText='— check it out!'
+                        to={`/service/${o?.id}`}
                         status={o.status}
-                        open={alertIsOpen(o.name)}
-                        setOpen={setAlertIsOpen(o.name)}
+                        open={alertIsOpen(o?.name)}
+                        setOpen={setAlertIsOpen(o?.name)}
                     />
                 ))}
             </Stack>
+        ) : activeAlerts === 0 && activeOutages.length === 0 ? (
+            <Box sx={{ width: '100%', bgcolor: 'primary.dark', borderRadius: (theme) => theme.shape.borderRadius }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Stack direction='column' spacing={2} sx={{ my: 2 }}>
+                        <Typography variant='h6'>There are active alerts. Would you like to see them?</Typography>
+                        <Button variant='contained' color='primary' onClick={handleClick}>
+                            Show Alerts
+                        </Button>
+                    </Stack>
+                </Box>
+            </Box>
         ) : null
     );
 };
 
-// TODO : Move bgcolor and icon functions to helper file as CSSObjects
-// TODO : Covert to styled components
 const OutageAlert = ({ text, linkText, to, status, open, setOpen }: AlertNotification) => {
-    const bgcolor = (status: string) => {
-        if (status.toLowerCase() === 'down') return 'error.dark';
-        if (status.toLowerCase() === 'limited') return 'warning.main';
-    };
-
-    const icon = (status: string) => {
-        if (status.toLowerCase() === 'down') return <Error fontSize='inherit' />;
-        if (status.toLowerCase() === 'limited') return <OfflineBolt fontSize='inherit' />;
-    };
-
+    const theme: Theme = useTheme();
     return (
         <Box sx={{ width: '100%' }}>
             <Collapse in={open}>
                 <Alert
-                    severity='warning'
+                    severity={severity(status)}
                     variant='filled'
-                    icon={icon(status)}
+                    icon={alertIcon(status)}
                     action={
                         <IconButton
                             aria-label='close'
@@ -144,17 +171,15 @@ const OutageAlert = ({ text, linkText, to, status, open, setOpen }: AlertNotific
                             <CloseIcon fontSize='inherit' />
                         </IconButton>
                     }
-                    sx={{ color: 'common.white', bgcolor: bgcolor(status) }}
+                    sx={{ ...alertStyles(theme, status) }}
                 >
                     <AlertTitle>{status}</AlertTitle>
-                    <Stack direction='row'>
-                        <Typography>{text}</Typography>
-                        <Typography component={Link} to={to} sx={{
-                            textDecoration: 'none', color: 'common.white', '&:hover': { color: 'common.black' }
-                        }}>
+                    <Typography>
+                        {text}
+                        <Typography component={Link} to={to} sx={linkStyles(theme)}>
                             &nbsp;{linkText}
                         </Typography>
-                    </Stack>
+                    </Typography>
                 </Alert>
             </Collapse>
         </Box>

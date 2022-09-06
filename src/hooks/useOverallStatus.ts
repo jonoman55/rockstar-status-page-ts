@@ -56,7 +56,8 @@ export const useOverallStatus = (queryName: string, options: UseQueryOptions): O
                     id: s.id,
                     name: s.name,
                     status: s.status.toLowerCase(),
-                    type: 'service'
+                    type: 'service',
+                    message: s?.message
                 })
             );
         }

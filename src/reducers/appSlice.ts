@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import type { OutageBarAlert } from '../types';
+
 interface AppState {
     tabValue: number;
     drawerOpen: boolean;
@@ -9,6 +11,10 @@ interface AppState {
     isServiceRoute: boolean;
     showToolbar: boolean;
     outageCount: number;
+    activeAlerts: number;
+    outageAlerts: OutageBarAlert[];
+    activeOutages: OutageBarAlert[];
+    resetAlerts: boolean;
 };
 
 const initialState: AppState = {
@@ -20,6 +26,10 @@ const initialState: AppState = {
     isServiceRoute: false,
     showToolbar: true,
     outageCount: 0,
+    activeAlerts: 0,
+    outageAlerts: [],
+    activeOutages: [],
+    resetAlerts: false,
 };
 
 const appSlice = createSlice({
@@ -50,6 +60,18 @@ const appSlice = createSlice({
         },
         setOutageCount: (state: AppState, action: PayloadAction<number>) => {
             state.outageCount = action.payload;
+        },
+        setActiveAlerts: (state: AppState, action: PayloadAction<number>) => {
+            state.activeAlerts = action.payload;
+        },
+        setOutageAlerts: (state: AppState, action: PayloadAction<OutageBarAlert[]>) => {
+            state.outageAlerts = action.payload;
+        },
+        setActiveOutages: (state: AppState, action: PayloadAction<OutageBarAlert[]>) => {
+            state.activeOutages = action.payload;
+        },
+        setResetAlerts: (state: AppState, action: PayloadAction<boolean>) => {
+            state.resetAlerts = action.payload;
         },
     },
 });
