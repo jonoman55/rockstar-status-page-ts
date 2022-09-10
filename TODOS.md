@@ -19,7 +19,8 @@
 - [x] Add Badge to Menu Icon in Header with the number of services/platforms that aren't UP
 - [x] Add dynamic OutageBar alerts for when service or platform statuses change
 - [x] Update Backend URL env vars for when heroku goes down
-- [ ] Fix OutageBar state on load/reload and finish implementing reset alerts window styling
+- [x] Fix OutageBar state on load/reload and finish implementing reset alerts window styling
+- [x] Remove all unused components
 - [ ] Fix Platform DataGrid Header styles in mobile
-- [ ] Remove all unused components
+- [ ] Create failover Backend API URL
 - [ ] Deploy to Netlify
