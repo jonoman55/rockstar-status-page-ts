@@ -41,7 +41,7 @@ export const ApiCard: React.FC = (): JSX.Element => {
                 />
                 <CardMedia id={4} />
                 <CardContent>
-                    <DetailsLink href={`${process.env.REACT_APP_BACKEND_API_URL}`} target='_blank'>
+                    <DetailsLink href={`${process.env.REACT_APP_BACKEND_API_HEROKU_URL}`} target='_blank'>
                         <Title variant='h6'>{apiStatus?.message}</Title>
                         <Divider sx={{ pb: 1 }} />
                         <Stack direction='row' spacing={4}>

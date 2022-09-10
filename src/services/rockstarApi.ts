@@ -16,7 +16,7 @@ const getApiPath = (): ApiPath => Boolean(process.env.REACT_APP_API_TESTING) ? '
 
 const apiPath: ApiPath = getApiPath();
 
-const baseURL: string = process.env.REACT_APP_BACKEND_API_URL as string;
+const baseURL: string = process.env.REACT_APP_BACKEND_API_HEROKU_URL as string;
 
 export const rockstarApi = createApi({
     reducerPath: 'rockstarApi',

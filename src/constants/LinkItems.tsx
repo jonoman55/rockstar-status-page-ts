@@ -19,7 +19,7 @@ export const LinkItems: LinkItem[] = [
         id: 4, text: 'Outages', description: 'Check Known Outages', icon: <MonitorHeart />, type: 'internal', to: '/outages'
     },
     {
-        id: 5, text: 'API Routes', description: 'Backend API Routes', icon: <Lan />, type: 'external', href: `${process.env.REACT_APP_BACKEND_API_URL}`
+        id: 5, text: 'API Routes', description: 'Backend API Routes', icon: <Lan />, type: 'external', href: `${process.env.REACT_APP_BACKEND_API_HEROKU_URL}`
     },
     {
         id: 6, text: 'GitHub Repo', description: 'Source Code', icon: <GitHub />, type: 'external', href: `${process.env.REACT_APP_GITHUB_REPO_URL}`
