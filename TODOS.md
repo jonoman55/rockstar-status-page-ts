@@ -18,7 +18,7 @@
 - [x] Make StatusAvatar clickable with menu showing all statuses on all route
 - [x] Add Badge to Menu Icon in Header with the number of services/platforms that aren't UP
 - [x] Add dynamic OutageBar alerts for when service or platform statuses change
-- [ ] Add dynamic backend api url function to get the best or working api url
+- [x] Update Backend URL env vars for when heroku goes down
 - [ ] Fix OutageBar state on load/reload and finish implementing reset alerts window styling
 - [ ] Fix Platform DataGrid Header styles in mobile
 - [ ] Remove all unused components
