@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 
 import { appActions } from "../reducers/appSlice";
 import { useAppDispatch } from "../app/hooks";
 import { useGetStatusesQuery } from "../services/rockstarApi";
-import { getHighestStatusCount } from "../helpers";
+import { createAlertMessage, getHighestStatusCount } from "../helpers";
+import { useNotify } from "./useNotify";
 
 import type { OverallStatus, Platform, Status, StatusItem, StatusItems, StatusType, UseQueryOptions } from "../types";
 
@@ -15,6 +16,9 @@ import type { OverallStatus, Platform, Status, StatusItem, StatusItems, StatusTy
  */
 export const useOverallStatus = (queryName: string, options: UseQueryOptions): OverallStatus => {
     const dispatch = useAppDispatch();
+    const notify = useNotify();
+
+    const [outages, setOutages] = useState<StatusItem[]>();
 
     const {
         data: statusesResults,
@@ -57,7 +61,8 @@ export const useOverallStatus = (queryName: string, options: UseQueryOptions): O
                     name: s.name,
                     status: s.status.toLowerCase(),
                     type: 'service',
-                    message: s?.message
+                    message: s?.message,
+                    new: s.status.toLowerCase() !== 'up',
                 })
             );
         }
@@ -68,10 +73,12 @@ export const useOverallStatus = (queryName: string, options: UseQueryOptions): O
                     id: p.id,
                     name: p.name,
                     status: p.status.toLowerCase(),
-                    type: 'platform'
+                    type: 'platform',
+                    new: p.status.toLowerCase() !== 'up',
                 });
             });
         }
+        setOutages(statusItems.statuses);
         return statusItems;
     }, [isLoading, platforms, statuses]);
 
@@ -108,23 +115,38 @@ export const useOverallStatus = (queryName: string, options: UseQueryOptions): O
         return highestValue;
     }, [statusItems]);
 
-    const setOutageCount = useCallback<() => void>(() => {
-        if (!isLoading && overallStatus) {
+    const handleOutages = useCallback<() => void>(() => {
+        if (!isLoading && overallStatus && outages) {
             if (overallStatus?.includes('down') || overallStatus?.includes('limited')) {
-                dispatch(appActions.setOutageCount(statusItems.statuses.filter(
+                const newOutages: StatusItem[] = statusItems.statuses?.filter(
                     (i: StatusItem) => i.type === 'service').filter(
-                        (i: StatusItem) => i.status !== 'up').length
-                ));
+                        (i: StatusItem) => i.status !== 'up'
+                    );
+                dispatch(appActions.setOutageCount(newOutages.length));
+                setOutages(newOutages.map((item: StatusItem) => {
+                    if (item.new) {
+                        notify({
+                            message: createAlertMessage(item),
+                            variant: item.status === 'down' ? 'error' : 'warning',
+                            persist: false,
+                            autoHideDuration: 5000,
+                            disableWindowBlurListener: true,
+                        });
+                        item.new = false;
+                    }
+                    return item;
+                }));
             }
             if (overallStatus.includes('up')) {
                 dispatch(appActions.setOutageCount(0));
             }
         }
-    }, [dispatch, isLoading, overallStatus, statusItems.statuses]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLoading, overallStatus, statusItems.statuses, dispatch, notify]);
 
     useEffect(() => {
-        setOutageCount();
-    }, [setOutageCount]);
+        handleOutages();
+    }, [handleOutages]);
 
     return {
         isLoading,

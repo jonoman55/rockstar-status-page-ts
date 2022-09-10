@@ -274,6 +274,10 @@ export type StatusItem = {
      * Message
      */
     message?: string;
+    /**
+     * New Alert
+     */
+    new?: boolean;
 };
 
 /**

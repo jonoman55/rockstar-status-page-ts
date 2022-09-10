@@ -21,7 +21,7 @@ const DismissIcon = ({ onClick }: DismissIconProps): JSX.Element => (
     <IconButton size='small' onClick={onClick}>
         <CloseIcon
             fontSize='small'
-            sx={{ color: 'common.black' }}
+            sx={{ color: 'common.white' }}
         />
     </IconButton>
 );

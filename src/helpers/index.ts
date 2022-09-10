@@ -28,7 +28,7 @@ import {
 } from '../images'
 import { RockstarStatus } from '../constants';
 
-import type { Indicator, StatusType } from '../types';
+import type { Indicator, OutageBarAlert, StatusItem, StatusType } from '../types';
 
 /**
  * Style Status
@@ -208,4 +208,15 @@ export const fetchStatusByCount = (statuses: any[]): string => {
  */
 export const capitalizeFirstLetter = (text: string): string => {
     return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
+/**
+ * Create Outage Alert Message
+ * @param {OutageBarAlert | StatusItem} outage OutageBar Alert or StatusItem
+ * @returns {string} Outage Alert Message
+ */
+export const createAlertMessage = (outage: OutageBarAlert | StatusItem): string => {
+    return outage.message && outage?.message !== ''
+        ? `${outage?.message}`
+        : `${outage?.name} is ${capitalizeFirstLetter(outage?.status?.toLowerCase())}`;
 };

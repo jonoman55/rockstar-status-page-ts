@@ -31,7 +31,7 @@ const initialState: AppState = {
     outageAlerts: [],
     activeOutages: [],
     resetAlerts: false,
-    resetAlertsOpen: true
+    resetAlertsOpen: true,
 };
 
 const appSlice = createSlice({
@@ -77,6 +77,14 @@ const appSlice = createSlice({
         },
         setResetAlertsOpen: (state: AppState, action: PayloadAction<boolean>) => {
             state.resetAlertsOpen = action.payload;
+        },
+        resetAlertState: (state: AppState) => {
+            state.outageCount = 0;
+            state.activeAlerts = 0;
+            state.outageAlerts = [];
+            state.activeOutages = [];
+            state.resetAlerts = false;
+            state.resetAlertsOpen = true;
         },
     },
 });
