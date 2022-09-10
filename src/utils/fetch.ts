@@ -26,7 +26,7 @@ export const fetchApiUrls = async (): Promise<AxiosResponse<any, any>[] | undefi
             ({ url }: ApiUrl) => axios.get(url)
         );
         return await Promise.all(promises);
-    } catch (error) {
+    } catch (error: any) {
         console.log(error);
     }
 };
@@ -37,9 +37,9 @@ export const fetchAllUrls = (): Promise<void> => {
         renderRequest,
         railwayRequest
     ]).then(axios.spread((...responses: AxiosResponse<any, any>[]) => {
-        const responseOne = responses[0]
-        const responseTwo = responses[1]
-        const responseThree = responses[2]
+        const responseOne = responses[0];
+        const responseTwo = responses[1];
+        const responseThree = responses[2];
         // use/access the results 
         console.log(responseOne, responseTwo, responseThree);
     })).catch((error: AxiosError) => {
