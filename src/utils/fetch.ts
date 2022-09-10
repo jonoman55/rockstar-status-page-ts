@@ -23,7 +23,7 @@ export const railwayRequest = axios.get(heroku.url);
 export const fetchApiUrls = async (): Promise<AxiosResponse<any, any>[] | undefined> => {
     try {
         const promises: Promise<AxiosResponse<any, any>>[] = ApiUrls.map(
-            ({ url }: ApiUrl) => axios.get(url)
+            ({ url }: ApiUrl) => axios.get(url + '/api')
         );
         return await Promise.all(promises);
     } catch (error: any) {
@@ -46,4 +46,17 @@ export const fetchAllUrls = (): Promise<void> => {
         // react on errors.
         console.log(error);
     });
+};
+
+export const fetchBaseURL = async (): Promise<(string | undefined)[]> => {
+    const promises: Promise<AxiosResponse<any, any>>[] = ApiUrls.map(
+        ({ url }: ApiUrl) => axios.get(url + '/api')
+    );
+    const responses: AxiosResponse<any, any>[] = await Promise.all(promises);
+    const baseURLs: (string | undefined)[] = responses.map(
+        (res) => res.status === 200 ? res.config.url : undefined
+    ).filter((url) =>
+        url !== undefined
+    );
+    return baseURLs;
 };
