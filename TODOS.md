@@ -22,5 +22,5 @@
 - [x] Fix OutageBar state on load/reload and finish implementing reset alerts window styling
 - [x] Remove all unused components
 - [x] Fix Platform DataGrid Header styles in mobile
-- [ ] Create failover Backend API URL
+- [ ] Implement and test failover Backend API URL
 - [ ] Deploy to Netlify
