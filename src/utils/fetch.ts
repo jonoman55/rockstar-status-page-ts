@@ -94,4 +94,5 @@ const getUrlName = (url: string): ApiName | undefined => {
     if (url.includes('heroku')) return 'heroku';
     if (url.includes('render')) return 'render';
     if (url.includes('railway')) return 'railway';
+    return undefined;
 };
