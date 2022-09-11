@@ -21,6 +21,6 @@
 - [x] Update Backend URL env vars for when heroku goes down
 - [x] Fix OutageBar state on load/reload and finish implementing reset alerts window styling
 - [x] Remove all unused components
-- [ ] Fix Platform DataGrid Header styles in mobile
+- [x] Fix Platform DataGrid Header styles in mobile
 - [ ] Create failover Backend API URL
 - [ ] Deploy to Netlify
