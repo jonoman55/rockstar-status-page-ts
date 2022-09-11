@@ -2,31 +2,54 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 
 import type { ApiName, ApiUrl } from '../types';
 
-const ApiUrls: ApiUrl[] = [
+/**
+ * Backend API Enum
+ */
+export enum API {
+    HEROKU = 'heroku',
+    RENDER = 'render',
+    RAILWAY = 'railway'
+};
+
+/**
+ * API Postfix
+ * @example `/api`
+ */
+export const ApiPostFix: string = '/api';
+
+/**
+ * Backend API URLs
+ */
+export const ApiUrls: ApiUrl[] = [
     {
         id: 0,
-        name: 'heroku',
+        name: API.HEROKU,
         url: `${process.env.REACT_APP_BACKEND_API_HEROKU_URL}`,
         enabled: true
     },
     {
         id: 1,
-        name: 'render',
+        name: API.RENDER,
         url: `${process.env.REACT_APP_BACKEND_API_RENDER_URL}`,
         enabled: true
     },
     {
         id: 2,
-        name: 'railway',
+        name: API.RAILWAY,
         url: `${process.env.REACT_APP_BACKEND_API_RAILWAY_URL}`,
         enabled: true
     }
 ];
 
-export const fetchApiUrls = async (): Promise<AxiosResponse<any, any>[] | undefined> => {
+/**
+ * Attempt To Fetch All API URLs
+ * @returns {Promise<AxiosResponse<any, any>[] | undefined>} Axios Promise Array
+ */
+export const fetchAllUrls = async (): Promise<AxiosResponse<any, any>[] | undefined> => {
     try {
+        const postFix: string = ApiPostFix;
         const promises: Promise<AxiosResponse<any, any>>[] = ApiUrls.map(
-            ({ url }: ApiUrl) => axios.get(url + '/api')
+            ({ url }: ApiUrl) => axios.get(url + postFix)
         );
         return await Promise.all(promises);
     } catch (error: any) {
@@ -34,16 +57,37 @@ export const fetchApiUrls = async (): Promise<AxiosResponse<any, any>[] | undefi
     }
 };
 
-const heroku: ApiUrl = ApiUrls[0];
-const render: ApiUrl = ApiUrls[1];
-const railway: ApiUrl = ApiUrls[2];
+/**
+ * Heroku Backend API URL
+ */
+export const heroku: ApiUrl = ApiUrls[0];
+/**
+ * Render Backend API URL
+ */
+export const render: ApiUrl = ApiUrls[1];
+/**
+ * Railway Backend API URL
+ */
+export const railway: ApiUrl = ApiUrls[2];
 
-const herokuRequest = axios.get(heroku.url);
-const renderRequest = axios.get(render.url);
-const railwayRequest = axios.get(railway.url);
+/**
+ * Heroku Request
+ */
+export const herokuRequest: Promise<AxiosResponse<any, any>> = axios.get(heroku.url);
+/**
+ * Render Request
+ */
+export const renderRequest: Promise<AxiosResponse<any, any>> = axios.get(render.url);
+/**
+ * Railway Request
+ */
+export const railwayRequest: Promise<AxiosResponse<any, any>> = axios.get(railway.url);
 
-export const fetchAllUrls = (): Promise<void> => {
-    return axios.all([
+/**
+ * Log API Responses
+ */
+export const logApiResponses = (): void => {
+    axios.all([
         herokuRequest,
         renderRequest,
         railwayRequest
@@ -51,17 +95,20 @@ export const fetchAllUrls = (): Promise<void> => {
         const responseOne = responses[0];
         const responseTwo = responses[1];
         const responseThree = responses[2];
-        // use/access the results 
         console.log(responseOne, responseTwo, responseThree);
     })).catch((error: AxiosError) => {
-        // react on errors.
         console.log(error);
     });
 };
 
-export const fetchBaseURL = (): ApiUrl[] => {
+/**
+ * Fetch Base API URL
+ * @returns {ApiUrl[]} ApiUrl Array
+ */
+export const fetchBaseUrl = (): ApiUrl[] => {
+    const postFix: string = ApiPostFix;
     const promises: Promise<AxiosResponse<any, any>>[] = ApiUrls.map(
-        ({ url }: ApiUrl) => axios.get(url + '/api')
+        ({ url }: ApiUrl) => axios.get(url + postFix)
     );
     const results: ApiUrl[] = [];
     promises.forEach((apiRes, index) => {
@@ -71,7 +118,7 @@ export const fetchBaseURL = (): ApiUrl[] => {
                     results.push({
                         id: index,
                         url: response.config.url as string,
-                        name: getUrlName(response.config.url as string),
+                        name: getApiName(response.config.url as string),
                         enabled: true,
                         reachable: true,
                     });
@@ -81,7 +128,7 @@ export const fetchBaseURL = (): ApiUrl[] => {
                 results.push({
                     id: index,
                     url: reason.config.url as string,
-                    name: getUrlName(reason.config.url as string),
+                    name: getApiName(reason.config.url as string),
                     enabled: false,
                     reachable: false,
                 });
@@ -90,9 +137,14 @@ export const fetchBaseURL = (): ApiUrl[] => {
     return results;
 };
 
-const getUrlName = (url: string): ApiName | undefined => {
-    if (url.includes('heroku')) return 'heroku';
-    if (url.includes('render')) return 'render';
-    if (url.includes('railway')) return 'railway';
+/**
+ * Get API Name From URL
+ * @param {string} url Target URL String 
+ * @returns {ApiName | undefined} ApiName or undefined
+ */
+export const getApiName = (url: string): ApiName | undefined => {
+    if (url.includes(API.HEROKU)) return API.HEROKU;
+    if (url.includes(API.RENDER)) return API.RENDER;
+    if (url.includes(API.RAILWAY)) return API.RAILWAY;
     return undefined;
 };
