@@ -106,4 +106,4 @@ export const platformColumns = (screenSize: boolean): GridColDef[] => {
             renderHeader: renderColumnHeader,
         }
     ];
-}
+};
