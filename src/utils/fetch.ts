@@ -1,24 +1,27 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-type ApiUrl = {
-    id: number;
-    name: string;
-    url: string;
-};
+import type { ApiName, ApiUrl } from '../types';
 
-export const ApiUrls: ApiUrl[] = [
-    { id: 0, name: 'heroku', url: `${process.env.REACT_APP_BACKEND_API_HEROKU_URL}` },
-    { id: 1, name: 'render', url: `${process.env.REACT_APP_BACKEND_API_RENDER_URL}` },
-    { id: 2, name: 'railway', url: `${process.env.REACT_APP_BACKEND_API_RAILWAY_URL}` }
+const ApiUrls: ApiUrl[] = [
+    {
+        id: 0,
+        name: 'heroku',
+        url: `${process.env.REACT_APP_BACKEND_API_HEROKU_URL}`,
+        enabled: true
+    },
+    {
+        id: 1,
+        name: 'render',
+        url: `${process.env.REACT_APP_BACKEND_API_RENDER_URL}`,
+        enabled: true
+    },
+    {
+        id: 2,
+        name: 'railway',
+        url: `${process.env.REACT_APP_BACKEND_API_RAILWAY_URL}`,
+        enabled: true
+    }
 ];
-
-export const heroku: ApiUrl = ApiUrls[0];
-export const render: ApiUrl = ApiUrls[1];
-export const railway: ApiUrl = ApiUrls[2];
-
-export const herokuRequest = axios.get(heroku.url);
-export const renderRequest = axios.get(render.url);
-export const railwayRequest = axios.get(heroku.url);
 
 export const fetchApiUrls = async (): Promise<AxiosResponse<any, any>[] | undefined> => {
     try {
@@ -30,6 +33,14 @@ export const fetchApiUrls = async (): Promise<AxiosResponse<any, any>[] | undefi
         console.log(error);
     }
 };
+
+const heroku: ApiUrl = ApiUrls[0];
+const render: ApiUrl = ApiUrls[1];
+const railway: ApiUrl = ApiUrls[2];
+
+const herokuRequest = axios.get(heroku.url);
+const renderRequest = axios.get(render.url);
+const railwayRequest = axios.get(railway.url);
 
 export const fetchAllUrls = (): Promise<void> => {
     return axios.all([
@@ -48,15 +59,39 @@ export const fetchAllUrls = (): Promise<void> => {
     });
 };
 
-export const fetchBaseURL = async (): Promise<(string | undefined)[]> => {
+export const fetchBaseURL = (): ApiUrl[] => {
     const promises: Promise<AxiosResponse<any, any>>[] = ApiUrls.map(
         ({ url }: ApiUrl) => axios.get(url + '/api')
     );
-    const responses: AxiosResponse<any, any>[] = await Promise.all(promises);
-    const baseURLs: (string | undefined)[] = responses.map(
-        (res) => res.status === 200 ? res.config.url : undefined
-    ).filter((url) =>
-        url !== undefined
-    );
-    return baseURLs;
+    const results: ApiUrl[] = [];
+    promises.forEach((apiRes, index) => {
+        apiRes
+            .then((response) => {
+                if (response.status === 200) {
+                    results.push({
+                        id: index,
+                        url: response.config.url as string,
+                        name: getUrlName(response.config.url as string),
+                        enabled: true,
+                        reachable: true,
+                    });
+                }
+            })
+            .catch((reason) => {
+                results.push({
+                    id: index,
+                    url: reason.config.url as string,
+                    name: getUrlName(reason.config.url as string),
+                    enabled: false,
+                    reachable: false,
+                });
+            });
+    });
+    return results;
+};
+
+const getUrlName = (url: string): ApiName | undefined => {
+    if (url.includes('heroku')) return 'heroku';
+    if (url.includes('render')) return 'render';
+    if (url.includes('railway')) return 'railway';
 };

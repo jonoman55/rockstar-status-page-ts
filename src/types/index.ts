@@ -357,3 +357,19 @@ export type AlertNotification = {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+/**
+ * Backend API Name
+ */
+export type ApiName = "heroku" | "render" | "railway" | undefined;
+
+/**
+ * Backend API URL
+ */
+export type ApiUrl = {
+    id: number;
+    name: ApiName;
+    url: string;
+    enabled: boolean;
+    reachable?: boolean;
+};
