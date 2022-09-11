@@ -373,3 +373,30 @@ export type ApiUrl = {
     enabled: boolean;
     reachable?: boolean;
 };
+
+/**
+ * Fetch Values
+ */
+export type FetchValues = {
+    /**
+     * Loading State
+     */
+    loading: boolean;
+    /**
+     * Error State
+     */
+    error: any | undefined;
+    /**
+     * Value State
+     */
+    value: any | undefined;
+};
+
+/**
+ * Default Fetch Header Options
+ */
+export type DefaultOptions = {
+    headers: {
+        "Content-Type": string;
+    }
+};
