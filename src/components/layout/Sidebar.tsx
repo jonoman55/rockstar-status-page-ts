@@ -7,7 +7,7 @@ import { Badge, ListSubheader, IconButton, Switch } from '../styled/Sidebar.styl
 import { appActions } from '../../reducers/appSlice';
 import { toggleTheme } from '../../reducers/themeSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { useBreakpoint } from '../../hooks';
+import { useBreakpoints } from '../../hooks';
 import { LinkItems } from '../../constants';
 
 import type { LinkItem, Anchor, Placement } from '../../types';
@@ -33,7 +33,7 @@ const badgeAnchorOrigin: BadgeOrigin = {
 
 const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element => {
     const dispatch = useAppDispatch();
-    const matches: boolean = useBreakpoint('sm', 'up');
+    const matches: boolean = useBreakpoints('sm', 'up');
 
     const outageCount: number = useAppSelector((state) => state.app.outageCount);
 
@@ -120,7 +120,7 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
 
 const Sidebar: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
-    const matches: boolean = useBreakpoint('sm', 'up');
+    const matches: boolean = useBreakpoints('sm', 'up');
 
     const drawerOpen: boolean = useAppSelector((state) => state.app.drawerOpen);
 

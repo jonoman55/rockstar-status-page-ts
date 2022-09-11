@@ -1,12 +1,6 @@
-import { useTheme } from '@mui/material';
-import {
-    GridCellParams,
-    GridRowClassNameParams,
-    GridRowHeightParams,
-    GridRowHeightReturnValue,
-    GridRowModel,
-    GridValidRowModel
-} from '@mui/x-data-grid';
+import { useCallback } from 'react';
+import { Theme } from '@mui/material';
+import { GridRowClassNameParams, GridRowHeightParams, GridRowHeightReturnValue, GridRowModel,  GridValidRowModel } from '@mui/x-data-grid';
 import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
 
 import { DataGrid, backgroundStyles, dataGridComponents } from '../styled/DataGrid.styled';
@@ -50,31 +44,25 @@ interface Props {
 
 /**
  * Platforms DataGrid
- * @param props PlatformStatusesData, isLoading
+ * @param {Props} props PlatformStatusesData, isLoading
  * @returns {JSX.Element} PlatformsDataGrid
  */
 export const PlatformsDataGrid: React.FC<Props> = ({ data, isLoading }): JSX.Element => {
-    const theme = useTheme();
-
     const handleGetRowId = (row: GridRowModel) => {
         return row.name as string;
-    };
-
-    const handleGetRowHeight = (_params: GridRowHeightParams) => {
-        return 'auto' as GridRowHeightReturnValue;
     };
 
     const handleGetRowClassName = (params: GridRowClassNameParams<GridValidRowModel>) => {
         return `super-app-theme--${params.row.status.toUpperCase()}` as string;
     };
 
-    const handleEstimatedRowHeight = (_params: GridRowHeightParams) => {
-        return 200 as number;
-    };
+    const handleGetRowHeight = useCallback((_params: GridRowHeightParams) => {
+        return 'auto' as GridRowHeightReturnValue;
+    }, []);
 
-    const handleOnCellClick = (params: GridCellParams) => {
-        // console.log(params.row);
-    };
+    const handleEstimatedRowHeight = useCallback((_params: GridRowHeightParams) => {
+        return 200 as number;
+    }, []);
 
     return (
         <DataGrid
@@ -92,8 +80,10 @@ export const PlatformsDataGrid: React.FC<Props> = ({ data, isLoading }): JSX.Ele
             getRowId={handleGetRowId}
             getRowClassName={handleGetRowClassName}
             components={dataGridComponents(true)}
-            onCellClick={handleOnCellClick}
-            sx={{ minHeight: 400, ...backgroundStyles(theme) }}
+            sx={(theme: Theme) => ({ 
+                minHeight: 400, 
+                ...backgroundStyles(theme) 
+            })}
         />
     );
 };

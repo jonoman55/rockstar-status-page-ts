@@ -4,7 +4,7 @@ import { groupBy, uniq } from 'lodash';
 
 import { ServicesDataGrid } from './ServicesDataGrid';
 import { PlatformsDataGrid } from './PlatformsDataGrid';
-import { platformColumns as columns } from './columnDefs';
+import { platformColumns } from './columnDefs';
 import { DataGridWrapper, GridHeader, PlatformHeader } from '../styled/DataGrid.styled';
 import { Card, CardContentPaper as CardContent, CardHeader, Paper } from '../styled/PaperCard.styled';
 import { useGetServicesQuery, useGetStatusesQuery } from '../../services/rockstarApi';
@@ -20,8 +20,11 @@ import type {
     Status,
     StatusType
 } from '../../types';
+import { useBreakpoints } from '../../hooks';
 
 export const OutagesCard: React.FC = (): JSX.Element => {
+    const smallScreen: boolean = useBreakpoints('sm', 'up');
+
     /**
      * RTK Fetch Services Query
      */
@@ -97,14 +100,14 @@ export const OutagesCard: React.FC = (): JSX.Element => {
             Object.values(groupBy(platformStatusRows, 'service')).forEach(
                 (rows: PlatformStatusRow[]) => {
                     results.push({
-                        columns,
+                        columns: platformColumns(smallScreen),
                         rows
                     });
                 }
             );
         }
         return results;
-    }, [platformStatusRows]);
+    }, [platformStatusRows, smallScreen]);
 
     /**
      * Overall Status
@@ -151,7 +154,7 @@ export const OutagesCard: React.FC = (): JSX.Element => {
                             </DataGridWrapper>
                         </Grid>
                         {platformsStatusData.map((data: PlatformStatusesData, index: number) => (
-                            <Grid key={index} item xs={12} sm={12} md={6} lg={6} xl={6}>
+                            <Grid key={index} item xs={12} sm={12} md={12} lg={4} xl={4}>
                                 <Fragment>
                                     {uniq(data.rows.map((row: PlatformStatusRow) => row.service)).map((service: string, i: number) => (
                                         <PlatformHeader key={i} name={service} />

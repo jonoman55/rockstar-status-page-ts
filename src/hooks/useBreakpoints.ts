@@ -6,7 +6,7 @@ import { useTheme, useMediaQuery, Breakpoint } from "@mui/material";
  * @param {string} on "up" or "down"
  * @returns {boolean} matches
  */
-export const useBreakpoint = (
+export const useBreakpoints = (
     size: Breakpoint = 'sm',
     on: string = 'up'
 ): boolean => {

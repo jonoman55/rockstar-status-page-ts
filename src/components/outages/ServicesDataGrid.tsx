@@ -1,17 +1,9 @@
-import { useState } from 'react';
-import { Theme, useTheme } from '@mui/material';
-import {
-    GridCellParams,
-    GridColumnVisibilityModel,
-    GridRowModel,
-    GridRowClassNameParams,
-    GridValidRowModel,
-    GridRowHeightParams,
-    GridRowHeightReturnValue
-} from '@mui/x-data-grid';
+import { useState, useCallback } from 'react';
+import { Theme } from '@mui/material';
+import { GridColumnVisibilityModel, GridRowModel, GridRowClassNameParams, GridValidRowModel, GridRowHeightParams, GridRowHeightReturnValue } from '@mui/x-data-grid';
 import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
 
-import { serviceColumns } from './columnDefs';
+import { serviceColumns as columns } from './columnDefs';
 import { DataGrid, backgroundStyles, dataGridComponents } from '../styled/DataGrid.styled';
 
 import type { ServiceRow, ServicesData } from '../../types';
@@ -55,12 +47,10 @@ interface Props {
 
 /**
  * Services DataGrid
- * @param props rows, isLoading
+ * @param {Props} props rows, isLoading
  * @returns {JSX.Element} ServicesDataGrid
  */
 export const ServicesDataGrid: React.FC<Props> = ({ rows, isLoading }): JSX.Element => {
-    const theme: Theme = useTheme();
-
     const [pageSize, setPageSize] = useState<number>(10);
     const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(initialColumnVisibilityState);
 
@@ -68,17 +58,17 @@ export const ServicesDataGrid: React.FC<Props> = ({ rows, isLoading }): JSX.Elem
         return row.id as number;
     };
 
-    const handleGetRowHeight = (_params: GridRowHeightParams) => {
-        return 'auto' as GridRowHeightReturnValue;
-    };
-
     const handleGetRowClassName = (params: GridRowClassNameParams<GridValidRowModel>) => {
         return `super-app-theme--${params.row.status.toUpperCase()}` as string;
     };
 
-    const handleEstimatedRowHeight = (_params: GridRowHeightParams) => {
+    const handleGetRowHeight = useCallback((_params: GridRowHeightParams) => {
+        return 'auto' as GridRowHeightReturnValue;
+    }, []);
+
+    const handleEstimatedRowHeight = useCallback((_params: GridRowHeightParams) => {
         return 200 as number;
-    };
+    }, []);
 
     const handleOnPageSizeChange = (newPageSize: number) => {
         setPageSize(newPageSize);
@@ -88,12 +78,8 @@ export const ServicesDataGrid: React.FC<Props> = ({ rows, isLoading }): JSX.Elem
         setColumnVisibilityModel(newModel);
     };
 
-    const handleOnCellClick = (params: GridCellParams) => {
-        // console.log(params.row);
-    };
-
     const data: ServicesData = {
-        columns: serviceColumns,
+        columns: columns,
         rows: rows,
     };
 
@@ -118,8 +104,7 @@ export const ServicesDataGrid: React.FC<Props> = ({ rows, isLoading }): JSX.Elem
             components={dataGridComponents()}
             columnVisibilityModel={columnVisibilityModel}
             onColumnVisibilityModelChange={handleOnColumnVisibilityModelChange}
-            onCellClick={handleOnCellClick}
-            sx={backgroundStyles(theme)}
+            sx={(theme: Theme) => backgroundStyles(theme)}
         />
     );
 };
