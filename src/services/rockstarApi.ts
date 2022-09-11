@@ -1,6 +1,7 @@
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError, FetchBaseQueryMeta } from '@reduxjs/toolkit/query/react';
 import type { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions';
 
+import { ApiBaseUrl } from '../utils';
 import type { ApiPath, Api, All, Service, Status, Updated } from '../types';
 
 /**
@@ -16,12 +17,14 @@ const getApiPath = (): ApiPath => Boolean(process.env.REACT_APP_API_TESTING) ? '
 
 const apiPath: ApiPath = getApiPath();
 
-const baseURL: string = process.env.REACT_APP_BACKEND_API_HEROKU_URL as string;
+//const baseURL: string = process.env.REACT_APP_BACKEND_API_HEROKU_URL as string;
+
+const baseUrl: string = new ApiBaseUrl(`/${apiPath}`).baseUrl;
 
 export const rockstarApi = createApi({
     reducerPath: 'rockstarApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${baseURL}/${apiPath}`,
+        baseUrl,
     }),
     endpoints: (builder: Builder) => ({
         getApiStatus: builder.query<Api, any>({

@@ -43,11 +43,11 @@ export const ApiUrls: ApiUrl[] = [
 
 /**
  * Attempt To Fetch All API URLs
+ * @param {string} postFix
  * @returns {Promise<AxiosResponse<any, any>[] | undefined>} Axios Promise Array
  */
-export const fetchAllUrls = async (): Promise<AxiosResponse<any, any>[] | undefined> => {
+export const fetchAllUrls = async (postFix: string = '/api'): Promise<AxiosResponse<any, any>[] | undefined> => {
     try {
-        const postFix: string = ApiPostFix;
         const promises: Promise<AxiosResponse<any, any>>[] = ApiUrls.map(
             ({ url }: ApiUrl) => axios.get(url + postFix)
         );
@@ -55,6 +55,19 @@ export const fetchAllUrls = async (): Promise<AxiosResponse<any, any>[] | undefi
     } catch (error: any) {
         console.log(error);
     }
+};
+
+/**
+ * Get All Base URL API Promises
+ * @param {string} postFix URL Postfix
+ * @default `/api`
+ * @returns {Promise<AxiosResponse<any, any>>[]} Axios Promise Array
+ */
+export const getAllPromises = (postFix: string = '/api'): Promise<AxiosResponse<any, any>>[] => {
+    const promises: Promise<AxiosResponse<any, any>>[] = ApiUrls.map(
+        ({ url }: ApiUrl) => axios.get(url + postFix)
+    );
+    return promises;
 };
 
 /**
@@ -102,11 +115,12 @@ export const logApiResponses = (): void => {
 };
 
 /**
- * Fetch Base API URL
+ * Fetch Base API URLs
+ * @param {string} postFix URL Postfix
+ * @default `/api`
  * @returns {ApiUrl[]} ApiUrl Array
  */
-export const fetchBaseUrl = (): ApiUrl[] => {
-    const postFix: string = ApiPostFix;
+export const fetchBaseUrls = (postFix: string = '/api'): ApiUrl[] => {
     const promises: Promise<AxiosResponse<any, any>>[] = ApiUrls.map(
         ({ url }: ApiUrl) => axios.get(url + postFix)
     );
@@ -148,3 +162,25 @@ export const getApiName = (url: string): ApiName | undefined => {
     if (url.includes(API.RAILWAY)) return API.RAILWAY;
     return undefined;
 };
+
+// TODO : Finish implementing this class
+export class ApiBaseUrl {
+    public baseUrl: string = '';
+    public postFix: string;
+
+    constructor(postFix: string) {
+        this.postFix = postFix;
+        this.baseUrl = this.createBaseUrl(this.postFix);
+    };
+
+    createBaseUrl = (postFix: string): string => {
+        const urls = fetchBaseUrls(postFix);
+        if (urls) {
+            const url = urls.shift()?.url;
+            if (url) {
+                return url;
+            }
+        }
+        return process.env.REACT_APP_BACKEND_API_HEROKU_URL as string + postFix;
+    };
+}
