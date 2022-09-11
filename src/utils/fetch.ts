@@ -95,9 +95,9 @@ export const logApiResponses = (): void => {
         const responseOne = responses[0];
         const responseTwo = responses[1];
         const responseThree = responses[2];
-        console.log(responseOne, responseTwo, responseThree);
+        console.info(responseOne, responseTwo, responseThree);
     })).catch((error: AxiosError) => {
-        console.log(error);
+        console.error(error);
     });
 };
 
