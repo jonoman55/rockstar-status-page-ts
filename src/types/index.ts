@@ -361,7 +361,7 @@ export type AlertNotification = {
 /**
  * Backend API Name
  */
-export type ApiName = "heroku" | "render" | "railway" | undefined;
+export type ApiName = "heroku" | "render" | "railway";
 
 /**
  * Backend API URL
