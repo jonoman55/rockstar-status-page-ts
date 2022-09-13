@@ -372,7 +372,14 @@ export type ApiUrl = {
     url: string;
     enabled: boolean;
     reachable?: boolean;
+    duration?: number;
+    isBest?: boolean;
 };
+
+/**
+ * Backend API Durations
+ */
+export type Durations = { [id: string]: number; };
 
 /**
  * Fetch Values

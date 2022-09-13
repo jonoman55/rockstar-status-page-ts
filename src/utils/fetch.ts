@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosStatic } from 'axios';
-import { sortBy } from 'lodash';
+// import { sortBy } from 'lodash';
 
-import type { ApiName, ApiUrl } from '../types';
+import type { ApiName, ApiUrl, Durations } from '../types';
 
 /**
  * Backend API Enum
@@ -26,19 +26,28 @@ export const ApiUrls: ApiUrl[] = [
         id: 0,
         name: API.HEROKU,
         url: `${process.env.REACT_APP_BACKEND_API_HEROKU_URL}`,
-        enabled: true
+        enabled: true,
+        reachable: false,
+        duration: 0,
+        isBest: false,
     },
     {
         id: 1,
         name: API.RENDER,
         url: `${process.env.REACT_APP_BACKEND_API_RENDER_URL}`,
-        enabled: true
+        enabled: true,
+        reachable: false,
+        duration: 0,
+        isBest: false,
     },
     {
         id: 2,
         name: API.RAILWAY,
         url: `${process.env.REACT_APP_BACKEND_API_RAILWAY_URL}`,
-        enabled: true
+        enabled: true,
+        reachable: false,
+        duration: 0,
+        isBest: false,
     }
 ];
 
@@ -171,49 +180,26 @@ export const getApiName = (url: string): ApiName | undefined => {
     return undefined;
 };
 
-// TODO : Figure out how to set the bestApiUrl
+// TODO : Figure out how to return the best api duration as baseUrl
 export class ApiBaseUrl {
     public baseUrl: string = '';
     public postFix: string = '/api';
-
-    public durations: { [id: string]: number; }
-
+    public durations: Durations;
+    public bestApiUrl: string = '';
+    public apis: ApiUrl[] = [];
     public heroku;
     public render;
     public railway;
 
-    public bestApi: Promise<ApiUrl | ApiUrl[]>;
-    public bestApiUrl: string = '';
-
     constructor(postFix: string) {
-        this.heroku = heroku;
-        this.render = render;
-        this.railway = railway;
-
         this.postFix = postFix;
-
         this.durations = {};
-
+        this.apis = ApiUrls;
+        this.heroku = ApiUrls[0];
+        this.render = ApiUrls[1];
+        this.railway = ApiUrls[2];
+        this.getAllDurations();
         this.baseUrl = this.createBaseUrl(this.postFix);
-
-        this.bestApi = this.getBestApi((bestApiUrl: string) => {
-            return this.bestApiUrl = this.createApiUrl(bestApiUrl);
-        });
-
-        // this.logAllDurations();
-    };
-    
-    setUrl = (url: string): string => {
-        return this.bestApiUrl = url;
-    }
-
-    /**
-     * Create URL
-     * @param {string} rest Rest of the URL 
-     * @returns {string} BaseURL + Rest
-     */
-    public createUrl = (rest: string): string => {
-        return this.baseUrl + rest;
     };
 
     /**
@@ -226,32 +212,19 @@ export class ApiBaseUrl {
     };
 
     /**
-     * Create Base URL
-     * @param {string} url Base URL
-     * @returns {string} Base URL
-     */
-    public createApiUrl = (url: string): string => {
-        this.bestApiUrl = url;
-        return this.bestApiUrl = url;
-    };
-    
-    /**
-     * Log All API Responses
-     */
-    public logAllResponses = (): void => {
-        logApiResponses();
-    };
-
-    /**
      * Get Heroku Request Duration
      * @returns {Promise<number>} Request Duration Promise
      */
     public getHerokuDuration = async (): Promise<number> => {
-        const request = await this.createRequest(
+        const response = await this.createRequest(
             this.heroku.url,
             this.heroku.name
         );
-        return request.duration;
+        const duration = response.duration;
+        if (response.status === 200 && duration > 0) {
+            this.setApiDuration(0, duration);
+        }
+        return duration;
     };
 
     /**
@@ -259,11 +232,15 @@ export class ApiBaseUrl {
      * @returns {Promise<number>} Request Duration Promise
      */
     public getRenderDuration = async (): Promise<number> => {
-        const request = await this.createRequest(
+        const response = await this.createRequest(
             this.render.url,
             this.render.name
         );
-        return request.duration;
+        const duration = response.duration;
+        if (response.status === 200 && duration > 0) {
+            this.setApiDuration(1, duration);
+        }
+        return duration;
     };
 
     /**
@@ -271,11 +248,25 @@ export class ApiBaseUrl {
      * @returns {Promise<number>} Request Duration Promise
      */
     public getRailwayDuration = async (): Promise<number> => {
-        const request = await this.createRequest(
+        const response: AxiosResponse<any, any> = await this.createRequest(
             this.railway.url,
             this.railway.name
         );
-        return request.duration;
+        const duration = response.duration;
+        if (response.status === 200 && duration > 0) {
+            this.setApiDuration(2, duration);
+        }
+        return duration;
+    };
+
+    /**
+     * Set API URL Duration
+     * @param {number} index ApiUrl Index
+     * @param {number} duration Response Time
+     */
+    private setApiDuration = (index: number, duration: number): void => {
+        this.apis[index].reachable = true;
+        this.apis[index].duration = duration;
     };
 
     /**
@@ -305,19 +296,11 @@ export class ApiBaseUrl {
         console.log(`${name} - ${duration} ms`);
     };
 
-    private getDurations = () => {
-        return Promise.all([
-            this.getHerokuDuration(),
-            this.getRailwayDuration(),
-            this.getRenderDuration()
-        ]);
-    };
-
     /**
      * Log All Request Durations (in milliseconds)
      */
     public logAllDurations = (): void => {
-        this.getDurations().then(() => {
+        this.getAllDurations().then(() => {
             console.log('Successfully Fetched Durations');
             Object.entries(this.durations).forEach(([key, value]) => {
                 this.logDuration(key, value);
@@ -326,52 +309,89 @@ export class ApiBaseUrl {
     };
 
     /**
-     * Get Best API
+     * Get All API URL Durations
+     * @returns {Promise<[number, number, number]>} API URL Durations Array
      */
-    public getBestApi = (callback: (url: string) => string): Promise<ApiUrl | ApiUrl[]> => {
-        return new Promise((resolve, _reject) => {
-            this.getDurations().then(() => {
-                console.log('Successfully Fetched Durations');
-                const durations: [string, number][] = sortBy(Object.entries(this.durations).map(
-                    (response) => response),
-                    ['duration', 'asc']
-                );
-                const first: [string, number] | undefined = durations.shift();
-                if (first) {
-                    console.log('Best API Found');
-                    resolve(ApiUrls.filter(({ name }) => name === first[0]).map((value) => {
-                        callback(this.bestApiUrl = value.url + this.postFix);
-                        console.log('Best API URL: ' + this.bestApiUrl);
-                        return {
-                            ...value,
-                            reachable: true,
-                        } as ApiUrl;
-                    }));
-                } else {
-                    console.log('Best API Not Found');
-                    resolve(ApiUrls.map(({ name }) => durations.find(([key, _value]) => key === name)).map((value) => {
-                        return {
-                            ...value,
-                            reachable: true,
-                        } as ApiUrl;
-                    }));
-                }
-            });
-        });
+    private getAllDurations = (): Promise<[number, number, number]> => {
+        return Promise.all([
+            this.getHerokuDuration(),
+            this.getRailwayDuration(),
+            this.getRenderDuration(),
+        ]);
     };
 
-    /**
-     * Return Best API 
-     */
-    // public returnBestApi = (callback: (url: string) => string) => {
-    //     // return new Promise(async (resolve, _reject) => {
-    //     //     const best = await this.getBestApi();
-    //     //     this.bestApiUrl = (best as ApiUrl).url + this.postFix;
-    //     //     return this.bestApiUrl = (best as ApiUrl).url + this.postFix;
-    //     // });
-    //     this.getBestApi().then((api) => {
-    //         const apiUrl = (api as ApiUrl).url;
-    //         callback(this.bestApiUrl = apiUrl + this.postFix);
+    // /**
+    //  * Get Best API URL By Duration with Failover to Reachable
+    //  * @returns {ApiUrl}
+    //  */
+    // private getBestApiByDuration = (): ApiUrl => {
+    //     const durations: [string, number][] = sortBy(Object.entries(this.durations).map(
+    //         (response) => response),
+    //         ['duration', 'asc']
+    //     );
+    //     const first: [string, number] | undefined = durations.shift();
+    //     if (first) {
+    //         console.log('Best API Found');
+    //         this.apis.filter(({ name }) => name === first[0]).map((value) => {
+    //             return {
+    //                 ...value,
+    //                 isBest: true,
+    //             } as ApiUrl;
+    //         });
+    //     } else {
+    //         console.log('Best API Not Found');
+    //         this.apis.map(({ name }) => durations.find(([key, _value]) => key === name)).map((value) => {
+    //             return {
+    //                 ...value,
+    //             } as ApiUrl;
+    //         });
+    //     }
+    //     const bestApi: ApiUrl | undefined = this.apis.filter(
+    //         ({ isBest }: ApiUrl) => isBest === false
+    //     ).shift();
+    //     if (bestApi !== undefined && bestApi.isBest) {
+    //         this.bestApiUrl = bestApi.url + this.postFix;
+    //         return bestApi as ApiUrl;
+    //     } else {
+    //         const api: ApiUrl | undefined = this.apis.filter(
+    //             ({ reachable }: ApiUrl) => reachable === true
+    //         ).shift();
+    //         return api as ApiUrl;
+    //     }
+    // };
+
+    // /**
+    //  * Get Best API
+    //  * @deprecated use getBestApiByDuration
+    //  */
+    // private getBestApi = (): Promise<ApiUrl | ApiUrl[]> => {
+    //     return new Promise((resolve, _reject) => {
+    //         this.getAllDurations().then(() => {
+    //             console.log('Successfully Fetched Durations');
+    //             const durations: [string, number][] = sortBy(Object.entries(this.durations).map(
+    //                 (response) => response),
+    //                 ['duration', 'asc']
+    //             );
+    //             const first: [string, number] | undefined = durations.shift();
+    //             if (first) {
+    //                 console.log('Best API Found');
+    //                 resolve(ApiUrls.filter(({ name }) => name === first[0]).map((value) => {
+    //                     return {
+    //                         ...value,
+    //                         isBest: true,
+    //                         reachable: true,
+    //                     } as ApiUrl;
+    //                 }));
+    //             } else {
+    //                 console.log('Best API Not Found');
+    //                 resolve(ApiUrls.map(({ name }) => durations.find(([key, _value]) => key === name)).map((value) => {
+    //                     return {
+    //                         ...value,
+    //                         reachable: true,
+    //                     } as ApiUrl;
+    //                 }));
+    //             }
+    //         });
     //     });
     // };
 };
@@ -389,23 +409,22 @@ declare module 'axios' {
 export class AxiosHandler {
     public axios: AxiosInstance;
     public config: AxiosRequestConfig;
-    // public responseTime: number = 0;
     public duration: number = 0;
-    
+
     constructor(axios: AxiosStatic, config: AxiosRequestConfig) {
         this.config = config;
         this.axios = axios.create(this.config);
 
         this.axios.interceptors.request.use((config) => {
-            config.metadata = { startTime: new Date() }
+            config.metadata = { startTime: new Date() };
             return config;
         }, (error) => {
             return Promise.reject(error);
         });
 
         this.axios.interceptors.response.use((response) => {
-            response.config.metadata.endTime = new Date()
-            response.duration = response.config.metadata.endTime - response.config.metadata.startTime
+            response.config.metadata.endTime = new Date();
+            response.duration = response.config.metadata.endTime - response.config.metadata.startTime;
             this.duration = response.duration;
             return response;
         }, (error) => {
@@ -414,60 +433,14 @@ export class AxiosHandler {
             this.duration = error.duration;
             return Promise.reject(error);
         });
-
-        // this.axios.interceptors.request.use((response) => {
-        //     // to avoid overwriting if another interceptor
-        //     // already defined the same object (meta)
-        //     response.metadata = response.metadata || {}
-        //     response.metadata.requestStartedAt = new Date().getTime();
-        //     return response;
-        // });
-
-        // this.axios.interceptors.response.use((response) => {
-        //     console.log(`Execution time for: ${response.config.url} - ${new Date().getTime() - response.config.metadata.requestStartedAt} ms`);
-        //     return response;
-        // },
-        //     // Handle 4xx & 5xx responses
-        //     (error) => {
-        //         console.error(
-        //             `Execution time for: ${error.config.url} - ${new Date().getTime() - error.config.metadata.requestStartedAt} ms`
-        //         );
-        //         throw error;
-        //     }
-        // );
-
-        // this.axios.interceptors.response.use((response) => {
-        //     response.responseTime = new Date().getTime() - response.config.metadata.requestStartedAt;
-        //     this.responseTime = response.responseTime;
-        //     return response;
-        // });
-
-        // this.axios.interceptors.request.use((x) => {
-        //     // to avoid overwriting if another interceptor
-        //     // already defined the same object (meta)
-        //     x.metadata = x.metadata || {}
-        //     x.metadata.requestStartedAt = new Date().getTime();
-        //     return x;
-        // });
-
-        // this.axios.interceptors.response.use((x) => {
-        //     console.log(`Execution time for: ${x.config.url} - ${new Date().getTime() - x.config.metadata.requestStartedAt} ms`)
-        //     return x;
-        // },
-        //     // Handle 4xx & 5xx responses
-        //     (x) => {
-        //         console.error(`Execution time for: ${x.config.url} - ${new Date().getTime() - x.config.metadata.requestStartedAt} ms`)
-        //         throw x;
-        //     }
-        // );
-    }
+    };
 
     /**
      * GET Request
      * @param {string} url Target URL
      * @returns {Promise<AxiosResponse<any, any>>} Axios Response Promise
      */
-    get = async (url: string): Promise<AxiosResponse<any, any>> => {
+    public get = async (url: string): Promise<AxiosResponse<any, any>> => {
         return await this.axios.get(url);
     };
 
@@ -477,7 +450,7 @@ export class AxiosHandler {
      * @param {any} data Data
      * @returns {Promise<AxiosResponse<any, any>>} Axios Response Promise
      */
-    post = async (url: string, data: any): Promise<AxiosResponse<any, any>> => {
+    public post = async (url: string, data: any): Promise<AxiosResponse<any, any>> => {
         return await this.axios.post(url, data);
     };
 
@@ -487,7 +460,7 @@ export class AxiosHandler {
      * @param {any} data Data
      * @returns {Promise<AxiosResponse<any, any>>} Axios Response Promise
      */
-    put = async (url: string, data: any): Promise<AxiosResponse<any, any>> => {
+    public put = async (url: string, data: any): Promise<AxiosResponse<any, any>> => {
         return await this.axios.put(url, data);
     };
 
@@ -497,7 +470,7 @@ export class AxiosHandler {
      * @param {any} data Data
      * @returns {Promise<AxiosResponse<any, any>>} Axios Response Promise
      */
-    patch = async (url: string, data: any): Promise<AxiosResponse<any, any>> => {
+    public patch = async (url: string, data: any): Promise<AxiosResponse<any, any>> => {
         return await this.axios.patch(url, data);
     };
 
@@ -506,7 +479,7 @@ export class AxiosHandler {
      * @param {string} url Target URL
      * @returns {Promise<AxiosResponse<any, any>>} Axios Response Promise
      */
-    delete = async (url: string): Promise<AxiosResponse<any, any>> => {
+    public delete = async (url: string): Promise<AxiosResponse<any, any>> => {
         return await this.axios.delete(url);
     };
 };
