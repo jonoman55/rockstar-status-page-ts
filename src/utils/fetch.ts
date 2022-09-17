@@ -1,5 +1,4 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosStatic } from 'axios';
-// eslint-disable-next-line
 import lodash from 'lodash';
 
 import type { ApiName, ApiUrl, Durations } from '../types';
