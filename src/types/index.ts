@@ -371,9 +371,11 @@ export type ApiUrl = {
     name: ApiName;
     url: string;
     enabled: boolean;
-    reachable?: boolean;
-    duration?: number;
+    reachable: boolean;
+    duration: number;
     isBest?: boolean;
+    baseUrl?: string;
+    postFix?: string;
 };
 
 /**

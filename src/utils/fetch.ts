@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosStatic } from 'axios';
-// import { sortBy } from 'lodash';
+// eslint-disable-next-line
+import lodash from 'lodash';
 
 import type { ApiName, ApiUrl, Durations } from '../types';
 
@@ -30,6 +31,7 @@ export const ApiUrls: ApiUrl[] = [
         reachable: false,
         duration: 0,
         isBest: false,
+        baseUrl: ''
     },
     {
         id: 1,
@@ -39,6 +41,7 @@ export const ApiUrls: ApiUrl[] = [
         reachable: false,
         duration: 0,
         isBest: false,
+        baseUrl: ''
     },
     {
         id: 2,
@@ -48,6 +51,7 @@ export const ApiUrls: ApiUrl[] = [
         reachable: false,
         duration: 0,
         isBest: false,
+        baseUrl: ''
     }
 ];
 
@@ -152,6 +156,7 @@ export const fetchBaseUrls = (postFix: string = '/api'): ApiUrl[] => {
                         name: getApiName(response.config.url as string) as ApiName,
                         enabled: true,
                         reachable: true,
+                        duration: response.duration
                     });
                 }
             })
@@ -162,6 +167,7 @@ export const fetchBaseUrls = (postFix: string = '/api'): ApiUrl[] => {
                     name: getApiName(reason.config.url as string) as ApiName,
                     enabled: false,
                     reachable: false,
+                    duration: reason.duration
                 });
             });
     });
@@ -180,13 +186,12 @@ export const getApiName = (url: string): ApiName | undefined => {
     return undefined;
 };
 
-// TODO : Figure out how to return the best api duration as baseUrl
 export class ApiBaseUrl {
     public baseUrl: string = '';
     public postFix: string = '/api';
     public durations: Durations;
-    public bestApiUrl: string = '';
     public apis: ApiUrl[] = [];
+    public bestApi: ApiUrl;
     public heroku;
     public render;
     public railway;
@@ -195,20 +200,42 @@ export class ApiBaseUrl {
         this.postFix = postFix;
         this.durations = {};
         this.apis = ApiUrls;
-        this.heroku = ApiUrls[0];
-        this.render = ApiUrls[1];
-        this.railway = ApiUrls[2];
-        this.getAllDurations();
-        this.baseUrl = this.createBaseUrl(this.postFix);
+        this.heroku = this.apis[0];
+        this.render = this.apis[1];
+        this.railway = this.apis[2];
+        this.bestApi = this.bestApiByDuration();
+        this.baseUrl = this.bestApi.baseUrl as string;
     };
 
     /**
      * Create Base URL
+     * @param {string} url API URL
+     * @param {number} id API URL
      * @param {string} postFix URL Postfix
      * @returns {string} Base URL
      */
-    public createBaseUrl = (postFix: string): string => {
-        return this.heroku.url + postFix;
+    public createBaseUrl = (url: string, id: number, postFix: string): string => {
+        const baseUrl = url + postFix;
+        this.apis[id].baseUrl = baseUrl;
+        return baseUrl;
+    };
+
+    /**
+     * Set API URL Duration
+     * @param {number} id ApiUrl ID
+     * @param {number} duration Response Time
+     */
+    private setApiDuration = (id: number, duration: number): void => {
+        this.apis[id].reachable = true;
+        this.apis[id].duration = duration;
+    };
+
+    /**
+     * Set API Best
+     * @param {number} id ApiUrl ID
+     */
+    private setBestApi = (id: number): void => {
+        this.apis[id].isBest = true;
     };
 
     /**
@@ -216,13 +243,13 @@ export class ApiBaseUrl {
      * @returns {Promise<number>} Request Duration Promise
      */
     public getHerokuDuration = async (): Promise<number> => {
-        const response = await this.createRequest(
+        const response: AxiosResponse<any, any> = await this.createRequest(
             this.heroku.url,
             this.heroku.name
         );
-        const duration = response.duration;
+        const duration: number = response.duration;
         if (response.status === 200 && duration > 0) {
-            this.setApiDuration(0, duration);
+            this.setApiDuration(this.heroku.id, duration);
         }
         return duration;
     };
@@ -232,13 +259,13 @@ export class ApiBaseUrl {
      * @returns {Promise<number>} Request Duration Promise
      */
     public getRenderDuration = async (): Promise<number> => {
-        const response = await this.createRequest(
+        const response: AxiosResponse<any, any> = await this.createRequest(
             this.render.url,
             this.render.name
         );
-        const duration = response.duration;
+        const duration: number = response.duration;
         if (response.status === 200 && duration > 0) {
-            this.setApiDuration(1, duration);
+            this.setApiDuration(this.render.id, duration);
         }
         return duration;
     };
@@ -252,25 +279,15 @@ export class ApiBaseUrl {
             this.railway.url,
             this.railway.name
         );
-        const duration = response.duration;
+        const duration: number = response.duration;
         if (response.status === 200 && duration > 0) {
-            this.setApiDuration(2, duration);
+            this.setApiDuration(this.railway.id, duration);
         }
         return duration;
     };
 
     /**
-     * Set API URL Duration
-     * @param {number} index ApiUrl Index
-     * @param {number} duration Response Time
-     */
-    private setApiDuration = (index: number, duration: number): void => {
-        this.apis[index].reachable = true;
-        this.apis[index].duration = duration;
-    };
-
-    /**
-     * Create HTTP Request
+     * Create HTTP GET Request
      * @param {string} url URL
      * @param {string} name Name
      * @returns {Promise<AxiosResponse<any, any>>} HTTP Response
@@ -285,6 +302,31 @@ export class ApiBaseUrl {
         const response: AxiosResponse<any, any> = await api.get(this.postFix);
         this.durations[name] = response.duration;
         return response;
+    };
+
+
+    /**
+     * Get Best API By Duration
+     * @returns {ApiUrl} ApiUrl
+     */
+    public bestApiByDuration = (): ApiUrl => {
+        this.apis.map(async (api: ApiUrl): Promise<ApiUrl> => {
+            const response: AxiosResponse<any, any> = await this.createRequest(api.url, api.name);
+            const duration: number = response.duration;
+            if (response.status === 200 && duration > 0) {
+                this.setApiDuration(api.id, duration);
+            }
+            return api;
+        });
+        // console.log(lodash.sortBy(this.apis,, ['name', apis => apis.duration, 'asc']));
+        const bestApi: ApiUrl = lodash.sortBy(this.apis, ['name', apis => apis.duration, 'asc'])[0] as ApiUrl;
+        this.setBestApi(bestApi.id);
+        this.createBaseUrl(
+            bestApi.url,
+            bestApi.id,
+            this.postFix
+        );
+        return bestApi;
     };
 
     /**
@@ -319,81 +361,6 @@ export class ApiBaseUrl {
             this.getRenderDuration(),
         ]);
     };
-
-    // /**
-    //  * Get Best API URL By Duration with Failover to Reachable
-    //  * @returns {ApiUrl}
-    //  */
-    // private getBestApiByDuration = (): ApiUrl => {
-    //     const durations: [string, number][] = sortBy(Object.entries(this.durations).map(
-    //         (response) => response),
-    //         ['duration', 'asc']
-    //     );
-    //     const first: [string, number] | undefined = durations.shift();
-    //     if (first) {
-    //         console.log('Best API Found');
-    //         this.apis.filter(({ name }) => name === first[0]).map((value) => {
-    //             return {
-    //                 ...value,
-    //                 isBest: true,
-    //             } as ApiUrl;
-    //         });
-    //     } else {
-    //         console.log('Best API Not Found');
-    //         this.apis.map(({ name }) => durations.find(([key, _value]) => key === name)).map((value) => {
-    //             return {
-    //                 ...value,
-    //             } as ApiUrl;
-    //         });
-    //     }
-    //     const bestApi: ApiUrl | undefined = this.apis.filter(
-    //         ({ isBest }: ApiUrl) => isBest === false
-    //     ).shift();
-    //     if (bestApi !== undefined && bestApi.isBest) {
-    //         this.bestApiUrl = bestApi.url + this.postFix;
-    //         return bestApi as ApiUrl;
-    //     } else {
-    //         const api: ApiUrl | undefined = this.apis.filter(
-    //             ({ reachable }: ApiUrl) => reachable === true
-    //         ).shift();
-    //         return api as ApiUrl;
-    //     }
-    // };
-
-    // /**
-    //  * Get Best API
-    //  * @deprecated use getBestApiByDuration
-    //  */
-    // private getBestApi = (): Promise<ApiUrl | ApiUrl[]> => {
-    //     return new Promise((resolve, _reject) => {
-    //         this.getAllDurations().then(() => {
-    //             console.log('Successfully Fetched Durations');
-    //             const durations: [string, number][] = sortBy(Object.entries(this.durations).map(
-    //                 (response) => response),
-    //                 ['duration', 'asc']
-    //             );
-    //             const first: [string, number] | undefined = durations.shift();
-    //             if (first) {
-    //                 console.log('Best API Found');
-    //                 resolve(ApiUrls.filter(({ name }) => name === first[0]).map((value) => {
-    //                     return {
-    //                         ...value,
-    //                         isBest: true,
-    //                         reachable: true,
-    //                     } as ApiUrl;
-    //                 }));
-    //             } else {
-    //                 console.log('Best API Not Found');
-    //                 resolve(ApiUrls.map(({ name }) => durations.find(([key, _value]) => key === name)).map((value) => {
-    //                     return {
-    //                         ...value,
-    //                         reachable: true,
-    //                     } as ApiUrl;
-    //                 }));
-    //             }
-    //         });
-    //     });
-    // };
 };
 
 declare module 'axios' {

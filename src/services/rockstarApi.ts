@@ -21,7 +21,7 @@ const API: ApiBaseUrl = new ApiBaseUrl(`/${apiPath}`);
 
 const baseUrl: string = API.baseUrl;
 
-// API.apis.forEach((api) => console.log(api));
+console.log(baseUrl);
 
 export const rockstarApi = createApi({
     reducerPath: 'rockstarApi',
