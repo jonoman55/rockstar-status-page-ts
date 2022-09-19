@@ -2,18 +2,13 @@ import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError,
 import type { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions';
 
 import { ApiBaseUrl } from '../utils';
+import { getApiPath } from '../helpers';
 import type { ApiPath, Api, All, Service, Status, Updated } from '../types';
 
 /**
  * Create API Endpoint Builder Type
  */
 type Builder = EndpointBuilder<BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, {}, FetchBaseQueryMeta>, never, 'rockstarApi'>;
-
-/**
- * Get API URL Path Extension
- * @returns {ApiPath} api or file
- */
-const getApiPath = (): ApiPath => Boolean(process.env.REACT_APP_API_TESTING) ? 'api' : 'file';
 
 const apiPath: ApiPath = getApiPath();
 

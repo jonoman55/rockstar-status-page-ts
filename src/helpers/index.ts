@@ -28,7 +28,7 @@ import {
 } from '../images'
 import { RockstarStatus } from '../constants';
 
-import type { Indicator, OutageBarAlert, StatusItem, StatusType } from '../types';
+import type { ApiPath, Indicator, OutageBarAlert, StatusItem, StatusType } from '../types';
 
 /**
  * Style Status
@@ -220,3 +220,9 @@ export const createAlertMessage = (outage: OutageBarAlert | StatusItem): string 
         ? `${outage?.message}`
         : `${outage?.name} is ${capitalizeFirstLetter(outage?.status?.toLowerCase())}`;
 };
+
+/**
+ * Get API URL Path Extension
+ * @returns {ApiPath} api or file
+ */
+export const getApiPath = (): ApiPath => Boolean(process.env.REACT_APP_API_TESTING) ? 'api' : 'file';
