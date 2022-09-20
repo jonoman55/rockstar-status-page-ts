@@ -1,6 +1,6 @@
 import { Fragment, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Typography, Divider, List, ListItemIcon, ListItem, ListItemText, Grid, Theme } from '@mui/material';
+import { Box, Typography, Divider, List, ListItemIcon, ListItem, ListItemText, Grid } from '@mui/material';
 
 import { FlexText } from '../controls';
 import { PlatformIcon, StatusChip } from '../shared';
@@ -10,12 +10,7 @@ import { useAppDispatch } from '../../app/hooks';
 
 import type { Platform, Status } from '../../types';
 
-interface StatusesGridItemsProps {
-    statuses: Status[];
-    theme: Theme;
-};
-
-export const StatusesGridItems: React.FC<StatusesGridItemsProps> = ({ statuses, theme }): JSX.Element => {
+export const StatusesGridItems: React.FC<{ statuses: Status[]; }> = ({ statuses }): JSX.Element => {
     const dispatch = useAppDispatch();
 
     const handleClick = useCallback((status: Status) => () => {
@@ -36,25 +31,20 @@ export const StatusesGridItems: React.FC<StatusesGridItemsProps> = ({ statuses, 
                     onClick={handleClick(status)}
                     sx={{ textDecoration: 'none' }}
                 >
-                    <StatusItem status={status} theme={theme} />
+                    <StatusItem status={status} />
                 </Grid>
             ))}
         </Grid>
     );
 };
 
-interface StatusItemProps {
-    status: Status;
-    theme: Theme;
-};
-
-export const StatusItem: React.FC<StatusItemProps> = ({ status, theme }): JSX.Element => (
+export const StatusItem: React.FC<{ status: Status; }> = ({ status }): JSX.Element => (
     <StatusCard>
         <Title variant='h6'>{status?.name}</Title>
         <Divider sx={{ py: 1 }} />
         <Stack direction='row' spacing={4}>
             <Typography variant='h6' sx={{ pt: 1, pr: 1 }}>Status</Typography>
-            <StatusChip status={`${status?.status.toUpperCase()}`} theme={theme} />
+            <StatusChip status={`${status?.status.toUpperCase()}`} />
         </Stack>
         <Divider sx={{ py: 1 }} />
         <UpdatedBox>
@@ -66,18 +56,12 @@ export const StatusItem: React.FC<StatusItemProps> = ({ status, theme }): JSX.El
         {status?.services_platforms && (
             <PlatformsListItem
                 platforms={status?.services_platforms}
-                theme={theme}
             />
         )}
     </StatusCard>
 );
 
-interface PlatformsListItemProps {
-    platforms: Platform[];
-    theme: Theme;
-}
-
-export const PlatformsListItem: React.FC<PlatformsListItemProps> = ({ platforms, theme }): JSX.Element => (
+export const PlatformsListItem: React.FC<{ platforms: Platform[]; }> = ({ platforms }): JSX.Element => (
     <Box sx={{ py: 1 }}>
         <Divider sx={{ pt: 1 }} />
         <Typography sx={{ py: 2, fontSize: 18 }} variant='h6'>Platforms</Typography>
@@ -92,7 +76,7 @@ export const PlatformsListItem: React.FC<PlatformsListItemProps> = ({ platforms,
                                     <PlatformIcon platform={p?.name} />
                                 </ListItemIcon>
                                 <ListItemText>{p.name}</ListItemText>
-                                <StatusChip status={`${p.status.toUpperCase()}`} theme={theme} />
+                                <StatusChip status={`${p.status.toUpperCase()}`} />
                             </ListItem>
                             <Divider sx={{ pt: 1 }} />
                         </Fragment>

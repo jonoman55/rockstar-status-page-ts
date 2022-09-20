@@ -48,8 +48,9 @@ import type { Children, ServiceRow, Status, StatusType } from '../../types';
  */
 export const AntDesignDataGrid = styled(MuiDataGrid)(({ theme }) => ({
     border: `1px solid ${theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'}`,
-    color:
-        theme.palette.mode === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.85)',
+    color: theme.palette.mode === 'light'
+        ? 'rgba(0,0,0,.85)'
+        : 'rgba(255,255,255,0.85)',
     fontFamily: [
         '-apple-system',
         'BlinkMacSystemFont',
@@ -65,22 +66,23 @@ export const AntDesignDataGrid = styled(MuiDataGrid)(({ theme }) => ({
     WebkitFontSmoothing: 'auto',
     letterSpacing: 'normal',
     '& .MuiDataGrid-columnsContainer': {
-        backgroundColor: theme.palette.mode === 'light' ? '#fafafa' : '#1d1d1d',
+        backgroundColor: theme.palette.mode === 'light'
+            ? '#fafafa'
+            : '#1d1d1d',
     },
     '& .MuiDataGrid-iconSeparator': {
         display: 'none',
     },
     '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
-        borderRight: `1px solid ${theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'
-            }`,
+        borderRight: `1px solid ${theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'}`,
     },
     '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-        borderBottom: `1px solid ${theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'
-            }`,
+        borderBottom: `1px solid ${theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'}`,
     },
     '& .MuiDataGrid-cell': {
-        color:
-            theme.palette.mode === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.85)',
+        color: theme.palette.mode === 'light'
+            ? 'rgba(0,0,0,.85)'
+            : 'rgba(255,255,255,0.85)',
         fontFamily: [
             '-apple-system',
             'BlinkMacSystemFont',
@@ -96,24 +98,18 @@ export const AntDesignDataGrid = styled(MuiDataGrid)(({ theme }) => ({
         WebkitFontSmoothing: 'auto',
         letterSpacing: 'normal',
         '& .MuiDataGrid-columnsContainer': {
-            backgroundColor: theme.palette.mode === 'light' ? '#fafafa' : '#1d1d1d',
+            backgroundColor: theme.palette.mode === 'light'
+                ? '#fafafa'
+                : '#1d1d1d',
         },
         '& .MuiDataGrid-iconSeparator': {
             display: 'none',
         },
         '& .MuiDataGrid-colCell, .MuiDataGrid-cell': {
-            borderRight:
-                `1px solid ${theme.palette.mode === 'light'
-                    ? '#f0f0f0'
-                    : '#303030'
-                }`,
+            borderRight: `1px solid ${theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'}`,
         },
         '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-            borderBottom:
-                `1px solid ${theme.palette.mode === 'light'
-                    ? '#f0f0f0'
-                    : '#303030'
-                }`,
+            borderBottom: `1px solid ${theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'}`,
         },
         '& .MuiDataGrid-cell': {
             color: theme.palette.mode === 'light'
@@ -127,11 +123,7 @@ export const AntDesignDataGrid = styled(MuiDataGrid)(({ theme }) => ({
             width: 16,
             height: 16,
             backgroundColor: 'transparent',
-            border:
-                `1px solid ${theme.palette.mode === 'light'
-                    ? '#d9d9d9'
-                    : 'rgb(67, 67, 67)'
-                }`,
+            border: `1px solid ${theme.palette.mode === 'light' ? '#d9d9d9' : 'rgb(67, 67, 67)'}`,
             borderRadius: 2,
         },
         '& .MuiCheckbox-root svg path': {
@@ -260,6 +252,9 @@ export const CardContent = styled(({ ...props }: CardContentProps) =>
     },
 }));
 
+/**
+ * Styled Card Image Box
+ */
 export const CardImageBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),
     border: `solid 1px ${theme.palette.common.black}`,
@@ -327,15 +322,9 @@ export const DataGridPagination = (props: {
 /**
  * Memoized Grid Cell StatusChip Component
  */
-export const GridCellStatusTypeChip = memo(({ status }: StatusTypeChipProps) => {
-    const theme = useTheme();
-    return (
-        <StatusTypeChip
-            status={status}
-            theme={theme}
-        />
-    );
-});
+export const GridCellStatusTypeChip = memo(({ status }: StatusTypeChipProps) => (
+    <StatusTypeChip status={status} />
+));
 
 /**
  * Get Full Name
@@ -362,7 +351,7 @@ export const ExpandableCell = ({ value }: GridRenderCellParams): JSX.Element => 
                 <MuiLink
                     type="button"
                     component="button"
-                    sx={{ color: (theme) => theme.palette.info.main, fontSize: 'inherit' }}
+                    sx={{ color: (theme: Theme) => theme.palette.info.main, fontSize: 'inherit' }}
                     onClick={() => setExpanded(!expanded)}
                 >
                     {expanded ? 'view less' : 'view more'}
@@ -489,7 +478,7 @@ export const DataGrid = styled(MuiDataGrid)(({ theme }) => ({
  * @returns {JSX.Element} Data Grid Wrapper Component
  */
 export const DataGridWrapper = (props: {
-    children: Children
+    children: Children;
 }): JSX.Element => (
     <Box sx={{ height: '100%', width: '100%' }}>
         <Box sx={{ display: 'flex', height: '100%' }}>
@@ -555,7 +544,7 @@ export const ImageBox = styled(Box)(({ theme }) => ({
  * Grid Header With Image
  * @returns {JSX.Element} DataGrid Header Component
  */
-export const GridHeader = (): JSX.Element => (
+export const GridHeader: React.FC<{}> = (): JSX.Element => (
     <HeaderBox elevation={1}>
         <ImageBox>
             <Box
@@ -588,18 +577,11 @@ export const PlatformHeaderPaper = styled(MuiPaper)(({ theme }) => ({
 }));
 
 /**
- * Platform Header Props
- */
-interface PlatformHeaderProps {
-    name: string;
-};
-
-/**
  * Platform Header With Service Name
- * @param {PlatformHeaderProps} name Service Name 
+ * @param {string} name Service Name 
  * @returns {JSX.Element} Platform DataGrid Header
  */
-export const PlatformHeader: React.FC<PlatformHeaderProps> = ({ name }): JSX.Element => (
+export const PlatformHeader: React.FC<{ name: string; }> = ({ name }): JSX.Element => (
     <PlatformHeaderPaper elevation={0}>
         <Typography variant='h6' textAlign='center'>
             {name}
@@ -677,8 +659,13 @@ export const NoRowsOverlay = (): JSX.Element => (
  */
 export const DataGridToolbar = (): JSX.Element => {
     const dispatch = useAppDispatch();
-    const { showToolbar } = useAppSelector((state) => state.app);
-    const handleClick = () => dispatch(appActions.setShowToolbar(!showToolbar));
+
+    const showToolbar: boolean = useAppSelector((state) => state.app.showToolbar);
+
+    const handleClick = () => {
+        dispatch(appActions.setShowToolbar(!showToolbar));
+    };
+
     return (
         <GridToolbarContainer>
             <ToolTip title={`${showToolbar ? 'Show Toolbar' : 'Hide Toolbar'}`} placement='right' component={
@@ -893,15 +880,11 @@ interface GridCellProps {
 /**
  * Memoized Grid Cell Link
  */
-export const GridCellLink = memo((props: GridCellProps) => {
-    const { service: { name, id } } = props;
-    const theme = useTheme();
-    return (
-        <Typography variant='body2' component={Link} to={`/service/${id}`} sx={linkStyles(theme)}>
-            {name}
-        </Typography>
-    );
-});
+export const GridCellLink = memo(({ service: { name, id } }: GridCellProps) => (
+    <Typography variant='body2' component={Link} to={`/service/${id}`} sx={(theme: Theme) => linkStyles(theme)}>
+        {name}
+    </Typography>
+));
 
 /**
  * Render Grid Cell Link
@@ -963,16 +946,13 @@ export const GridCellExpand = memo(function GridCellExpand(
         if (!showFullCell) {
             return undefined;
         }
-
         function handleKeyDown(nativeEvent: KeyboardEvent) {
             // IE11, Edge (prior to using Bink?) use 'Esc'
             if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
                 setShowFullCell(false);
             }
-        }
-
+        };
         document.addEventListener('keydown', handleKeyDown);
-
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };

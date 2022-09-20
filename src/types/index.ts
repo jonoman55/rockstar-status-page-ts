@@ -182,6 +182,9 @@ export type ServicesData = {
     rows: ServiceRow[];
 };
 
+/**
+ * DataGrid Platform
+ */
 export type DataGridPlatform = {
     platform_name: string;
     platform_status: string;
@@ -248,6 +251,9 @@ export type CustomPalette = {
     }
 };
 
+/**
+ * Status Item Type
+ */
 export type StatusItemType = 'service' | 'platform';
 
 /**

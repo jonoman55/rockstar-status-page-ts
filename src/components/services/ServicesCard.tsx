@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react';
-import { Theme, useTheme } from '@mui/material';
 
 import { RockstarSpinner } from '../design';
 import { ServicesGridItems } from './ServicesComponents';
@@ -10,9 +9,7 @@ import { getHighestStatusCount } from '../../helpers';
 
 import type { Service, StatusItem, StatusItems, StatusType } from '../../types';
 
-export const ServicesCard: React.FC = (): JSX.Element => {
-    const theme: Theme = useTheme();
-
+export const ServicesCard: React.FC<{}> = (): JSX.Element => {
     const { data: servicesResults, isLoading: servicesIsLoading, refetch } = useGetServicesQuery('getServices', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
@@ -91,7 +88,6 @@ export const ServicesCard: React.FC = (): JSX.Element => {
                     {services && (
                         <ServicesGridItems
                             services={services}
-                            theme={theme}
                         />
                     )}
                 </CardContent>

@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react';
-import { Theme, useTheme } from '@mui/material';
 
 import { RockstarSpinner } from '../design';
 import { StatusesGridItems } from './StatusesComponents';
@@ -10,9 +9,7 @@ import { getHighestStatusCount } from '../../helpers';
 
 import type { Status, StatusItem, StatusItems, StatusType } from '../../types';
 
-export const StatusesCard: React.FC = (): JSX.Element => {
-    const theme: Theme = useTheme();
-
+export const StatusesCard: React.FC<{}> = (): JSX.Element => {
     const { data: statusesResults, isLoading: statusesIsLoading, refetch } = useGetStatusesQuery('getStatuses', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
@@ -91,7 +88,6 @@ export const StatusesCard: React.FC = (): JSX.Element => {
                     {statuses && (
                         <StatusesGridItems
                             statuses={statuses}
-                            theme={theme}
                         />
                     )}
                 </CardContent>

@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { Divider, Theme, useTheme } from '@mui/material';
+import { Divider } from '@mui/material';
 
 import { FlexText } from '../controls';
 import { RockstarSpinner } from '../design';
@@ -32,8 +32,6 @@ interface IServiceDetailsCardProps {
 };
 
 export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ serviceId, service, refetchService }): JSX.Element => {
-    const theme: Theme = useTheme();
-
     const { data, isLoading, refetch } = useGetStatusQuery(serviceId, {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
@@ -171,12 +169,10 @@ export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ service
                     <StatusesList
                         status={statusStatus}
                         service={serviceStatus}
-                        theme={theme}
                     />
                     {platforms.length > 0 && (
                         <PlatformsListItem
                             platforms={platforms}
-                            theme={theme}
                         />
                     )}
                 </CardContent>

@@ -120,7 +120,7 @@ export const IndicatorPaper = styled(Paper)(({ theme }) => ({
             theme.palette.primary.dark,
             theme.palette.action.focusOpacity
         ),
-    minWidth: '83px',
+    minWidth: '75px',
     minHeight: '50px',
 }));
 

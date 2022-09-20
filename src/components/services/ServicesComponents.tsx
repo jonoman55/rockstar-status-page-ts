@@ -1,7 +1,6 @@
 import { Fragment, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Divider, Grid, Typography } from '@mui/material';
-import { Theme } from '@mui/material/styles';
 
 import { FlexText } from '../controls';
 import { StatusChip } from '../shared';
@@ -11,12 +10,7 @@ import { useAppDispatch } from '../../app/hooks';
 
 import type { Service } from '../../types';
 
-interface ServicesGridItemsProps {
-    services: Service[];
-    theme: Theme;
-};
-
-export const ServicesGridItems: React.FC<ServicesGridItemsProps> = ({ services, theme }): JSX.Element => {
+export const ServicesGridItems: React.FC<{ services: Service[]; }> = ({ services }): JSX.Element => {
     const dispatch = useAppDispatch();
 
     const handleClick = useCallback((service: Service) => () => {
@@ -37,38 +31,32 @@ export const ServicesGridItems: React.FC<ServicesGridItemsProps> = ({ services, 
                     onClick={handleClick(service)}
                     sx={{ textDecoration: 'none' }}
                 >
-                    <ServiceGridItem service={service} theme={theme} />
+                    <ServiceGridItem service={service} />
                 </Grid>
             ))}
         </Grid>
     );
 };
 
-interface ServiceMessageProps {
-    message: string;
-};
 
-export const ServiceMessage: React.FC<ServiceMessageProps> = ({ message }): JSX.Element => (
+export const ServiceMessage: React.FC<{ message: string; }> = ({ message }): JSX.Element => (
     <Fragment>
         <Divider sx={{ py: 1 }} />
         <Typography sx={{ pt: 2 }}>{message}</Typography>
     </Fragment>
 );
 
-interface ServiceGridItemProps {
-    service: Service;
-    theme: Theme;
-};
-
-export const ServiceGridItem: React.FC<ServiceGridItemProps> = ({ service, theme }): JSX.Element => (
+export const ServiceGridItem: React.FC<{ service: Service; }> = ({ service }): JSX.Element => (
     <ServiceCard>
         <Title variant='h6'>{service?.name}</Title>
         <Divider sx={{ py: 1 }} />
         <Stack direction='row' spacing={4}>
             <Typography variant='h6' sx={{ pt: 1, pr: 1 }}>Status</Typography>
-            <StatusChip status={`${service?.status.toUpperCase()}`} theme={theme} />
+            <StatusChip status={`${service?.status.toUpperCase()}`} />
         </Stack>
-        {service?.message && <ServiceMessage message={service?.message} />}
+        {service?.message && (
+            <ServiceMessage message={service?.message} />
+        )}
         <Divider sx={{ py: 1 }} />
         <UpdatedBox>
             <FlexText sx={{ pr: 1 }}>Updated:</FlexText>

@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useTheme, Divider, Typography, Theme } from '@mui/material';
+import { Divider, Typography } from '@mui/material';
 
 import { RockstarSpinner } from '../design';
 import { StatusChip } from '../shared';
@@ -9,9 +9,7 @@ import { useGetApiStatusQuery } from '../../services/rockstarApi';
 
 import type { StatusType } from '../../types';
 
-export const ApiCard: React.FC = (): JSX.Element => {
-    const theme: Theme = useTheme();
-
+export const ApiCard: React.FC<{}> = (): JSX.Element => {
     const { data: apiStatus, isLoading, refetch } = useGetApiStatusQuery('getApiStatus', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
@@ -25,9 +23,10 @@ export const ApiCard: React.FC = (): JSX.Element => {
         return result;
     }, [isLoading, apiStatus]);
 
-    const handleRefreshClick = useCallback<() => void>(() => {
-        refetch();
-    }, [refetch]);
+    const handleRefreshClick = useCallback<() => void>(
+        () => refetch(),
+        [refetch]
+    );
 
     return isLoading ? <RockstarSpinner /> : (
         <Container>
@@ -46,7 +45,7 @@ export const ApiCard: React.FC = (): JSX.Element => {
                         <Divider sx={{ pb: 1 }} />
                         <Stack direction='row' spacing={4}>
                             <Typography variant='h6' sx={{ pr: 1 }}>Status</Typography>
-                            <StatusChip  status={`${apiStatus?.status}`} theme={theme} />
+                            <StatusChip  status={`${apiStatus?.status}`} />
                         </Stack>
                         <Divider sx={{ pt: 2 }} />
                         <Updated variant='h6'>{`Updated: ${apiStatus?.updated}`}</Updated>

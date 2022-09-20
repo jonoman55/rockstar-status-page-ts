@@ -63,8 +63,7 @@ export const HomeCard: React.FC<{}> = (): JSX.Element => {
                     status?.name !== 'General' &&
                     status?.name !== 'Support'
             ).forEach(
-                (status: Status) =>
-                    results.push(status)
+                (status: Status) => results.push(status)
             );
         }
         return results;

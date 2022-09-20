@@ -1,6 +1,6 @@
 import { Fragment, memo, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useTheme, Box, Stack, Typography, Divider, Grid } from '@mui/material';
+import { Box, Stack, Typography, Divider, Grid } from '@mui/material';
 import { sortBy } from 'lodash';
 
 import { PlatformIcon, StatusChip, StatusIcon } from '../shared';
@@ -24,7 +24,7 @@ import {
 } from '../styled/HomeCard.styled';
 import { appActions } from '../../reducers/appSlice';
 import { useAppDispatch } from '../../app/hooks';
-import { RockstarStatus } from '../../constants';
+import { REACT_APP_ROCKSTAR_SERVICE_URL, RockstarStatus } from '../../constants';
 
 import type { Status, Platform, StatusType } from '../../types';
 
@@ -39,7 +39,7 @@ const IndicatorItem: React.FC<IndicatorItemProps> = ({ status }): JSX.Element =>
     </IndicatorPaper>
 );
 
-const StatusIndicatorsGrid = (): JSX.Element => (
+const StatusIndicatorsGrid: React.FC<{}> = (): JSX.Element => (
     <IndicatorsGridPaper>
         <IndicatorTitle variant='h6'>Status Indicators</IndicatorTitle>
         <Divider sx={{ pb: 1 }} />
@@ -53,16 +53,16 @@ const StatusIndicatorsGrid = (): JSX.Element => (
     </IndicatorsGridPaper>
 );
 
-export const StatusIndicators = (): JSX.Element => (
+export const StatusIndicators: React.FC<{}> = (): JSX.Element => (
     <IndicatorsContainer>
         <StatusIndicatorsGrid />
     </IndicatorsContainer>
 );
 
-export const Title = (): JSX.Element => (
+export const Title: React.FC<{}> = (): JSX.Element => (
     <RockstarLinkStack direction='row' spacing={2}>
         <RockstarLinkIcon />
-        <RockstarLink href={`${process.env.REACT_APP_ROCKSTAR_SERVICE_URL}`} target='_blank' variant='h5'>
+        <RockstarLink href={`${REACT_APP_ROCKSTAR_SERVICE_URL}`} target='_blank' variant='h5'>
             Service Status
         </RockstarLink>
     </RockstarLinkStack>
@@ -78,11 +78,7 @@ export const Updated: React.FC<UpdatedProps> = ({ updated }): JSX.Element => (
     </FlexText>
 );
 
-interface ImageProps {
-    id: number;
-};
-
-export const Image: React.FC<ImageProps> = ({ id }): JSX.Element => (
+export const Image: React.FC<{ id: number; }> = ({ id }): JSX.Element => (
     <CardImageBox>
         <CardMediaBrandLogo id={id} />
     </CardImageBox>
@@ -93,8 +89,10 @@ interface PlatformsListProps {
 };
 
 export const PlatformsList = memo(({ platforms }: PlatformsListProps): JSX.Element => {
-    const theme = useTheme();
-    const sortedPlatforms: Platform[] = useMemo(() => sortBy(platforms, 'name'), [platforms]);
+    const sortedPlatforms: Platform[] = useMemo<Platform[]>(
+        () => sortBy(platforms, 'name'),
+        [platforms]
+    );
     return (
         <Fragment>
             {sortedPlatforms?.map((platform: Platform, idx: number) => (
@@ -104,7 +102,7 @@ export const PlatformsList = memo(({ platforms }: PlatformsListProps): JSX.Eleme
                             <PlatformIcon platform={platform?.name} />
                             <Typography sx={{ pl: 2 }}>{platform?.name}</Typography>
                         </Box>
-                        <StatusChip status={`${platform?.status}`} theme={theme} />
+                        <StatusChip status={`${platform?.status}`} />
                     </PlatformWrapper>
                 </PlatformItem>
             ))}

@@ -11,7 +11,7 @@ import type { Children, ZoomStyles } from '../../types';
 const zoomBoxStyles: ZoomStyles = {
     position: 'fixed',
     bottom: 100,
-    right: 15,
+    right: 25,
 };
 
 /**

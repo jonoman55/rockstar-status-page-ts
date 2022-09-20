@@ -95,7 +95,7 @@ export const CardHeader: React.FC<CardHeaderProps> = ({ title, subheader, status
 
 export const CardMedia: React.FC<{ id: number }> = ({ id }): JSX.Element => (
     <MuiCardMedia
-        sx={{ objectFit: 'contain' }}
+        sx={{ objectFit: 'contain', mt: 2, mb: 1 }}
         component='img'
         height='198px'
         image={fetchCardImage(id)}
