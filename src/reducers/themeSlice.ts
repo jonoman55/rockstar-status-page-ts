@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, Slice } from '@reduxjs/toolkit';
 
 import { getItem } from '../hooks';
 
@@ -12,7 +12,11 @@ const initialState: ThemeState = {
     darkMode: Boolean(theme) ? false : true
 };
 
-const themeSlice = createSlice({
+type ThemeSlice = Slice<ThemeState, {
+    toggleTheme: (state: ThemeState) => void;
+}, 'theme'>;
+
+const themeSlice: ThemeSlice = createSlice({
     name: 'theme',
     initialState,
     reducers: {

@@ -93,7 +93,7 @@ const OutageAlerts = () => {
         resetAlertsOpen,
     } = useAppSelector((state) => state.app);
 
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState<boolean>(false);
 
     const alertIsOpen = useCallback<(name: string) => boolean>(
         (name: string) => {
@@ -106,7 +106,7 @@ const OutageAlerts = () => {
         [activeOutages]
     );
 
-    const setAlertIsOpen = useCallback<(name: string) => () => void>(
+    const setAlertIsOpen = useCallback(
         (name: string) => () => {
             dispatch(appActions.setActiveOutages(activeOutages.filter(
                 (a: OutageBarAlert) => a.name !== name && {

@@ -44,13 +44,15 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
         [matches]
     );
 
-    const internalLinks: LinkItem[] = useMemo<LinkItem[]>(() =>
-        LinkItems.filter((i) => i.type !== 'external' && i.type !== 'other'),
+    const internalLinks: LinkItem[] = useMemo<LinkItem[]>(
+        () => LinkItems.filter(
+            (i: LinkItem) => i.type !== 'external' && i.type !== 'other'
+        ),
         []
     );
 
-    const externalLinks: LinkItem[] = useMemo<LinkItem[]>(() =>
-        LinkItems.filter((i) => i.type === 'external'),
+    const externalLinks: LinkItem[] = useMemo<LinkItem[]>(
+        () => LinkItems.filter((i) => i.type === 'external'),
         []
     );
 
@@ -103,7 +105,7 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
                         primary={darkMode ? 'Dark Mode' : 'Light Mode'}
                         sx={{ color: 'primary.contrastText' }}
                     />
-                    <ToolTip title={`Toggle ${darkMode ? 'Light Mode' : 'Dark Mode'}`} placement={matches ? 'right' : 'top'} component={
+                    <ToolTip title={`Toggle ${darkMode ? 'Light' : 'Dark'} Mode`} placement={matches ? 'right' : 'top'} component={
                         <Switch
                             edge="end"
                             onChange={() => dispatch(toggleTheme())}
@@ -118,7 +120,7 @@ const SidebarList: React.FC<ListProps> = ({ anchor, toggleDrawer }): JSX.Element
     );
 };
 
-const Sidebar: React.FC = (): JSX.Element => {
+const Sidebar: React.FC<{}> = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const matches: boolean = useBreakpoints('sm', 'up');
 

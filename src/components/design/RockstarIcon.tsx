@@ -2,11 +2,7 @@ import { Box, SxProps } from '@mui/material';
 
 import { RockstarLogo } from '../../images';
 
-interface Props {
-    sx: SxProps;
-};
-
-export const RockstarIcon = ({ sx }: Props): JSX.Element => (
+export const RockstarIcon: React.FC<{ sx: SxProps; }> = ({ sx }): JSX.Element => (
     <Box
         component='img'
         src={RockstarLogo}

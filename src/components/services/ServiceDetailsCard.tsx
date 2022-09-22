@@ -31,6 +31,9 @@ interface IServiceDetailsCardProps {
     refetchService: () => void;
 };
 
+/**
+ * Service Details Card
+ */
 export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ serviceId, service, refetchService }): JSX.Element => {
     const { data, isLoading, refetch } = useGetStatusQuery(serviceId, {
         refetchOnReconnect: true,
@@ -92,7 +95,7 @@ export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ service
             }
             // Add Platform values to state
             if (!isLoading && data && data?.services_platforms) {
-                data?.services_platforms.forEach((p) => {
+                data?.services_platforms.forEach((p: Platform) => {
                     statusItems.statuses.push({
                         name: p.name,
                         status: p.status.toLowerCase(),
@@ -140,7 +143,7 @@ export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ service
     /**
      * Handle Refetch
      */
-    const handleRefreshClick = useCallback<() => void>(() => {
+    const handleRefreshClick = useCallback(() => {
         refetch();
         refetchService();
     }, [refetch, refetchService]);
@@ -170,11 +173,7 @@ export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ service
                         status={statusStatus}
                         service={serviceStatus}
                     />
-                    {platforms.length > 0 && (
-                        <PlatformsListItem
-                            platforms={platforms}
-                        />
-                    )}
+                    {platforms.length > 0 && <PlatformsListItem platforms={platforms} />}
                 </CardContent>
                 <Footer />
             </Card>

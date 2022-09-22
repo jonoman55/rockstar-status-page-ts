@@ -28,11 +28,7 @@ import { REACT_APP_ROCKSTAR_SERVICE_URL, RockstarStatus } from '../../constants'
 
 import type { Status, Platform, StatusType } from '../../types';
 
-interface IndicatorItemProps {
-    status: StatusType;
-};
-
-const IndicatorItem: React.FC<IndicatorItemProps> = ({ status }): JSX.Element => (
+const IndicatorItem: React.FC<{ status: StatusType; }> = ({ status }): JSX.Element => (
     <IndicatorPaper>
         <StatusIcon status={status} />
         <IndicatorStatus>{status?.toUpperCase()}</IndicatorStatus>
@@ -68,11 +64,7 @@ export const Title: React.FC<{}> = (): JSX.Element => (
     </RockstarLinkStack>
 );
 
-interface UpdatedProps {
-    updated: string;
-}
-
-export const Updated: React.FC<UpdatedProps> = ({ updated }): JSX.Element => (
+export const Updated: React.FC<{ updated: string; }> = ({ updated }): JSX.Element => (
     <FlexText gutterBottom sx={{ textTransform: 'uppercase', textAlign: 'center', pb: 2 }}>
         Updated&nbsp;{`${updated}`}
     </FlexText>
@@ -117,11 +109,14 @@ interface StatusGridItemsProps {
 export const StatusGridItems = memo(({ statuses }: StatusGridItemsProps): JSX.Element => {
     const dispatch = useAppDispatch();
 
-    const handleClick = useCallback((status: Status) => () => {
-        dispatch(appActions.setServicePageId(status.id));
-        dispatch(appActions.setIsServiceRoute(true));
-        dispatch(appActions.setTargetHref(`/service/${status.id}`));
-    }, [dispatch]);
+    const handleClick = useCallback(
+        (status: Status) => () => {
+            dispatch(appActions.setServicePageId(status.id));
+            dispatch(appActions.setIsServiceRoute(true));
+            dispatch(appActions.setTargetHref(`/service/${status.id}`));
+        },
+        [dispatch]
+    );
 
     return (
         <Fragment>

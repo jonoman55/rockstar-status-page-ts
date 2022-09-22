@@ -105,9 +105,7 @@ export const HomeCard: React.FC<{}> = (): JSX.Element => {
     /**
      * Handle Menu Close
      */
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const handleClose = () => setAnchorEl(null);
 
     return isLoading ? <RockstarSpinner /> : (
         <Fragment>

@@ -14,7 +14,7 @@ const apiPath: ApiPath = getApiPath();
 
 const API: ApiBaseUrl = new ApiBaseUrl(`/${apiPath}`);
 
-const baseUrl: string = API.baseUrl;
+export const baseUrl: string = API.baseUrl;
 
 export const rockstarApi = createApi({
     reducerPath: 'rockstarApi',

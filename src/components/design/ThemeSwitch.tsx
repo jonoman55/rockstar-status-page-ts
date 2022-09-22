@@ -1,6 +1,6 @@
-import { styled, Switch } from '@mui/material';
+import { styled, Switch, SwitchProps } from '@mui/material';
 
-const MaterialUISwitch = styled(Switch)(({ theme }) => ({
+const MaterialUISwitch = styled(Switch)<SwitchProps>(({ theme }) => ({
     width: 62,
     height: 34,
     padding: 7,
@@ -53,12 +53,12 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     },
 }));
 
-interface Props {
+interface ThemeSwitchProps {
     checked: boolean;
     onChange: ((event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void) | undefined;
 };
 
-export const ThemeSwitch: React.FC<Props> = ({ checked, onChange }): JSX.Element => (
+export const ThemeSwitch: React.FC<ThemeSwitchProps> = ({ checked, onChange }): JSX.Element => (
     <MaterialUISwitch
         checked={checked}
         onChange={onChange}

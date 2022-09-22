@@ -3,7 +3,7 @@ import { Divider } from '@mui/material';
 import { AppBar, Container, FooterLink, Stack } from '../styled/Footer.styled';
 import { REACT_APP_GITHUB_URL, REACT_APP_ROCKSTAR_URL } from '../../constants';
 
-const Footer: React.FC = (): JSX.Element => (
+const Footer: React.FC<{}> = (): JSX.Element => (
     <AppBar position='static' elevation={2}>
         <Container>
             <Stack>

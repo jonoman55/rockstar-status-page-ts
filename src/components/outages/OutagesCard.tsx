@@ -115,32 +115,26 @@ export const OutagesCard: React.FC<{}> = (): JSX.Element => {
     /**
      * Overall Status
      */
-    const overallStatus: StatusType = useMemo<StatusType>(
-        () => {
-            let result: StatusType;
-            if (!isLoading && statusesResults) {
-                const highest = getStatusesCount(
-                    statusesResults.map(
-                        (s: Status) => s.status?.toLowerCase() as RockstarStatus
-                    )
-                );
-                result = highest?.toString().toLowerCase() as StatusType;
-            }
-            return result;
-        },
-        [statusesResults, isLoading]
-    );
+    const overallStatus: StatusType = useMemo<StatusType>(() => {
+        let result: StatusType;
+        if (!isLoading && statusesResults) {
+            const highest = getStatusesCount(
+                statusesResults.map(
+                    (s: Status) => s.status?.toLowerCase() as RockstarStatus
+                )
+            );
+            result = highest?.toString().toLowerCase() as StatusType;
+        }
+        return result;
+    }, [statusesResults, isLoading]);
 
     /**
      * Handle Refetch Click
      */
-    const handleRefreshClick = useCallback<() => void>(
-        () => {
-            servicesRefetch();
-            statusesRefetch();
-        },
-        [servicesRefetch, statusesRefetch]
-    );
+    const handleRefreshClick = useCallback(() => {
+        servicesRefetch();
+        statusesRefetch();
+    }, [servicesRefetch, statusesRefetch]);
 
     return (
         <Paper elevation={0}>
@@ -166,8 +160,7 @@ export const OutagesCard: React.FC<{}> = (): JSX.Element => {
                             <Grid key={index} item xs={12} sm={12} md={12} lg={4} xl={4}>
                                 <Fragment>
                                     {uniq(data.rows.map((row: PlatformStatusRow) => row.service)).map(
-                                        (service: string, i: number) =>
-                                            <PlatformHeader key={i} name={service} />
+                                        (service: string, i: number) => <PlatformHeader key={i} name={service} />
                                     )}
                                     <DataGridWrapper>
                                         <PlatformsDataGrid

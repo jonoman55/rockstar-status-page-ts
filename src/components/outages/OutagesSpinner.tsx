@@ -5,7 +5,7 @@ const Spinner = styled(CircularProgress)(({ theme }) => ({
     color: theme.custom.palette.main,
 }));
 
-const SpinnerContainer = styled(Box)(({ theme }) => ({
+const SpinnerContainer = styled(Box)(({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -14,7 +14,7 @@ const SpinnerContainer = styled(Box)(({ theme }) => ({
     width: '100%',
 }));
 
-export const OutagesSpinner: React.FC = (): JSX.Element => (
+export const OutagesSpinner: React.FC<{}> = (): JSX.Element => (
     <SpinnerContainer>
         <Spinner />
     </SpinnerContainer>

@@ -13,21 +13,21 @@ const Outages: Lazy = lazy(() => import("../pages/OutagesPage"));
 const Service: Lazy = lazy(() => import("../pages/ServicePage"));
 const NotFound: Lazy = lazy(() => import("../pages/NotFoundPage"));
 
-export default function Routes(): JSX.Element {
-    return (
-        <Router>
-            <Layout>
-                <Switch>
-                    <Route path="/" element={<Navigate to="/all" />} />
-                    <Route path="/all" element={<Home />} />
-                    <Route path="/services" element={<Services />} />
-                    <Route path="/statuses" element={<Statuses />} />
-                    <Route path="/api" element={<Api />} />
-                    <Route path="/outages" element={<Outages />} />
-                    <Route path="/service/:id" element={<Service />} />
-                    <Route path="*" element={<NotFound />} />
-                </Switch>
-            </Layout>
-        </Router>
-    );
-};
+const Routes = (): JSX.Element => (
+    <Router>
+        <Layout>
+            <Switch>
+                <Route path="/" element={<Navigate to="/all" />} />
+                <Route path="/all" element={<Home />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/statuses" element={<Statuses />} />
+                <Route path="/api" element={<Api />} />
+                <Route path="/outages" element={<Outages />} />
+                <Route path="/service/:id" element={<Service />} />
+                <Route path="*" element={<NotFound />} />
+            </Switch>
+        </Layout>
+    </Router>
+);
+
+export default Routes;

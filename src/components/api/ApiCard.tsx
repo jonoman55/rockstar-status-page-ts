@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react';
 import { Divider, Typography } from '@mui/material';
 
-import { RockstarSpinner } from '../design';
 import { StatusChip } from '../shared';
+import { RockstarSpinner } from '../design';
 import { Card, CardMedia, CardHeader, CardFooter } from '../styled/PaperCard.styled';
 import { Container, CardContent, Title, Updated, DetailsLink, Stack } from '../styled/ApiCard.styled';
-import { useGetApiStatusQuery } from '../../services/rockstarApi';
+import { baseUrl, useGetApiStatusQuery } from '../../services/rockstarApi';
 
 import type { StatusType } from '../../types';
 
@@ -40,7 +40,7 @@ export const ApiCard: React.FC<{}> = (): JSX.Element => {
                 />
                 <CardMedia id={4} />
                 <CardContent>
-                    <DetailsLink href={`${process.env.REACT_APP_BACKEND_API_HEROKU_URL}`} target='_blank'>
+                    <DetailsLink href={`${baseUrl}`} target='_blank'>
                         <Title variant='h6'>{apiStatus?.message}</Title>
                         <Divider sx={{ pb: 1 }} />
                         <Stack direction='row' spacing={4}>

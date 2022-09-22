@@ -1,10 +1,6 @@
 import * as React from "react";
 
-interface Props {
-    props: React.SVGProps<SVGSVGElement>;
-};
-
-export const RockstarLogo = (props: Props): JSX.Element => (
+export const RockstarLogo: React.FC<{ props: React.SVGProps<SVGSVGElement>; }> = (props): JSX.Element => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 216 198.83"

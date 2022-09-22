@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { Theme } from '@mui/material';
 import { GridRowClassNameParams, GridRowHeightParams, GridRowHeightReturnValue, GridRowModel,  GridValidRowModel } from '@mui/x-data-grid';
 import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
@@ -29,9 +28,9 @@ const initialState: GridInitialStateCommunity = {
 };
 
 /**
- * Services DataGrid Props
+ * Platforms DataGrid Props
  */
-interface Props {
+interface PlatformsDataGridProps {
     /**
      * Platform Statuses Data (columns and rows)
      */
@@ -44,10 +43,8 @@ interface Props {
 
 /**
  * Platforms DataGrid
- * @param {Props} props PlatformStatusesData, isLoading
- * @returns {JSX.Element} PlatformsDataGrid
  */
-export const PlatformsDataGrid: React.FC<Props> = ({ data, isLoading }): JSX.Element => {
+export const PlatformsDataGrid: React.FC<PlatformsDataGridProps> = ({ data, isLoading }): JSX.Element => {
     const handleGetRowId = (row: GridRowModel) => {
         return row.name as string;
     };
@@ -56,13 +53,13 @@ export const PlatformsDataGrid: React.FC<Props> = ({ data, isLoading }): JSX.Ele
         return `super-app-theme--${params.row.status.toUpperCase()}` as string;
     };
 
-    const handleGetRowHeight = useCallback((_params: GridRowHeightParams) => {
+    const handleGetRowHeight = (_params: GridRowHeightParams) => {
         return 'auto' as GridRowHeightReturnValue;
-    }, []);
+    };
 
-    const handleEstimatedRowHeight = useCallback((_params: GridRowHeightParams) => {
+    const handleEstimatedRowHeight = (_params: GridRowHeightParams) => {
         return 200 as number;
-    }, []);
+    };
 
     return (
         <DataGrid

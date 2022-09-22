@@ -13,11 +13,14 @@ import type { Platform, Status } from '../../types';
 export const StatusesGridItems: React.FC<{ statuses: Status[]; }> = ({ statuses }): JSX.Element => {
     const dispatch = useAppDispatch();
 
-    const handleClick = useCallback((status: Status) => () => {
-        dispatch(appActions.setServicePageId(status.id));
-        dispatch(appActions.setIsServiceRoute(true));
-        dispatch(appActions.setTargetHref(`/service/${status.id}`));
-    }, [dispatch]);
+    const handleClick = useCallback(
+        (status: Status) => () => {
+            dispatch(appActions.setServicePageId(status.id));
+            dispatch(appActions.setIsServiceRoute(true));
+            dispatch(appActions.setTargetHref(`/service/${status.id}`));
+        },
+        [dispatch]
+    );
 
     return (
         <Grid container spacing={2}>
@@ -53,11 +56,7 @@ export const StatusItem: React.FC<{ status: Status; }> = ({ status }): JSX.Eleme
             <FlexText sx={{ pr: 1 }}>{' - '}</FlexText>
             <FlexText>{new Date(status?.updated).toLocaleTimeString()}</FlexText>
         </UpdatedBox>
-        {status?.services_platforms && (
-            <PlatformsListItem
-                platforms={status?.services_platforms}
-            />
-        )}
+        {status?.services_platforms && <PlatformsListItem platforms={status?.services_platforms} />}
     </StatusCard>
 );
 

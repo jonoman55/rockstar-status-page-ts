@@ -241,7 +241,7 @@ export class ApiBaseUrl {
      * Get Heroku Request Duration
      * @returns {Promise<number>} Request Duration Promise
      */
-    public getHerokuDuration = async (): Promise<number> => {
+    private getHerokuDuration = async (): Promise<number> => {
         const response: AxiosResponse<any, any> = await this.createRequest(
             this.heroku.url,
             this.heroku.name
@@ -257,7 +257,7 @@ export class ApiBaseUrl {
      * Get Render Request Duration
      * @returns {Promise<number>} Request Duration Promise
      */
-    public getRenderDuration = async (): Promise<number> => {
+    private getRenderDuration = async (): Promise<number> => {
         const response: AxiosResponse<any, any> = await this.createRequest(
             this.render.url,
             this.render.name
@@ -273,7 +273,7 @@ export class ApiBaseUrl {
      * Get Railway Request Duration
      * @returns {Promise<number>} Request Duration Promise
      */
-    public getRailwayDuration = async (): Promise<number> => {
+    private getRailwayDuration = async (): Promise<number> => {
         const response: AxiosResponse<any, any> = await this.createRequest(
             this.railway.url,
             this.railway.name
@@ -308,7 +308,7 @@ export class ApiBaseUrl {
      * Get Best API By Duration
      * @returns {ApiUrl} ApiUrl
      */
-    public bestApiByDuration = (): ApiUrl => {
+    private bestApiByDuration = (): ApiUrl => {
         this.apis.map(async (api: ApiUrl): Promise<ApiUrl> => {
             const response: AxiosResponse<any, any> = await this.createRequest(api.url, api.name);
             const duration: number = response.duration;

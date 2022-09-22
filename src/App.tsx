@@ -11,7 +11,7 @@ const Routes: React.LazyExoticComponent<() => JSX.Element> = lazy(
     () => import('./routes')
 );
 
-const App: React.FC = (): JSX.Element => {
+const App: React.FC<{}> = (): JSX.Element => {
     const darkMode: boolean = useAppSelector((state) => state.theme.darkMode);
     const activeTheme: Theme = createTheme(darkMode ? darkTheme : lightTheme);
     return (

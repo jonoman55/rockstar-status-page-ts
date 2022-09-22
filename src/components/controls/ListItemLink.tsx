@@ -3,6 +3,7 @@ import { Link as RouterLink, LinkProps as RouterLinkProps } from 'react-router-d
 import { Box, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 
 import { ToolTip } from './ToolTip';
+
 import type { Placement } from '../../types';
 
 const styles = {
@@ -39,7 +40,8 @@ export const ListItemLink = (props: ListItemLinkProps): JSX.Element => {
                         <ListItemIcon sx={styles}>{icon}</ListItemIcon>
                     ) : null}
                     <ListItemText primary={primary} sx={styles} />
-                </ListItem>} />
+                </ListItem>} 
+            />
         </Box>
     );
 };

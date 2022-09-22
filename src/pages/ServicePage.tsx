@@ -9,7 +9,10 @@ import type { Service } from '../types';
 const ServicePage = (): JSX.Element => {
     const { id } = useParams();
 
-    const serviceId: number = useMemo(() => parseInt(id as string), [id]);
+    const serviceId: number = useMemo<number>(
+        () => parseInt(id as string),
+        [id]
+    );
 
     const { isLoading, services, refetch } = useServicesQuery() as ServiceQueryProps;
 

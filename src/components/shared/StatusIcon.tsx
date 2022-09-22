@@ -1,4 +1,4 @@
-import { Theme, useTheme, CSSObject } from '@mui/material/styles';
+import { Theme, CSSObject } from '@mui/material/styles';
 import { Error, OfflinePin, OfflineBolt } from '@mui/icons-material';
 
 import type { StatusType } from '../../types';
@@ -31,29 +31,18 @@ const iconStyles = (theme: Theme, status: string): CSSObject => {
 };
 
 /**
- * Status Icon Props
- */
-interface StatusIconProps {
-    /**
-     * Status Type
-     */
-    status: StatusType;
-};
-
-/**
  * Rockstar Status Icon
  */
-export const StatusIcon: React.FC<StatusIconProps> = ({ status }): JSX.Element => {
-    const theme: Theme = useTheme();
+export const StatusIcon: React.FC<{ status: StatusType; }> = ({ status }): JSX.Element => {
     const iconStatus: string = status as string;
     switch (status) {
         case 'up':
-            return <OfflinePin fontSize='large' sx={{ ...iconStyles(theme, iconStatus) }} />;
+            return <OfflinePin fontSize='large' sx={(theme: Theme) => iconStyles(theme, iconStatus)} />;
         case 'limited':
-            return <OfflineBolt fontSize='large' sx={{ ...iconStyles(theme, iconStatus) }} />;
+            return <OfflineBolt fontSize='large' sx={(theme: Theme) => iconStyles(theme, iconStatus)} />;
         case 'down':
-            return <Error fontSize='large' sx={{ ...iconStyles(theme, iconStatus) }} />;
+            return <Error fontSize='large' sx={(theme: Theme) => iconStyles(theme, iconStatus)} />;
         default:
-            return <OfflinePin fontSize='large' sx={{ ...iconStyles(theme, iconStatus) }} />;
+            return <OfflinePin fontSize='large' sx={(theme: Theme) => iconStyles(theme, iconStatus)} />;
     };
 };

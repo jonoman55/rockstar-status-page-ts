@@ -15,14 +15,19 @@ interface StatusMenuProps {
     menuItems: StatusMenuItem[];
 };
 
-export const StatusMenu = ({ open, anchorEl, handleClose, menuItems }: StatusMenuProps): JSX.Element => {
+export const StatusMenu: React.FC<StatusMenuProps> = (props): JSX.Element => {
+    const { open, anchorEl, handleClose, menuItems } = props;
+    
     const dispatch = useAppDispatch();
 
-    const handleClick = useCallback((id: number) => () => {
-        dispatch(appActions.setServicePageId(id));
-        dispatch(appActions.setIsServiceRoute(true));
-        dispatch(appActions.setTargetHref(`/service/${id}`));
-    }, [dispatch]);
+    const handleClick = useCallback(
+        (id: number) => () => {
+            dispatch(appActions.setServicePageId(id));
+            dispatch(appActions.setIsServiceRoute(true));
+            dispatch(appActions.setTargetHref(`/service/${id}`));
+        },
+        [dispatch]
+    );
 
     return (
         <Box component='div'>
@@ -57,7 +62,7 @@ interface MenuItemProps {
     onClick?: React.MouseEventHandler<HTMLAnchorElement> | undefined;
 };
 
-export const MenuItem = (props: MenuItemProps): JSX.Element => {
+export const MenuItem: React.FC<MenuItemProps> = (props): JSX.Element => {
     const { children, text, to, onClick } = props;
 
     const renderLink = useMemo(

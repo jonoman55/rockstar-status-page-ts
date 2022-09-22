@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { Theme } from '@mui/material';
 import { GridColumnVisibilityModel, GridRowModel, GridRowClassNameParams, GridValidRowModel, GridRowHeightParams, GridRowHeightReturnValue } from '@mui/x-data-grid';
 import { GridInitialStateCommunity } from '@mui/x-data-grid/models/gridStateCommunity';
@@ -34,7 +34,7 @@ const initialColumnVisibilityState: GridColumnVisibilityModel = {
 /**
  * Services DataGrid Props
  */
-interface Props {
+interface ServicesDataGridProps {
     /**
      * Service Rows
      */
@@ -47,10 +47,8 @@ interface Props {
 
 /**
  * Services DataGrid
- * @param {Props} props rows, isLoading
- * @returns {JSX.Element} ServicesDataGrid
  */
-export const ServicesDataGrid: React.FC<Props> = ({ rows, isLoading }): JSX.Element => {
+export const ServicesDataGrid: React.FC<ServicesDataGridProps> = ({ rows, isLoading }): JSX.Element => {
     const [pageSize, setPageSize] = useState<number>(10);
     const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>(initialColumnVisibilityState);
 
@@ -62,13 +60,13 @@ export const ServicesDataGrid: React.FC<Props> = ({ rows, isLoading }): JSX.Elem
         return `super-app-theme--${params.row.status.toUpperCase()}` as string;
     };
 
-    const handleGetRowHeight = useCallback((_params: GridRowHeightParams) => {
+    const handleGetRowHeight = (_params: GridRowHeightParams) => {
         return 'auto' as GridRowHeightReturnValue;
-    }, []);
+    };
 
-    const handleEstimatedRowHeight = useCallback((_params: GridRowHeightParams) => {
+    const handleEstimatedRowHeight = (_params: GridRowHeightParams) => {
         return 200 as number;
-    }, []);
+    };
 
     const handleOnPageSizeChange = (newPageSize: number) => {
         setPageSize(newPageSize);

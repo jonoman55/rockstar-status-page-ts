@@ -1,4 +1,4 @@
-import { useTheme, Box, Icon } from '@mui/material';
+import { useTheme, Box, Icon, Theme } from '@mui/material';
 import {
     Store,
     NotificationsActive as Alert,
@@ -25,12 +25,8 @@ import {
 import { PlatformType } from '../../constants/PlatformType';
 import { RockstarWhiteLogo } from '../../images';
 
-interface Props {
-    platform: string;
-};
-
-export const PlatformIcon: React.FC<Props> = ({ platform }): JSX.Element => {
-    const theme = useTheme();
+export const PlatformIcon: React.FC<{ platform: string; }> = ({ platform }): JSX.Element => {
+    const theme: Theme = useTheme();
     switch (platform) {
         case PlatformType.PC:
             return (
@@ -143,7 +139,7 @@ export const PlatformIcon: React.FC<Props> = ({ platform }): JSX.Element => {
                     component='img'
                     src={RockstarWhiteLogo}
                     alt='defualt'
-                    sx={{ color: 'primary.contrastText', width: '24px', height: '24px' }}
+                    sx={{ color: theme.palette.primary.contrastText, width: '24px', height: '24px' }}
                 />
             );
     };

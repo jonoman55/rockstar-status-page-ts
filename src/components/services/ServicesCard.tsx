@@ -69,9 +69,10 @@ export const ServicesCard: React.FC<{}> = (): JSX.Element => {
     /**
      * Handle Refetch
      */
-    const handleRefreshClick = useCallback<() => void>(() => {
-        refetch();
-    }, [refetch]);
+    const handleRefreshClick = useCallback(
+        () => refetch(),
+        [refetch]
+    );
 
     return servicesIsLoading ? <RockstarSpinner /> : (
         <Paper elevation={0}>

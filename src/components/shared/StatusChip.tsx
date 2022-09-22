@@ -13,7 +13,7 @@ export interface StatusChipProps {
 };
 
 /**
- * Status Chips
+ * Status Chip
  */
 export const StatusChip: React.FC<StatusChipProps> = ({ status }): JSX.Element => (
     <Chip

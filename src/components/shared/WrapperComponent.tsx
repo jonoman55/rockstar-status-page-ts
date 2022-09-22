@@ -10,7 +10,7 @@ interface WrappedLinkProps {
     children: Children;
 };
 
-export function WrappedLink(props: WrappedLinkProps): JSX.Element {
+export const WrappedLink: React.FC<WrappedLinkProps> = (props): JSX.Element => {
     const CustomLink = useMemo(
         () =>
             forwardRef<HTMLAnchorElement, Omit<LinkProps, 'to'>>(function Link(

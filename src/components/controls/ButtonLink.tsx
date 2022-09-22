@@ -1,7 +1,7 @@
 import { forwardRef, useMemo } from 'react';
 import { Link as RouterLink, LinkProps as RouterLinkProps } from 'react-router-dom';
 import { Button } from '@mui/material';
-import { useTheme, CSSObject, Theme } from '@mui/material/styles';
+import { CSSObject, Theme } from '@mui/material/styles';
 
 /**
  * Create Button Styles
@@ -52,8 +52,6 @@ interface ButtonLinkProps {
 export const ButtonLink = (props: ButtonLinkProps): JSX.Element => {
     const { text, to, selected, onClick } = props;
 
-    const theme = useTheme();
-
     const renderLink = useMemo(
         () =>
             forwardRef<HTMLAnchorElement, Omit<RouterLinkProps, 'to'>>(function Link(
@@ -66,7 +64,7 @@ export const ButtonLink = (props: ButtonLinkProps): JSX.Element => {
     );
 
     return (
-        <Button component={renderLink} sx={buttonStyles(selected, theme)}>
+        <Button component={renderLink} sx={(theme: Theme) => buttonStyles(selected, theme)}>
             {text}
         </Button>
     );

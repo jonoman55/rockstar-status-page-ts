@@ -6,10 +6,8 @@ import { ChildProps } from '../../interfaces';
 
 /**
  * Page Wrapper With LinkBar
- * @param {ChildProps} props React Node
- * @returns {JSX.Element} Wrapped Component
  */
-export const PageItem = (props: ChildProps): JSX.Element => (
+export const PageItem: React.FC<ChildProps> = (props): JSX.Element => (
     <Fragment>
         <LinkBar />
         <OutageBar />

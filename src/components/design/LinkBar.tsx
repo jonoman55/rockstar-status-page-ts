@@ -12,9 +12,12 @@ import type { LinkItem } from '../../types';
 
 export const LinkBar = (): JSX.Element => {
     const dispatch = useAppDispatch();
-    const pathname = usePathname();
+    const pathname: string = usePathname();
 
-    const links: LinkItem[] = useMemo(() => LinkItems.slice(0, 4), []);
+    const links: LinkItem[] = useMemo<LinkItem[]>(
+        () => LinkItems.slice(0, 4),
+        []
+    );
 
     const { tabValue, targetHref } = useAppSelector((state) => state.app);
     

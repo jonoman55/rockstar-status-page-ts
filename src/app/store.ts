@@ -1,5 +1,6 @@
 import type { AnyAction, Reducer } from '@reduxjs/toolkit';
 import { configureStore, combineReducers, ThunkAction, Action } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import {
     Persistor,
     persistStore,
@@ -17,7 +18,6 @@ import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
 import appReducer from '../reducers/appSlice';
 import themeReducer from '../reducers/themeSlice';
 import { rockstarApi } from '../services/rockstarApi';
-import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
 type CombinedState = typeof rootReducer extends Reducer<infer U, any> ? U : never;
 

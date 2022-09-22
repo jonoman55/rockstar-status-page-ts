@@ -2,8 +2,8 @@ import { Fragment, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Divider, Grid, Typography } from '@mui/material';
 
-import { FlexText } from '../controls';
 import { StatusChip } from '../shared';
+import { FlexText } from '../controls';
 import { Stack, ServiceCard, UpdatedBox, Title } from '../styled/ServicesCard.styled';
 import { appActions } from '../../reducers/appSlice';
 import { useAppDispatch } from '../../app/hooks';
@@ -13,11 +13,14 @@ import type { Service } from '../../types';
 export const ServicesGridItems: React.FC<{ services: Service[]; }> = ({ services }): JSX.Element => {
     const dispatch = useAppDispatch();
 
-    const handleClick = useCallback((service: Service) => () => {
-        dispatch(appActions.setServicePageId(service.id));
-        dispatch(appActions.setIsServiceRoute(true));
-        dispatch(appActions.setTargetHref(`/service/${service.id}`));
-    }, [dispatch]);
+    const handleClick = useCallback(
+        (service: Service) => () => {
+            dispatch(appActions.setServicePageId(service.id));
+            dispatch(appActions.setIsServiceRoute(true));
+            dispatch(appActions.setTargetHref(`/service/${service.id}`));
+        },
+        [dispatch]
+    );
 
     return (
         <Grid container spacing={2}>
@@ -38,7 +41,6 @@ export const ServicesGridItems: React.FC<{ services: Service[]; }> = ({ services
     );
 };
 
-
 export const ServiceMessage: React.FC<{ message: string; }> = ({ message }): JSX.Element => (
     <Fragment>
         <Divider sx={{ py: 1 }} />
@@ -54,9 +56,7 @@ export const ServiceGridItem: React.FC<{ service: Service; }> = ({ service }): J
             <Typography variant='h6' sx={{ pt: 1, pr: 1 }}>Status</Typography>
             <StatusChip status={`${service?.status.toUpperCase()}`} />
         </Stack>
-        {service?.message && (
-            <ServiceMessage message={service?.message} />
-        )}
+        {service?.message && <ServiceMessage message={service?.message} />}
         <Divider sx={{ py: 1 }} />
         <UpdatedBox>
             <FlexText sx={{ pr: 1 }}>Updated:</FlexText>

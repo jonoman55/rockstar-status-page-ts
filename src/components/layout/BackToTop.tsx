@@ -25,17 +25,17 @@ const UpIcon = styled(Fab)(({ theme }) => ({
 /**
  * Scroll Top Props
  */
-interface Props {
+interface ScrollTopProps {
     children: Children;
     window?: () => Window;
 };
 
 /**
  * Scroll Top Wrapper Component
- * @param {Props} props 
+ * @param {ScrollTopProps} props 
  * @returns {JSX.Element} JSX Element
  */
-const ScrollTop = (props: Props): JSX.Element => {
+const ScrollTop = (props: ScrollTopProps): JSX.Element => {
     const { children, window } = props;
 
     /**

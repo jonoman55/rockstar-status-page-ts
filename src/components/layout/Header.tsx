@@ -10,11 +10,11 @@ import { toggleTheme } from '../../reducers/themeSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { usePathname } from '../../hooks';
 
-const Header: React.FC = (): JSX.Element => {
-    const pathname = usePathname();
+const Header: React.FC<{}> = (): JSX.Element => {
     const dispatch = useAppDispatch();
+    const pathname: string = usePathname();
 
-    const { darkMode } = useAppSelector((state) => state.theme);
+    const darkMode: boolean = useAppSelector((state) => state.theme.darkMode);
     
     const { targetHref, drawerOpen } = useAppSelector((state) => state.app);
 
@@ -84,7 +84,7 @@ const Header: React.FC = (): JSX.Element => {
                     </LinkBox>}
                 />
                 <Box sx={{ width: 78, height: 50 }}>
-                    <ToolTip title={darkMode ? 'Light Mode' : 'Dark Mode'} placement='bottom' component={
+                    <ToolTip title={`${darkMode ? 'Light' : 'Dark'} Mode`} placement='bottom' component={
                         <ThemeSwitch
                             checked={darkMode}
                             onChange={() => dispatch(toggleTheme())}

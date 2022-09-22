@@ -17,12 +17,12 @@ export const sleep = async (milliseconds: number): Promise<void> => {
 /**
  * Set Timeout Sleep Promise
  * @param {number} duration number of milliseconds
- * @returns Promise
+ * @returns {Promise<void>} Promise
  */
-export function sleepPromise(duration: number): Promise<void> {
+export const sleepPromise = (duration: number): Promise<void> => {
     return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, duration);
+        setTimeout(() => {
+            resolve();
+        }, duration);
     });
 };

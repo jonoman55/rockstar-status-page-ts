@@ -1,6 +1,6 @@
-import { styled, Typography } from '@mui/material';
+import { styled, Typography, TypographyProps } from '@mui/material';
 
-export const FlexText = styled(Typography)(({ theme }) => ({
+export const FlexText = styled(Typography)<TypographyProps>(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         fontSize: 14,
     },
@@ -15,7 +15,7 @@ export const FlexText = styled(Typography)(({ theme }) => ({
     },
 }));
 
-export const XSFlexText = styled(Typography)(({ theme }) => ({
+export const XSFlexText = styled(Typography)<TypographyProps>(({ theme }) => ({
     [theme.breakpoints.down('xs')]: {
         fontSize: 14,
     },
@@ -36,7 +36,7 @@ export const XSFlexText = styled(Typography)(({ theme }) => ({
     },
 }));
 
-export const XLFlexText = styled(Typography)(({ theme }) => ({
+export const XLFlexText = styled(Typography)<TypographyProps>(({ theme }) => ({
     [theme.breakpoints.up('xs')]: {
         fontSize: 10,
     },
