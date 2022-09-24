@@ -126,7 +126,7 @@ export const StatusGridItems = memo(({ statuses }: StatusGridItemsProps): JSX.El
                     item
                     component={Link}
                     to={`/service/${status?.id}`}
-                    xs={12} sm={12} md={6} lg={4} xl={3}
+                    xs={12} sm={6} md={6} lg={3} xl={3} // xs={12} sm={12} md={6} lg={4} xl={3}
                     onClick={handleClick(status)}
                     sx={{ textDecoration: 'none' }}
                 >

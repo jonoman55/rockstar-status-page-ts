@@ -10,7 +10,7 @@ import { getHighestStatusCount } from '../../helpers';
 import type { Status, StatusItem, StatusItems, StatusType } from '../../types';
 
 export const StatusesCard: React.FC<{}> = (): JSX.Element => {
-    const { data: statusesResults, isLoading: statusesIsLoading, refetch } = useGetStatusesQuery('getStatuses', {
+    const { data: statusesResults, isLoading, refetch, isFetching } = useGetStatusesQuery('getStatuses', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
@@ -20,13 +20,13 @@ export const StatusesCard: React.FC<{}> = (): JSX.Element => {
      */
     const statuses: Status[] = useMemo<Status[]>(() => {
         const results: Status[] = [];
-        if (!statusesIsLoading && statusesResults) {
+        if (!isLoading && statusesResults) {
             statusesResults.forEach((status: Status) => {
                 results.push(status);
             });
         }
         return results;
-    }, [statusesResults, statusesIsLoading]);
+    }, [statusesResults, isLoading]);
 
     /**
      * Get Overall Status
@@ -37,7 +37,7 @@ export const StatusesCard: React.FC<{}> = (): JSX.Element => {
             statuses: []
         };
         // Add Service Statuses to state
-        if (!statusesIsLoading && statuses) {
+        if (statuses) {
             statuses.forEach(
                 (s) => statusItems.statuses.push({
                     name: s.name,
@@ -61,7 +61,7 @@ export const StatusesCard: React.FC<{}> = (): JSX.Element => {
         const highestValue = getHighestStatusCount(allStatusValues) as StatusType;
         // return highest status
         return highestValue;
-    }, [statuses, statusesIsLoading]);
+    }, [statuses]);
 
     /**
      * Handle Refetch
@@ -71,7 +71,7 @@ export const StatusesCard: React.FC<{}> = (): JSX.Element => {
         [refetch]
     );
 
-    return statusesIsLoading ? <RockstarSpinner /> : (
+    return isLoading || isFetching ? <RockstarSpinner /> : (
         <Paper elevation={0}>
             <Card>
                 <CardHeader

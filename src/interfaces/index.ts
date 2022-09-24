@@ -26,4 +26,8 @@ export interface ServiceQueryProps {
      * Refetch Function
      */
     refetch: () => void;
+    /**
+     * Fetching State
+     */
+    isFetching: boolean;
 };

@@ -28,14 +28,14 @@ interface IServiceDetailsCardProps {
     /**
      * Refetch Function
      */
-    refetchService: () => void;
+    refetchServices: () => void;
 };
 
 /**
  * Service Details Card
  */
-export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ serviceId, service, refetchService }): JSX.Element => {
-    const { data, isLoading, refetch } = useGetStatusQuery(serviceId, {
+export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ serviceId, service, refetchServices }): JSX.Element => {
+    const { data, isLoading, refetch: refetchStatuses, isFetching } = useGetStatusQuery(serviceId, {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
@@ -78,77 +78,74 @@ export const ServiceDetailsCard: React.FC<IServiceDetailsCardProps> = ({ service
     /**
      * Get Overall Status
      */
-    const overallStatus: StatusType = useMemo<StatusType>(
-        () => {
-            // Initial State
-            let statusItems: StatusItems = {
-                statuses: []
-            };
-            // Add Service and Status values to state
-            if (serviceStatus && statusStatus) {
-                const service_status: string = serviceStatus?.toString() as string;
-                const status_status: string = statusStatus?.toString() as string;
-                statusItems.statuses = [
-                    { name: 'Service', status: service_status },
-                    { name: 'Status', status: status_status },
-                ];
-            }
-            // Add Platform values to state
-            if (!isLoading && data && data?.services_platforms) {
-                data?.services_platforms.forEach((p: Platform) => {
-                    statusItems.statuses.push({
-                        name: p.name,
-                        status: p.status.toLowerCase(),
-                    });
+    const overallStatus: StatusType = useMemo<StatusType>(() => {
+        // Initial State
+        let statusItems: StatusItems = {
+            statuses: []
+        };
+        // Add Service and Status values to state
+        if (serviceStatus && statusStatus) {
+            const service_status: string = serviceStatus?.toString() as string;
+            const status_status: string = statusStatus?.toString() as string;
+            statusItems.statuses = [
+                { name: 'Service', status: service_status },
+                { name: 'Status', status: status_status },
+            ];
+        }
+        // Add Platform values to state
+        if (!isLoading && data && data?.services_platforms) {
+            data?.services_platforms.forEach((p: Platform) => {
+                statusItems.statuses.push({
+                    name: p.name,
+                    status: p.status.toLowerCase(),
                 });
-            }
-            // Get All Statuses from state
-            const statuses: StatusItem[] = Object.values(statusItems.statuses);
-            // Get All Status Values
-            const allStatusValues = statuses.map((v) => v.status.toLowerCase());
-            // Get Service and Status values
-            const overallValues: StatusItem[] = Object.values(statuses).filter(
-                (v) => v.name === 'Service' || v.name === 'Status'
-            );
-            // Get Service and Status statuses
-            const overallStatusValues: string[] = overallValues.map((s) => s.status);
-            // Check if Service and Status statuses are all UP
-            const isOverallAllUp: boolean = overallValues.every((v) => v.status === 'up');
-            // Get Platform values
-            const platformValues: StatusItem[] = Object.values(statuses).filter(
-                (v) => v.name !== 'Service' && v.name !== 'Status'
-            );
-            // Get Platform statuses
-            const platformStatusValues: string[] = platformValues.map((s) => s.status);
-            // Check if Platform statuses are all UP
-            const isPlatformsAllUp: boolean = platformValues.every((v) => v.status === 'up');
-            // All UP
-            if (isOverallAllUp && isPlatformsAllUp) return 'up';
-            // Service OR Status DOWN
-            if (overallStatusValues.includes('down')) return 'down';
-            // Service OR Status LIMITED
-            if (overallStatusValues.includes('limited')) return 'limited';
-            // Service/Status AND Platforms DOWN
-            if (overallStatusValues.includes('down') && platformStatusValues.includes('down')) return 'down';
-            // Service/Status AND Platforms LIMITED
-            if (overallStatusValues.includes('limited') && platformStatusValues.includes('limited')) return 'limited';
-            // Get highest status value count
-            const highestValue = getHighestStatusCount(allStatusValues) as StatusType;
-            // return highest status
-            return highestValue;
-        },
-        [isLoading, data, serviceStatus, statusStatus]
-    );
+            });
+        }
+        // Get All Statuses from state
+        const statuses: StatusItem[] = Object.values(statusItems.statuses);
+        // Get All Status Values
+        const allStatusValues = statuses.map((v) => v.status.toLowerCase());
+        // Get Service and Status values
+        const overallValues: StatusItem[] = Object.values(statuses).filter(
+            (v: StatusItem) => v.name === 'Service' || v.name === 'Status'
+        );
+        // Get Service and Status statuses
+        const overallStatusValues: string[] = overallValues.map((s: StatusItem) => s.status);
+        // Check if Service and Status statuses are all UP
+        const isOverallAllUp: boolean = overallValues.every((v: StatusItem) => v.status === 'up');
+        // Get Platform values
+        const platformValues: StatusItem[] = Object.values(statuses).filter(
+            (v) => v.name !== 'Service' && v.name !== 'Status'
+        );
+        // Get Platform statuses
+        const platformStatusValues: string[] = platformValues.map((s: StatusItem) => s.status);
+        // Check if Platform statuses are all UP
+        const isPlatformsAllUp: boolean = platformValues.every((v: StatusItem) => v.status === 'up');
+        // All UP
+        if (isOverallAllUp && isPlatformsAllUp) return 'up';
+        // Service OR Status DOWN
+        if (overallStatusValues.includes('down')) return 'down';
+        // Service OR Status LIMITED
+        if (overallStatusValues.includes('limited')) return 'limited';
+        // Service/Status AND Platforms DOWN
+        if (overallStatusValues.includes('down') && platformStatusValues.includes('down')) return 'down';
+        // Service/Status AND Platforms LIMITED
+        if (overallStatusValues.includes('limited') && platformStatusValues.includes('limited')) return 'limited';
+        // Get highest status value count
+        const highestValue = getHighestStatusCount(allStatusValues) as StatusType;
+        // return highest status
+        return highestValue;
+    }, [isLoading, data, serviceStatus, statusStatus]);
 
     /**
      * Handle Refetch
      */
     const handleRefreshClick = useCallback(() => {
-        refetch();
-        refetchService();
-    }, [refetch, refetchService]);
+        refetchStatuses();
+        refetchServices();
+    }, [refetchStatuses, refetchServices]);
 
-    return isLoading ? <RockstarSpinner /> : (
+    return isLoading || isFetching ? <RockstarSpinner /> : (
         <Paper elevation={0}>
             <Card>
                 <CardHeader

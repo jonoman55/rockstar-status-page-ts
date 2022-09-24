@@ -14,21 +14,19 @@ const ServicePage = (): JSX.Element => {
         [id]
     );
 
-    const { isLoading, services, refetch } = useServicesQuery() as ServiceQueryProps;
+    const { services, isLoading, refetch, isFetching } = useServicesQuery() as ServiceQueryProps;
 
     const service: Service = useMemo<Service>(() => {
         let result: Service[] = [];
         if (!isLoading && services) {
-            result.push(
-                services.filter(
-                    (s: Service) => s.id === serviceId
-                ).shift() as Service
+            result.push(services.filter(
+                (s: Service) => s.id === serviceId).shift() as Service
             );
         }
         return result.shift() as Service;
     }, [isLoading, serviceId, services]);
 
-    return isLoading ? <RockstarSpinner /> : (
+    return isLoading || isFetching ? <RockstarSpinner /> : (
         <Fragment>
             <NavBar
                 services={services}
@@ -36,7 +34,7 @@ const ServicePage = (): JSX.Element => {
             <ServiceDetailsCard
                 service={service}
                 serviceId={serviceId}
-                refetchService={refetch}
+                refetchServices={refetch}
             />
         </Fragment>
     );

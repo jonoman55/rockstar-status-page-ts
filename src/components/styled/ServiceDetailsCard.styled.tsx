@@ -50,8 +50,9 @@ export const Image = styled('img')(({ theme }) => ({
     border: `solid 1px ${theme.palette.common.black}`,
     borderRadius: '0.5rem',
     padding: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-        maxWidth: '294px',
+    [theme.breakpoints.down('xs')]: {
+        width: '250px',
+        height: '225px',
     },
 }));
 

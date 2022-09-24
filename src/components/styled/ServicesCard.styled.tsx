@@ -35,6 +35,14 @@ export const Title = styled(Typography)(({ theme }) => ({
     color: theme.custom.palette.main,
     textDecoration: 'none',
     paddingTop: theme.spacing(1),
+    [theme.breakpoints.up('xs')]: {
+        fontSize: 18,
+        textAlign: 'center'
+    },
+    [theme.breakpoints.up('sm')]: {
+        fontSize: 20,
+        textAlign: 'inherit'
+    },
 }));
 
 export const Status = styled(Typography)(({ theme }) => ({

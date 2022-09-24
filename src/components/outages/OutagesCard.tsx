@@ -31,7 +31,8 @@ export const OutagesCard: React.FC<{}> = (): JSX.Element => {
     const {
         data: servicesResults,
         isLoading: servicesIsLoading,
-        refetch: servicesRefetch
+        refetch: servicesRefetch,
+        isFetching: servicesIsFetching
     } = useGetServicesQuery('getServicesDG', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
@@ -43,7 +44,8 @@ export const OutagesCard: React.FC<{}> = (): JSX.Element => {
     const {
         data: statusesResults,
         isLoading: statusesIsLoading,
-        refetch: statusesRefetch
+        refetch: statusesRefetch,
+        isFetching: statusesIsFetching
     } = useGetStatusesQuery('getStatusesDG', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
@@ -53,10 +55,17 @@ export const OutagesCard: React.FC<{}> = (): JSX.Element => {
      * RTK DataGrid Loading State
      */
     const isLoading: boolean = useMemo<boolean>(
-        () => servicesIsLoading || statusesIsLoading,
-        [servicesIsLoading, statusesIsLoading]
+        () => servicesIsLoading
+            || statusesIsLoading
+            || statusesIsFetching
+            || servicesIsFetching,
+        [
+            servicesIsLoading,
+            statusesIsLoading,
+            statusesIsFetching,
+            servicesIsFetching
+        ]
     );
-
     /**
      * Services DataGrid Rows
      */

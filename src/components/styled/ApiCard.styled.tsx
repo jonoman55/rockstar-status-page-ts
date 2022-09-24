@@ -1,4 +1,4 @@
-import { Box, CardContent as MuiCardContent, Stack as MuiStack, Typography, Link, LinkProps } from '@mui/material';
+import { Box, Chip, CardContent as MuiCardContent, Stack as MuiStack, Typography, Link, LinkProps } from '@mui/material';
 import { styled, lighten, darken } from '@mui/material/styles';
 
 export const Container = styled(Box)(({ theme }) => ({
@@ -21,9 +21,11 @@ export const Title = styled(Typography)(({ theme }) => ({
     color: theme.custom.palette.main,
     [theme.breakpoints.up('xs')]: {
         fontSize: 18,
+        textAlign: 'center'
     },
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('sm')]: {
         fontSize: 20,
+        textAlign: 'inherit'
     },
 }));
 
@@ -71,4 +73,15 @@ export const Stack = styled(MuiStack)(({ theme }) => ({
     paddingTop: theme.spacing(2),
     alignItems: 'center',
     justifyContent: 'space-between'
+}));
+
+export const ApiChip = styled(Chip)(({ theme }) => ({
+    cursor: 'pointer',
+    backgroundColor: theme.custom.palette.main,
+    color: theme.palette.primary.contrastText,
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    '& .MuiChip-icon': {
+        color: theme.palette.primary.contrastText,
+    },
 }));

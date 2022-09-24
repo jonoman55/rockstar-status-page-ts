@@ -10,7 +10,7 @@ import { getHighestStatusCount } from '../../helpers';
 import type { Service, StatusItem, StatusItems, StatusType } from '../../types';
 
 export const ServicesCard: React.FC<{}> = (): JSX.Element => {
-    const { data: servicesResults, isLoading: servicesIsLoading, refetch } = useGetServicesQuery('getServices', {
+    const { data: servicesResults, isLoading: servicesIsLoading, refetch, isFetching } = useGetServicesQuery('getServices', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
@@ -31,40 +31,37 @@ export const ServicesCard: React.FC<{}> = (): JSX.Element => {
     /**
      * Get Overall Status
      */
-    const overallStatus: StatusType = useMemo<StatusType>(
-        () => {
-            // Initial State
-            let statusItems: StatusItems = {
-                statuses: []
-            };
-            // Add Service Statuses to state
-            if (!servicesIsLoading && services) {
-                services.forEach(
-                    (s) => statusItems.statuses.push({
-                        name: s.name,
-                        status: s.status.toLowerCase(),
-                    })
-                );
-            }
-            // Get All Statuses from state
-            const statuses: StatusItem[] = Object.values(statusItems.statuses);
-            // Get All Status Values
-            const allStatusValues = statuses.map((v) => v.status.toLowerCase());
-            // Check if Service and Status statuses are all UP
-            const isOverallAllUp: boolean = allStatusValues.every((v) => v === 'up');
-            // All UP
-            if (isOverallAllUp) return 'up';
-            // Service DOWN
-            if (allStatusValues.includes('down')) return 'down';
-            // Service LIMITED
-            if (allStatusValues.includes('limited')) return 'limited';
-            // Get highest status value count
-            const highestValue = getHighestStatusCount(allStatusValues) as StatusType;
-            // return highest status
-            return highestValue;
-        },
-        [services, servicesIsLoading]
-    );
+    const overallStatus: StatusType = useMemo<StatusType>(() => {
+        // Initial State
+        let statusItems: StatusItems = {
+            statuses: []
+        };
+        // Add Service Statuses to state
+        if (!servicesIsLoading && services) {
+            services.forEach(
+                (s) => statusItems.statuses.push({
+                    name: s.name,
+                    status: s.status.toLowerCase(),
+                })
+            );
+        }
+        // Get All Statuses from state
+        const statuses: StatusItem[] = Object.values(statusItems.statuses);
+        // Get All Status Values
+        const allStatusValues = statuses.map((v) => v.status.toLowerCase());
+        // Check if Service and Status statuses are all UP
+        const isOverallAllUp: boolean = allStatusValues.every((v) => v === 'up');
+        // All UP
+        if (isOverallAllUp) return 'up';
+        // Service DOWN
+        if (allStatusValues.includes('down')) return 'down';
+        // Service LIMITED
+        if (allStatusValues.includes('limited')) return 'limited';
+        // Get highest status value count
+        const highestValue = getHighestStatusCount(allStatusValues) as StatusType;
+        // return highest status
+        return highestValue;
+    }, [services, servicesIsLoading]);
 
     /**
      * Handle Refetch
@@ -74,7 +71,7 @@ export const ServicesCard: React.FC<{}> = (): JSX.Element => {
         [refetch]
     );
 
-    return servicesIsLoading ? <RockstarSpinner /> : (
+    return servicesIsLoading || isFetching ? <RockstarSpinner /> : (
         <Paper elevation={0}>
             <Card>
                 <CardHeader

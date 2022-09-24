@@ -328,6 +328,7 @@ export type OverallStatus = {
     statusItems: StatusItems;
     overallStatus: StatusType;
     refetch: () => void;
+    isFetching: boolean;
 };
 
 /**

@@ -35,6 +35,9 @@ export const CardName = styled(Typography)(({ theme }) => ({
     paddingTop: theme.spacing(2),
     textAlign: 'center',
     color: theme.custom.palette.main,
+    [theme.breakpoints.up('xs')]: {
+        fontSize: 20,
+    },
 }));
 
 export const PlatformItem = styled(Box)(({ theme }) => ({

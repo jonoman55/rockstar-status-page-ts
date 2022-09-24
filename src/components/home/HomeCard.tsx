@@ -28,7 +28,8 @@ export const HomeCard: React.FC<{}> = (): JSX.Element => {
     const {
         data: updatedResult,
         isLoading: updatedIsLoading,
-        refetch: updatedRefetch
+        refetch: updatedRefetch,
+        isFetching: updatedIsFetching
     } = useGetUpdatedQuery('getUpdated', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
@@ -38,6 +39,7 @@ export const HomeCard: React.FC<{}> = (): JSX.Element => {
         isLoading: statusesIsLoading,
         statuses: statusesResults,
         refetch: statusesRefetch,
+        isFetching: statusesIsFetching,
         overallStatus,
     } = useOverallStatus('getAllStatuses', {
         refetchOnReconnect: true,
@@ -48,8 +50,16 @@ export const HomeCard: React.FC<{}> = (): JSX.Element => {
      * Is Loading State
      */
     const isLoading: boolean = useMemo<boolean>(
-        () => statusesIsLoading || updatedIsLoading,
-        [statusesIsLoading, updatedIsLoading]
+        () => statusesIsLoading
+            || updatedIsLoading
+            || updatedIsFetching
+            || statusesIsFetching,
+        [
+            statusesIsLoading,
+            updatedIsLoading,
+            updatedIsFetching,
+            statusesIsFetching
+        ]
     );
 
     /**
@@ -90,7 +100,7 @@ export const HomeCard: React.FC<{}> = (): JSX.Element => {
     /**
      * Handle Refetch
      */
-    const handleRefreshClick = useCallback<() => void>(() => {
+    const handleRefreshClick = useCallback(() => {
         statusesRefetch();
         updatedRefetch();
     }, [statusesRefetch, updatedRefetch]);

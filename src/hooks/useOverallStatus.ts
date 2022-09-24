@@ -23,9 +23,13 @@ export const useOverallStatus = (queryName: string, options: UseQueryOptions): O
     const {
         data: statusesResults,
         isLoading,
-        refetch
+        refetch,
+        isFetching
     } = useGetStatusesQuery(queryName, options);
 
+    /**
+     * Statuses
+     */
     const statuses: Status[] = useMemo<Status[]>(() => {
         const results: Status[] = [];
         if (!isLoading && statusesResults) {
@@ -36,6 +40,9 @@ export const useOverallStatus = (queryName: string, options: UseQueryOptions): O
         return results;
     }, [statusesResults, isLoading]);
 
+    /**
+     * Platforms
+     */
     const platforms: Platform[] = useMemo<Platform[]>(() => {
         const results: Platform[] = [];
         if (!isLoading && statusesResults) {
@@ -48,6 +55,9 @@ export const useOverallStatus = (queryName: string, options: UseQueryOptions): O
         return results;
     }, [isLoading, statusesResults]);
 
+    /**
+     * Status Items
+     */
     const statusItems: StatusItems = useMemo<StatusItems>(() => {
         // Initial State
         let statusItems: StatusItems = {
@@ -78,10 +88,14 @@ export const useOverallStatus = (queryName: string, options: UseQueryOptions): O
                 });
             });
         }
+        // Set Outages Statuses State
         setOutages(statusItems.statuses);
         return statusItems;
     }, [isLoading, platforms, statuses]);
 
+    /**
+     * Overall Status
+     */
     const overallStatus: StatusType = useMemo<StatusType>(() => {
         // Get All Statuses from state
         const allStatuses: StatusItem[] = Object.values(statusItems.statuses);
@@ -115,6 +129,9 @@ export const useOverallStatus = (queryName: string, options: UseQueryOptions): O
         return highestValue;
     }, [statusItems]);
 
+    /**
+     * Outage Change Callback Handler
+     */
     const handleOutages = useCallback<() => void>(() => {
         if (!isLoading && overallStatus && outages) {
             if (overallStatus?.includes('down') || overallStatus?.includes('limited')) {
@@ -144,9 +161,13 @@ export const useOverallStatus = (queryName: string, options: UseQueryOptions): O
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoading, overallStatus, statusItems.statuses, dispatch, notify]);
 
-    useEffect(() => {
-        handleOutages();
-    }, [handleOutages]);
+    /**
+     * Handle Outage Change Hook
+     */
+    useEffect(
+        () => handleOutages(),
+        [handleOutages]
+    );
 
     return {
         isLoading,
@@ -155,5 +176,6 @@ export const useOverallStatus = (queryName: string, options: UseQueryOptions): O
         statusItems,
         overallStatus,
         refetch,
+        isFetching
     };
 };

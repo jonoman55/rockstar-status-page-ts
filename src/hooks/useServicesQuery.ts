@@ -9,10 +9,8 @@ import type { Service } from "../types";
  * @returns {ServiceQueryProps} Services Array
  */
 export const useServicesQuery = (): ServiceQueryProps => {
-    const { data: servicesResults, isLoading, refetch } = useGetServicesQuery('getNavbarServices');
-    /**
-     * Memoize Fetched Services
-     */
+    const { data: servicesResults, isLoading, refetch, isFetching } = useGetServicesQuery('getServicesQuery');
+
     const services: Service[] = useMemo<Service[]>(() => {
         const results: Service[] = [];
         if (!isLoading && servicesResults) {
@@ -22,9 +20,11 @@ export const useServicesQuery = (): ServiceQueryProps => {
         }
         return results;
     }, [isLoading, servicesResults]);
+
     return {
         isLoading,
         services,
-        refetch
-    } as const;
+        refetch,
+        isFetching
+    };
 };

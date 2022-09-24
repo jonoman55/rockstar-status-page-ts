@@ -1,16 +1,18 @@
 import { useCallback, useMemo } from 'react';
 import { Divider, Typography } from '@mui/material';
+import { Api as ApiIcon } from '@mui/icons-material';
 
 import { StatusChip } from '../shared';
 import { RockstarSpinner } from '../design';
 import { Card, CardMedia, CardHeader, CardFooter } from '../styled/PaperCard.styled';
-import { Container, CardContent, Title, Updated, DetailsLink, Stack } from '../styled/ApiCard.styled';
+import { Container, CardContent, Title, Updated, DetailsLink, Stack, ApiChip } from '../styled/ApiCard.styled';
 import { baseUrl, useGetApiStatusQuery } from '../../services/rockstarApi';
+import { getApiName } from '../../utils';
 
 import type { StatusType } from '../../types';
 
 export const ApiCard: React.FC<{}> = (): JSX.Element => {
-    const { data: apiStatus, isLoading, refetch } = useGetApiStatusQuery('getApiStatus', {
+    const { data: apiStatus, isLoading, refetch, isFetching } = useGetApiStatusQuery('getApiStatus', {
         refetchOnReconnect: true,
         pollingInterval: 1000 * 60 * 5 // 5 min
     });
@@ -28,7 +30,12 @@ export const ApiCard: React.FC<{}> = (): JSX.Element => {
         [refetch]
     );
 
-    return isLoading ? <RockstarSpinner /> : (
+    const apiProvider: string = useMemo<string>(
+        () => getApiName(baseUrl) as string,
+        []
+    );
+
+    return isLoading || isFetching ? <RockstarSpinner /> : (
         <Container>
             <Card elevation={2}>
                 <CardHeader
@@ -45,10 +52,18 @@ export const ApiCard: React.FC<{}> = (): JSX.Element => {
                         <Divider sx={{ pb: 1 }} />
                         <Stack direction='row' spacing={4}>
                             <Typography variant='h6' sx={{ pr: 1 }}>Status</Typography>
-                            <StatusChip  status={`${apiStatus?.status}`} />
+                            <StatusChip status={`${apiStatus?.status}`} />
                         </Stack>
                         <Divider sx={{ pt: 2 }} />
-                        <Updated variant='h6'>{`Updated: ${apiStatus?.updated}`}</Updated>
+                        <Updated variant='body1'>{`Updated: ${apiStatus?.updated}`}</Updated>
+                        <Divider sx={{ pt: 1 }} />
+                        <Stack direction='row'>
+                            <Typography variant='body1'>API Provider</Typography>
+                            <ApiChip
+                                label={apiProvider}
+                                icon={<ApiIcon />}
+                            />
+                        </Stack>
                     </DetailsLink>
                 </CardContent>
                 <CardFooter />
