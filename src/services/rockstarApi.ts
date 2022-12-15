@@ -1,20 +1,17 @@
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError, FetchBaseQueryMeta } from '@reduxjs/toolkit/query/react';
 import type { EndpointBuilder } from '@reduxjs/toolkit/dist/query/endpointDefinitions';
 
-import { ApiBaseUrl } from '../utils';
-import { getApiPath } from '../helpers';
-import type { ApiPath, Api, All, Service, Status, Updated } from '../types';
+import type { Api, All, Service, Status, Updated } from '../types';
 
 /**
  * Create API Endpoint Builder Type
  */
 type Builder = EndpointBuilder<BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, {}, FetchBaseQueryMeta>, never, 'rockstarApi'>;
 
-const apiPath: ApiPath = getApiPath();
-
-const API: ApiBaseUrl = new ApiBaseUrl(`/${apiPath}`);
-
-export const baseUrl: string = API.baseUrl;
+/**
+ * Base Backend API URL
+ */
+export const baseUrl: string = process.env.REACT_APP_BACKEND_API_RENDER_URL as string + '/api';
 
 export const rockstarApi = createApi({
     reducerPath: 'rockstarApi',

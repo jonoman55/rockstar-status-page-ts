@@ -58,7 +58,7 @@ export const OutageBar = () => {
     }, [dispatch, outages]);
 
     useEffect(() => {
-        if (outages.length !== outageAlerts.length) {
+        if (outages?.length !== outageAlerts?.length) {
             dispatch(appActions.resetAlertState());
             resetState();
         }
@@ -72,7 +72,7 @@ export const OutageBar = () => {
     }, [resetAlerts, resetState]);
 
     return (
-        outageAlerts.length > 0 ? (
+        outageAlerts?.length > 0 ? (
             <AppBar elevation={2}>
                 <Toolbar disableGutters>
                     <OutageAlerts />
